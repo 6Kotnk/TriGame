@@ -270,7 +270,11 @@ const ctx = canvas.getContext('2d');
 
 //drawSphericalTriangle(ctx, city1_vec, city2_vec, city3_vec);
 
-const mapTexture = textureLoader.load('https://github.com/6Kotnk/TriGame/blob/main/WorldMap.png');
+//https://6Kotnk.github.io/TriGame/WorldMap.png
+//https://raw.githubusercontent.com/6Kotnk/TriGame/main/WorldMap.png
+
+
+const mapTexture = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/main/WorldMap.png');
 var triTexture = new THREE.CanvasTexture(canvas);
 
 // General parameters

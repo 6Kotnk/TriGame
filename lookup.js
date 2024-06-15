@@ -6,7 +6,7 @@ function coordStringToArray(str) {
 }
 
 function fetchAndProcessCSV() {
-    url = 'http://localhost:8000/city_names.csv';
+    url = 'https://raw.githubusercontent.com/6Kotnk/TriGame/main/city_names.csv';
     city1_name = document.getElementById("city1").value;
     city2_name = document.getElementById("city2").value;
     city3_name = document.getElementById("city3").value;
