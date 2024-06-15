@@ -83,7 +83,7 @@ function drawLine(ctx, curr_lon, curr_lat, next_lon, next_lat) {
 
   map_dist_sqrd = (curr_lon - next_lon)**2 + (curr_lat - next_lat)**2;
   
-  if(map_dist_sqrd > ((360 / divs)**2) * 10) 
+  if(map_dist_sqrd > ((360 / divs)**2) * 15) 
   {
     curr_lon -= 180;
     next_lon -= 180;
@@ -124,8 +124,11 @@ function drawSphericalTriangle(ctx, vec1, vec2, vec3, color = "cyan") {
   let { longitude: lon3, latitude: lat3 } = toLatLon(vec3);
   
   const longitudes = [lon1, lon2, lon3];
-  const newCentralMeridian = ((Math.min(...longitudes) + Math.max(...longitudes)) / 2) - 180;
-
+  newCentralMeridian = (Math.min(...longitudes) + Math.max(...longitudes)) / 2;
+  if((Math.max(...longitudes) - Math.min(...longitudes)) < 180)
+  {
+    newCentralMeridian -= 180;
+  }
   
     s1 = createSphereAtPoint(vec1);
     s2 = createSphereAtPoint(vec2);
@@ -267,7 +270,7 @@ const ctx = canvas.getContext('2d');
 
 //drawSphericalTriangle(ctx, city1_vec, city2_vec, city3_vec);
 
-const mapTexture = textureLoader.load('http://localhost:8000/2560px-World_location_map_mono.svg.png');
+const mapTexture = textureLoader.load('http://localhost:8000/2560px-World_location_map_mono.png');
 var triTexture = new THREE.CanvasTexture(canvas);
 
 // General parameters
