@@ -163,20 +163,7 @@
   
   return r;
 }
-/*
- function parametricCircle(n, t) {
-  u = new THREE.Vector3();
-  v = new THREE.Vector3();
-  r = new THREE.Vector3();
 
-  u.crossVectors(new THREE.Vector3(-n.y,n.x,Math.sqrt(1-n.x^2-n.y^2)), n).normalize();
-  v.crossVectors(u,n);
-  
-  r = v.multiplyScalar(Math.sin(-t)).add(u.multiplyScalar(Math.cos(-t)));
-  
-  return r;
-}
-*/
  function findCoordinates(cityName, cities) {
   const city = cities.find(c => c.name === cityName);
   if (city) {
