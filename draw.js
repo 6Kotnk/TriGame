@@ -24,13 +24,13 @@ const mapTexture = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/
 
 // General parameters
 const radius = 1;
-const detil = 10;
+const detail = 10;
 const delta = 0.01;
 
 // Create the sphere geometry
-//const sphereGeometry = new THREE.IcosahedronGeometry(radius, detil); // radius, segments (horizontal, vertical)
+//const sphereGeometry = new THREE.IcosahedronGeometry(radius, detail); // radius, segments (horizontal, vertical)
 const sphereGeometry = new THREE.SphereGeometry(radius, 16,32);
-const wireframeGeometry = new THREE.IcosahedronGeometry(radius + delta, detil); // radius, segments (horizontal, vertical)
+const wireframeGeometry = new THREE.IcosahedronGeometry(radius + delta, detail); // radius, segments (horizontal, vertical)
 //const wireframeGeometry = new THREE.SphereGeometry(radius + delta, 16,32);
 const canvasGeometry = new THREE.SphereGeometry(radius + delta, 16,32);
 const wireframeEdgeGeometry = new THREE.WireframeGeometry(wireframeGeometry); // radius, segments (horizontal, vertical)

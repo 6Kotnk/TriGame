@@ -1,3 +1,4 @@
+
 var s1;
 var s2;
 var s3;
@@ -5,6 +6,16 @@ var s3;
 var t1;
 var t2;
 var t3;
+
+const S1_IDX = 0;
+const S2_IDX = 1;
+const S3_IDX = 2;
+
+const T1_IDX = 3;
+const T2_IDX = 4;
+const T3_IDX = 5;
+
+var triangle_objects = [s1, s2, s3, t1, t2, t3];
 
 var city1_coord;
 var city2_coord;
@@ -88,18 +99,12 @@ function processData(csvData) {
 
 //-------------------------------------------------------//
 
-
-    scene.remove(t1);
-    t1 = createLineBetweenPoints(city2_vec, city3_vec);
-    scene.remove(t2);
-    t2 = createLineBetweenPoints(city1_vec, city2_vec);
-    scene.remove(t3);
-    t3 = createLineBetweenPoints(city3_vec, city1_vec);
-    
     scene.remove(mapTriangle);
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    newCentralMeridian = drawSphericalTriangle(ctx, city1_vec, city2_vec, city3_vec);
+    newCentralMeridian = drawSphericalTriangle(ctx,
+        triangle_objects,
+    [city1_vec, city2_vec, city3_vec]);
     
     triTexture = new THREE.CanvasTexture(canvas);
     triTexture.wrapS = THREE.RepeatWrapping;
