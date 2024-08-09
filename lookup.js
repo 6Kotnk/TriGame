@@ -1,4 +1,3 @@
-
 var s1;
 var s2;
 var s3;
