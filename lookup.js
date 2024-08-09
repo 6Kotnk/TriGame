@@ -61,13 +61,9 @@ function processData(csvData) {
     });
 
     // Example to process Paris, Tokyo, and Colombo
-    const city1_coord_s = findCoordinates(city1_name, cities);
-    const city2_coord_s = findCoordinates(city2_name, cities);
-    const city3_coord_s = findCoordinates(city3_name, cities);
-
-    city1_coord = coordStringToArray(city1_coord_s);
-    city2_coord = coordStringToArray(city2_coord_s);
-    city3_coord = coordStringToArray(city3_coord_s);
+    city1_coord = findCoordinates(city1_name, cities);
+    city2_coord = findCoordinates(city2_name, cities);
+    city3_coord = findCoordinates(city3_name, cities);
 
     const area_skm = sphericalExcess(city1_coord, city2_coord, city3_coord);
     const area_mil_skm = area_skm / 1e6;
@@ -78,23 +74,9 @@ function processData(csvData) {
 
 //-------------------------------------------------------//
     
-    city1_vec.setFromSphericalCoords(
-      1,
-      THREE.Math.degToRad(-city1_coord[0] + 90),
-      THREE.Math.degToRad( city1_coord[1] + 90),
-    );
-    
-    city2_vec.setFromSphericalCoords(
-      1,
-      THREE.Math.degToRad(-city2_coord[0] + 90),
-      THREE.Math.degToRad( city2_coord[1] + 90),
-    );
-    
-    city3_vec.setFromSphericalCoords(
-      1,
-      THREE.Math.degToRad(-city3_coord[0] + 90),
-      THREE.Math.degToRad( city3_coord[1] + 90),
-    );
+    city1_vec = coordsToVec(city1_coord);
+    city2_vec = coordsToVec(city2_coord);
+    city3_vec = coordsToVec(city3_coord);
 
 //-------------------------------------------------------//
 

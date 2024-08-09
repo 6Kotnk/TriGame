@@ -1,9 +1,6 @@
 const divs = 100;
 const R = 6371;  // Earth's radius in kilometers
 
-function coordStringToArray(str) {
-  return str.split(", ").map(Number);
-}
 
 function createSphereAtPoint(position, radius = 0.05, color = 0xff0000) {
   const geometry = new THREE.SphereGeometry(radius, 32, 32);
@@ -183,9 +180,22 @@ function interpolateBetweenPoints(point1, point2, t) {
 function findCoordinates(cityName, cities) {
   const city = cities.find(c => c.name === cityName);
   if (city) {
-      return city.coord;
+    const city_coord = city.coord.split(", ").map(Number)
+    return city_coord;
   }
   throw new Error("City not found");
+}
+
+function coordsToVec(city_coord) {
+  var city_vec = new THREE.Vector3();
+
+  city_vec.setFromSphericalCoords(
+    1,
+    THREE.Math.degToRad(-city_coord[0] + 90),
+    THREE.Math.degToRad( city_coord[1] + 90),
+  );
+
+  return city_vec;
 }
 
 function rotate(l, n) {
