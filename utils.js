@@ -85,81 +85,56 @@ function drawLine(ctx, curr_lon, curr_lat, next_lon, next_lat) {
 }
 
 
-function drawSphericalTriangle(ctx, triangle_spheres, vecs, color = "cyan") {
+function drawSphericalTriangle(ctx, spheres, lines, vecs, color = "cyan") {
 
-  let { longitude: lon1 } = toLatLon(vecs[0]);
-  let { longitude: lon2 } = toLatLon(vecs[1]);
-  let { longitude: lon3 } = toLatLon(vecs[2]);
-  
-  const longitudes = [lon1, lon2, lon3];
+  let longitudes = [];
+
+  vecs.forEach((vec, index) => {
+    let { longitude: lon } = toLatLon(vec);
+    longitudes[index] = lon;
+  });
+
   newCentralMeridian = (Math.min(...longitudes) + Math.max(...longitudes)) / 2;
   if((Math.max(...longitudes) - Math.min(...longitudes)) < 180)
   {
     newCentralMeridian -= 180;
   }
 
-  /*
-    triangle_spheres.forEach(sphere => {
-      scene.remove(sphere)
-      sphere = createSphereAtPoint(vecs[]);
-    });
-  */
+  vecs.forEach((vec, index) => {
+    scene.remove(spheres[index]); // Remove the old sphere
+    spheres[index] = createSphereAtPoint(vec); // Create and assign the new sphere
+  });
 
-    scene.remove(triangle_spheres[0]);
-    scene.remove(triangle_spheres[1]);
-    scene.remove(triangle_spheres[2]);
+  let r = new THREE.Vector3();
 
-    triangle_spheres[0] = createSphereAtPoint(vecs[0]);
-    triangle_spheres[1] = createSphereAtPoint(vecs[1]);
-    triangle_spheres[2] = createSphereAtPoint(vecs[2]);
+  let { longitude: curr_lon, latitude: curr_lat } = toLatLon(vecs[0], newCentralMeridian);
+  let next_lon = 0;
+  let next_lat = 0;
 
-    let r = new THREE.Vector3();
+  ctx.moveTo(curr_lon, curr_lat);
+  ctx.beginPath();      // Start the path for the triangle
 
-    let { longitude: curr_lon, latitude: curr_lat } = toLatLon(vecs[0], newCentralMeridian);
-    let next_lon = 0;
-    let next_lat = 0;
+  for (let idx = 0; idx < vecs.length; idx++) {
 
-    ctx.moveTo(curr_lon, curr_lat);
-    ctx.beginPath();      // Start the path for the triangle
+    let current_vec = vecs[idx];
+    let next_vec = vecs[(idx + 1) % vecs.length];
 
-
-    scene.remove(triangle_objects[3]);
-    triangle_objects[3] = createLineBetweenPoints(vecs[0], vecs[1]);
+    scene.remove(lines[idx]);
+    lines[idx] = createLineBetweenPoints(current_vec, next_vec);
     
-    for (let t = 0; t < vecs[0].angleTo(vecs[1]); t += 2*Math.PI/divs) {
-      r = interpolateBetweenPoints(vecs[0],vecs[1],t);
+    for (let t = 0; t < current_vec.angleTo(next_vec); t += 2*Math.PI/divs) {
+      r = interpolateBetweenPoints(current_vec,next_vec,t);
       ({ longitude: next_lon, latitude: next_lat } = toLatLon(r, newCentralMeridian));
       drawLine(ctx, curr_lon, curr_lat, next_lon, next_lat)
       curr_lon = next_lon;
       curr_lat = next_lat;
     }
+  }
 
-    scene.remove(triangle_objects[4]);
-    triangle_objects[4] = createLineBetweenPoints(vecs[1], vecs[2]);
+  ctx.closePath();      // Close the path (draw line back to the first vertex)
 
-    for (let t = 0; t < vecs[1].angleTo(vecs[2]); t += 2*Math.PI/divs) {
-      r = interpolateBetweenPoints(vecs[1],vecs[2],t);
-      ({ longitude: next_lon, latitude: next_lat } = toLatLon(r, newCentralMeridian));
-      drawLine(ctx, curr_lon, curr_lat, next_lon, next_lat)
-      curr_lon = next_lon;
-      curr_lat = next_lat;
-    }
-
-    scene.remove(triangle_objects[5]);
-    triangle_objects[5] = createLineBetweenPoints(vecs[2], vecs[0]);
-
-    for (let t = 0; t < vecs[2].angleTo(vecs[0]); t += 2*Math.PI/divs) {
-      r = interpolateBetweenPoints(vecs[2],vecs[0],t);
-      ({ longitude: next_lon, latitude: next_lat } = toLatLon(r, newCentralMeridian));
-      drawLine(ctx, curr_lon, curr_lat, next_lon, next_lat)
-      curr_lon = next_lon;
-      curr_lat = next_lat;
-    }
-
-    ctx.closePath();      // Close the path (draw line back to the first vertex)
-
-    ctx.fillStyle = color; // Set the fill color
-    ctx.fill();            // Fill the triangle
+  ctx.fillStyle = color; // Set the fill color
+  ctx.fill();            // Fill the triangle
 
   return newCentralMeridian
 }

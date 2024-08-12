@@ -14,7 +14,8 @@ const T1_IDX = 3;
 const T2_IDX = 4;
 const T3_IDX = 5;
 
-var triangle_objects = [s1, s2, s3, t1, t2, t3];
+var spheres = [s1, s2, s3];
+var lines = [t1, t2, t3];
 
 var city1_coord;
 var city2_coord;
@@ -84,7 +85,8 @@ function processData(csvData) {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     newCentralMeridian = drawSphericalTriangle(ctx,
-        triangle_objects,
+        spheres,
+        lines,
     [city1_vec, city2_vec, city3_vec]);
     
     triTexture = new THREE.CanvasTexture(canvas);
