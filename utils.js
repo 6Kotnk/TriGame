@@ -51,7 +51,7 @@ function drawLine(ctx, curr_lon, curr_lat, next_lon, next_lat) {
 
   map_dist_sqrd = (curr_lon - next_lon)**2 + (curr_lat - next_lat)**2;
   
-  if(map_dist_sqrd > ((360 / divs)**2) * 15) 
+  if(map_dist_sqrd > ((360 / divs)**2) * 15) // One day actually calculate this
   {
     curr_lon -= 180;
     next_lon -= 180;
@@ -111,6 +111,16 @@ function drawSphericalTriangle(ctx, spheres, lines, vecs, color = "cyan") {
   let next_lon = 0;
   let next_lat = 0;
 
+
+
+
+  scene.remove(mapTriangle);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+
+
+
+  
   ctx.moveTo(curr_lon, curr_lat);
   ctx.beginPath();      // Start the path for the triangle
 
@@ -135,6 +145,26 @@ function drawSphericalTriangle(ctx, spheres, lines, vecs, color = "cyan") {
 
   ctx.fillStyle = color; // Set the fill color
   ctx.fill();            // Fill the triangle
+
+
+
+
+  triTexture = new THREE.CanvasTexture(canvas);
+  triTexture.wrapS = THREE.RepeatWrapping;
+
+  triTexture.offset.x = (-newCentralMeridian) / 360;
+
+  triMaterial = new THREE.MeshBasicMaterial(
+    { map: triTexture,     
+      transparent: true,
+      opacity: 0.5});
+
+  mapTriangle = new THREE.Mesh(sphereGeometry, triMaterial);
+  scene.add(mapTriangle);
+
+
+
+
 
   return newCentralMeridian
 }
@@ -192,14 +222,32 @@ function haversine(coord1, coord2) {
   return distance;
 }
 
-function sphericalExcess(coord1, coord2, coord3) {
-  const a = haversine(coord2, coord3);
-  const b = haversine(coord1, coord3);
-  const c = haversine(coord1, coord2);
-  const A = Math.acos((Math.cos(a / R) - Math.cos(b / R) * Math.cos(c / R)) / (Math.sin(b / R) * Math.sin(c / R)));
-  const B = Math.acos((Math.cos(b / R) - Math.cos(a / R) * Math.cos(c / R)) / (Math.sin(a / R) * Math.sin(c / R)));
-  const C = Math.acos((Math.cos(c / R) - Math.cos(a / R) * Math.cos(b / R)) / (Math.sin(a / R) * Math.sin(b / R)));
-  const E = A + B + C - Math.PI;
+function sphericalExcess(coords) {
+
+  const sides = [];
+  const angles = [];
+
+  // Calculate the sides
+  for (let idx = 0; idx < 3;idx++) {
+    const next_idx = (idx + 1) % 3; // Wrap around to form pairs (1,2), (0,2), (0,1)
+    sides[idx] = haversine(coords[idx], coords[next_idx]);
+  }
+
+  // Calculate the angles
+  for (let idx = 0; idx < 3; idx++) {
+    const [a, b, c] = [
+      sides[idx],
+      sides[(idx + 1) % 3],
+      sides[(idx + 2) % 3]
+    ];
+    angles[idx] = Math.acos(
+      (Math.cos(a / R) - Math.cos(b / R) * Math.cos(c / R)) /
+      (Math.sin(b / R) * Math.sin(c / R))
+    );
+  }
+
+
+  const E = angles.reduce((sum, angle) => sum + angle, 0) - Math.PI;
   const area = E * R ** 2;
   return area;
 }
