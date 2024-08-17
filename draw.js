@@ -1,7 +1,10 @@
+var new_dist = 4;
+var old_dist = 4;
 
 const container = document.getElementById('container');
 
 const scene = new THREE.Scene();
+scene.background = new THREE.Color( 0xe0e0e0 );
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 // Create renderer
@@ -11,12 +14,14 @@ container.appendChild(renderer.domElement);
 renderer.setClearColor(0xffffff, 1); // Set background to white
 
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.maxDistance = 5;
+controls.minDistance = 1.12;
 
 const textureLoader = new THREE.TextureLoader();
 //const canvas = document.createElement('canvas');
 const canvas = document.getElementById('MapCanvas');
-canvas.width =  360;
-canvas.height = 180;
+canvas.width =  3600;
+canvas.height = 1800;
 
 const ctx = canvas.getContext('2d');
 
@@ -29,10 +34,10 @@ const delta = 0.01;
 
 // Create the sphere geometry
 //const sphereGeometry = new THREE.IcosahedronGeometry(radius, detail); // radius, segments (horizontal, vertical)
-const sphereGeometry = new THREE.SphereGeometry(radius, 16,32);
+const sphereGeometry = new THREE.SphereGeometry(radius, 160,320);
 const wireframeGeometry = new THREE.IcosahedronGeometry(radius + delta, detail); // radius, segments (horizontal, vertical)
 //const wireframeGeometry = new THREE.SphereGeometry(radius + delta, 16,32);
-const canvasGeometry = new THREE.SphereGeometry(radius + delta, 16,32);
+const canvasGeometry = new THREE.SphereGeometry(radius, 160,320);
 const wireframeEdgeGeometry = new THREE.WireframeGeometry(wireframeGeometry); // radius, segments (horizontal, vertical)
 
 // Create a material for the sphere (filled, optional color)
@@ -48,7 +53,7 @@ const sphere = new THREE.Mesh(sphereGeometry, mapMaterial);
 const wireframe = new THREE.LineSegments(wireframeEdgeGeometry, blackMaterial);
 
 scene.add(sphere);
-scene.add(wireframe);
+//scene.add(wireframe);
 
 camera.position.z = 5; // Move the camera back for better view
 
@@ -56,6 +61,20 @@ camera.position.z = 5; // Move the camera back for better view
 function animate() {
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
+
+
+  new_dist = controls.target.distanceTo( controls.object.position ) - 1;
+  tolerance = 0.1;
+
+  if ((Math.abs(new_dist - old_dist) > tolerance) &&
+      city_vecs[0] != null ){
+
+    old_dist = new_dist;
+
+    newCentralMeridian = drawSphericalTriangle(ctx, spheres, lines, city_vecs, new_dist);
+  }
+
+
 }
 
 // Start the animation loop

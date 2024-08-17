@@ -1,9 +1,9 @@
 const divs = 100;
 const R = 6371;  // Earth's radius in kilometers
+const mapScale = 10;
 
-
-function createSphereAtPoint(position, radius = 0.05, color = 0xff0000) {
-  const geometry = new THREE.SphereGeometry(radius, 32, 32);
+function createSphereAtPoint(position, scale, radius = 0.02, color = 0xff0000) {
+  const geometry = new THREE.SphereGeometry(radius * scale, 32, 32);
   const material = new THREE.MeshBasicMaterial({ color: color });
   const sphere = new THREE.Mesh(geometry, material);
   sphere.position.copy(position);
@@ -11,13 +11,13 @@ function createSphereAtPoint(position, radius = 0.05, color = 0xff0000) {
   return sphere;
 }
 
-function createLineBetweenPoints(point1, point2, radius = 0.01, color = 0x0000ff) {
+function createLineBetweenPoints(point1, point2, scale, radius = 0.01, color = 0x0000ff) {
   const radialSegments = 16; // Number of segments around the radius of the torus
   const tubularSegments = 100; // Number of segments along the tube
 
   const arc = point2.angleTo(point1);
   
-  const torusGeometry = new THREE.TorusGeometry(1, radius, radialSegments, tubularSegments, arc);
+  const torusGeometry = new THREE.TorusGeometry(1, radius * scale, radialSegments, tubularSegments, arc);
   const material = new THREE.MeshBasicMaterial({ color: color });
   const torus = new THREE.Mesh(torusGeometry, material);
 
@@ -51,7 +51,7 @@ function drawLine(ctx, curr_lon, curr_lat, next_lon, next_lat) {
 
   map_dist_sqrd = (curr_lon - next_lon)**2 + (curr_lat - next_lat)**2;
   
-  if(map_dist_sqrd > ((360 / divs)**2) * 15) // One day actually calculate this
+  if(map_dist_sqrd > ((360*mapScale / divs)**2) * 15) // One day actually calculate this
   {
     curr_lon -= 180;
     next_lon -= 180;
@@ -69,10 +69,10 @@ function drawLine(ctx, curr_lon, curr_lat, next_lon, next_lat) {
 
     side_lat = Math.sign(mid_point_lat);
 
-    ctx.lineTo(side_lon * 180  + 180, mid_point_lat + 90);
-    ctx.lineTo(side_lon * 180  + 180, side_lat * 90 + 90);
-    ctx.lineTo(-side_lon * 180 + 180, side_lat * 90 + 90);
-    ctx.lineTo(-side_lon * 180 + 180, mid_point_lat + 90);
+    ctx.lineTo(mapScale*(side_lon *  180 + 180),mapScale*( mid_point_lat + 90));
+    ctx.lineTo(mapScale*(side_lon *  180 + 180),mapScale*( side_lat * 90 + 90));
+    ctx.lineTo(mapScale*(-side_lon * 180 + 180),mapScale*( side_lat * 90 + 90));
+    ctx.lineTo(mapScale*(-side_lon * 180 + 180),mapScale*( mid_point_lat + 90));
 
     curr_lon += 180;
     next_lon += 180;
@@ -81,11 +81,11 @@ function drawLine(ctx, curr_lon, curr_lat, next_lon, next_lat) {
     
   }
   
-  ctx.lineTo(next_lon, next_lat);
+  ctx.lineTo(next_lon*mapScale, next_lat*mapScale);
 }
 
 
-function drawSphericalTriangle(ctx, spheres, lines, vecs, color = "cyan") {
+function drawSphericalTriangle(ctx, spheres, lines, vecs, scale, color = "cyan") {
 
   let longitudes = [];
 
@@ -102,7 +102,7 @@ function drawSphericalTriangle(ctx, spheres, lines, vecs, color = "cyan") {
 
   vecs.forEach((vec, index) => {
     scene.remove(spheres[index]); // Remove the old sphere
-    spheres[index] = createSphereAtPoint(vec); // Create and assign the new sphere
+    spheres[index] = createSphereAtPoint(vec, scale); // Create and assign the new sphere
   });
 
   let r = new THREE.Vector3();
@@ -130,7 +130,7 @@ function drawSphericalTriangle(ctx, spheres, lines, vecs, color = "cyan") {
     let next_vec = vecs[(idx + 1) % vecs.length];
 
     scene.remove(lines[idx]);
-    lines[idx] = createLineBetweenPoints(current_vec, next_vec);
+    lines[idx] = createLineBetweenPoints(current_vec, next_vec, scale);
     
     for (let t = 0; t < current_vec.angleTo(next_vec); t += 2*Math.PI/divs) {
       r = interpolateBetweenPoints(current_vec,next_vec,t);

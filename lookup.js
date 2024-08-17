@@ -1,7 +1,7 @@
 var spheres = Array(3).fill(null);
 var lines = Array(3).fill(null);
 var city_coords = Array(3).fill(null);
-var city_vecs = Array(3).fill(new THREE.Vector3());
+var city_vecs = Array(3).fill(null);
 
 var triTexture
 var mapTriangle;
@@ -68,7 +68,7 @@ function processData(csvData, city_names) {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     */
-    newCentralMeridian = drawSphericalTriangle(ctx, spheres, lines, city_vecs);
+    newCentralMeridian = drawSphericalTriangle(ctx, spheres, lines, city_vecs, 1);
     /*
     triTexture = new THREE.CanvasTexture(canvas);
     triTexture.wrapS = THREE.RepeatWrapping;
