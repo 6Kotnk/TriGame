@@ -100,38 +100,23 @@ function drawSphericalTriangle(ctx, spheres, lines, vecs, scale, color = "cyan")
     newCentralMeridian -= 180;
   }
 
-  vecs.forEach((vec, index) => {
-    scene.remove(spheres[index]); // Remove the old sphere
-    spheres[index] = createSphereAtPoint(vec, scale); // Create and assign the new sphere
-  });
-
-  let r = new THREE.Vector3();
-
   let { longitude: curr_lon, latitude: curr_lat } = toLatLon(vecs[0], newCentralMeridian);
   let next_lon = 0;
   let next_lat = 0;
 
-
-
-
   scene.remove(mapTriangle);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-
-
-
-  
   ctx.moveTo(curr_lon, curr_lat);
   ctx.beginPath();      // Start the path for the triangle
+
+  let r = new THREE.Vector3();
 
   for (let idx = 0; idx < vecs.length; idx++) {
 
     let current_vec = vecs[idx];
     let next_vec = vecs[(idx + 1) % vecs.length];
 
-    scene.remove(lines[idx]);
-    lines[idx] = createLineBetweenPoints(current_vec, next_vec, scale);
-    
     for (let t = 0; t < current_vec.angleTo(next_vec); t += 2*Math.PI/divs) {
       r = interpolateBetweenPoints(current_vec,next_vec,t);
       ({ longitude: next_lon, latitude: next_lat } = toLatLon(r, newCentralMeridian));
@@ -139,15 +124,12 @@ function drawSphericalTriangle(ctx, spheres, lines, vecs, scale, color = "cyan")
       curr_lon = next_lon;
       curr_lat = next_lat;
     }
+    
   }
 
   ctx.closePath();      // Close the path (draw line back to the first vertex)
-
   ctx.fillStyle = color; // Set the fill color
   ctx.fill();            // Fill the triangle
-
-
-
 
   triTexture = new THREE.CanvasTexture(canvas);
   triTexture.wrapS = THREE.RepeatWrapping;
@@ -162,11 +144,25 @@ function drawSphericalTriangle(ctx, spheres, lines, vecs, scale, color = "cyan")
   mapTriangle = new THREE.Mesh(sphereGeometry, triMaterial);
   scene.add(mapTriangle);
 
-
-
-
-
   return newCentralMeridian
+
+}
+
+
+function drawSphericalTriangleOutline(spheres, lines, vecs, scale) {
+
+  for (let idx = 0; idx < vecs.length; idx++) {
+
+    let current_vec = vecs[idx];
+    let next_vec = vecs[(idx + 1) % vecs.length];
+
+    scene.remove(lines[idx]);
+    scene.remove(spheres[idx]);
+    lines[idx] = createLineBetweenPoints(current_vec, next_vec, scale);
+    spheres[idx] = createSphereAtPoint(current_vec, scale); // Create and assign the new sphere
+
+  }
+
 }
 
 function interpolateBetweenPoints(point1, point2, t) {

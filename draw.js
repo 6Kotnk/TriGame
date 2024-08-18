@@ -71,7 +71,8 @@ function animate() {
 
     old_dist = new_dist;
 
-    newCentralMeridian = drawSphericalTriangle(ctx, spheres, lines, city_vecs, new_dist);
+    drawSphericalTriangleOutline(spheres, lines, city_vecs, new_dist);
+
   }
 
 

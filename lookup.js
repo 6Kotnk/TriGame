@@ -63,24 +63,9 @@ function processData(csvData, city_names) {
 
 
 //-------------------------------------------------------//
-    /*
-    scene.remove(mapTriangle);
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    */
-    newCentralMeridian = drawSphericalTriangle(ctx, spheres, lines, city_vecs, 1);
-    /*
-    triTexture = new THREE.CanvasTexture(canvas);
-    triTexture.wrapS = THREE.RepeatWrapping;
 
-    triTexture.offset.x = (-newCentralMeridian) / 360;
+    drawSphericalTriangleOutline(spheres, lines, city_vecs, new_dist);
+    newCentralMeridian = drawSphericalTriangleFill(ctx, city_vecs);
 
-    triMaterial = new THREE.MeshBasicMaterial(
-      { map: triTexture,     
-        transparent: true,
-        opacity: 0.5});
-
-    mapTriangle = new THREE.Mesh(sphereGeometry, triMaterial);
-    scene.add(mapTriangle);
-    */
 }
