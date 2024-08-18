@@ -85,7 +85,7 @@ function drawLine(ctx, curr_lon, curr_lat, next_lon, next_lat) {
 }
 
 
-function drawSphericalTriangle(ctx, spheres, lines, vecs, scale, color = "cyan") {
+function drawSphericalTriangleFill(ctx, vecs, color = "cyan") {
 
   let longitudes = [];
 

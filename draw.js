@@ -4,14 +4,13 @@ var old_dist = 4;
 const container = document.getElementById('container');
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color( 0xe0e0e0 );
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 // Create renderer
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 container.appendChild(renderer.domElement);
-renderer.setClearColor(0xffffff, 1); // Set background to white
+renderer.setClearColor(0xe0e0e0, 1); // Set background to white
 
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.maxDistance = 5;
