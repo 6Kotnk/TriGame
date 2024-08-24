@@ -1,7 +1,11 @@
 var new_dist = 4;
 var old_dist = 4;
 
+const target_val = (10 + Math.random() * 90).toFixed(2);
+document.getElementById('targetDisplay').textContent = `Target: ${target_val} million Km^2`;
+
 const container = document.getElementById('container');
+const outputDiv = document.getElementById("output");
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -63,7 +67,7 @@ function animate() {
 
 
   new_dist = controls.target.distanceTo( controls.object.position ) - 1;
-  tolerance = 0.1;
+  tolerance = 0.01;
 
   if ((Math.abs(new_dist - old_dist) > tolerance) &&
       city_vecs[0] != null ){

@@ -7,6 +7,8 @@ var triTexture
 var mapTriangle;
 var triMaterial
 
+let historyResults = [];
+
 function fetchAndProcessCSV() {
     url = 'https://raw.githubusercontent.com/6Kotnk/TriGame/main/city_names.csv';
 
@@ -47,13 +49,46 @@ function processData(csvData, city_names) {
         city_coords[i] = findCoordinates(city_names[i], cities);
     }
 
+    const areaResult = (sphericalExcess(city_coords) / 1e6).toFixed(2);
+ 
+    // Latest result object
+    const latestResult = {
+        cities: `${city_names[0]}, ${city_names[1]}, ${city_names[2]}`,
+        area: areaResult
+    };
 
-    const area_skm = sphericalExcess(city_coords);
-    const area_mil_skm = area_skm / 1e6;
-    const area_str = area_mil_skm.toFixed(2);
+    // Add the latest result to the historyResults array
+    historyResults.push(latestResult);
 
-    const output = `Area: ` + area_str + ` million Km^2`;
-    document.getElementById('output').innerHTML = output;
+    // Sort the history by proximity to the target value
+    historyResults.sort((a, b) => Math.abs(a.area - target_val) - Math.abs(b.area - target_val));
+
+    // Limit the history to the top 9 results (keeping 1 spot for the latest result)
+    if (historyResults.length > 9) {
+        historyResults = historyResults.slice(0, 9);
+    }
+
+    // Clear the output div
+    const outputDiv = document.getElementById("output");
+    outputDiv.innerHTML = '';
+
+    // Display the latest result with a clear demarcation
+    const latestDiv = document.createElement("div");
+    latestDiv.style.fontWeight = 'bold';
+    latestDiv.style.marginBottom = '10px';
+    latestDiv.textContent = `Newest Result: Cities: ${latestResult.cities} - Area: ${latestResult.area} million Km^2`;
+    outputDiv.appendChild(latestDiv);
+
+    // Demarcation between latest result and history
+    const demarcationLine = document.createElement("hr");
+    outputDiv.appendChild(demarcationLine);
+
+    // Display the sorted history
+    historyResults.forEach(result => {
+        const resultDiv = document.createElement("div");
+        resultDiv.textContent = `Cities: ${result.cities} - Area: ${result.area} million Km^2`;
+        outputDiv.appendChild(resultDiv);
+    });
 
 //-------------------------------------------------------//
     
