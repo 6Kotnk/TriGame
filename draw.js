@@ -31,7 +31,7 @@ canvas.height = 1800;
 
 const ctx = canvas.getContext('2d');
 
-const mapTexture = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/main/WorldMap.png');
+const mapTexture = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/main/WorldMap.jpg');
 
 // General parameters
 const radius = 1;
