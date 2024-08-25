@@ -4,15 +4,15 @@ var old_dist = 4;
 const target_val = (10 + Math.random() * 90).toFixed(2);
 document.getElementById('target').textContent = `Target: ${target_val} million Km^2`;
 
-const container = document.getElementById('3dContainer');
+const container = document.getElementById('rightPanel');
 const outputDiv = document.getElementById("output");
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
 
 // Create renderer
 const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setSize(container.clientWidth, container.clientHeight);
 container.appendChild(renderer.domElement);
 renderer.setClearColor(0xe0e0e0, 1); // Set background to white
 
@@ -82,7 +82,7 @@ animate();
 
 // Handle window resize
 window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.aspect = container.clientWidth / container.clientHeight;
   camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(container.clientWidth, container.clientHeight);
 });

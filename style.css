@@ -7,33 +7,25 @@ body, html {
   
   #container {
     display: flex;
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden;
+    height: 100vh; /* Full viewport height */
   }
   
   #leftPanel {
     width: 25%; /* Increased from 300px to 25% of viewport width */
-    min-width: 250px; /* Ensure it doesn't get too small on narrow screens */
+    /*min-width: 250px;*/ /* Ensure it doesn't get too small on narrow screens */
     padding: 20px;
-    overflow-y: auto;
     background-color: #f0f0f0;
   }
   
   #rightPanel {
-    flex: 1;
-    position: relative;
-    overflow: hidden; /* Prevent any potential overflow */
+    width: 75%; /* 80% of the width */
+    overflow: hidden; /* Hide overflow */
   }
   
-  #3dContainer {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
+  canvas {
+    display: block; /* Remove scrollbars */
   }
-  
+
   #cityInputs div {
     margin-bottom: 10px;
   }
@@ -76,3 +68,4 @@ body, html {
     top: -9999px;
     visibility: hidden;
   }
+
