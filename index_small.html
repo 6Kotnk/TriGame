@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TriGame</title>
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="container">
+    <div id="leftPanel">
+      <div id="cityInputs">
+        <div>City1: <input type="text" id="city1" value="Lima, PE"></div>
+        <div>City2: <input type="text" id="city2" value="Sydney, AU"></div>
+        <div>City3: <input type="text" id="city3" value="Manhattan, US"></div>
+        <button onclick="fetchAndProcessCSV()">Submit</button>
+      </div>
+      <div id="output"></div>
+    </div>
+    <div id="rightPanel">
+      <div id="target"></div>
+      <div id="3dContainer"></div>
+    </div>
+  </div>
+
+  <canvas id="MapCanvas" width="360" height="180"></canvas>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.122.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.122.0/examples/js/controls/OrbitControls.min.js"></script>
+  <script src="utils.js"></script>
+  <script src="lookup.js"></script>
+  <script src="draw.js"></script>
+
+  
+ </body>
+</html>

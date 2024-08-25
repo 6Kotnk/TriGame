@@ -28,6 +28,44 @@ function fetchAndProcessCSV() {
         });
 }
 
+function displayResults(latestResult, historyResults) {
+    const outputDiv = document.getElementById("output");
+    outputDiv.innerHTML = '';
+  
+    // Display the latest result
+    const latestDiv = document.createElement("div");
+    latestDiv.className = "resultItem newest";
+    latestDiv.innerHTML = `
+      <h3>Newest Result:</h3>
+      <p>${latestResult.cities[0]},</p>
+      <p>${latestResult.cities[1]},</p>
+      <p>${latestResult.cities[2]}</p>
+      <p class="area">Area: ${latestResult.area} million Km<sup>2</sup></p>
+    `;
+    outputDiv.appendChild(latestDiv);
+  
+    // Add a separator
+    const separator = document.createElement("hr");
+    outputDiv.appendChild(separator);
+  
+    // Display the history
+    const historyHeader = document.createElement("h3");
+    historyHeader.textContent = "History:";
+    outputDiv.appendChild(historyHeader);
+  
+    historyResults.forEach(result => {
+      const resultDiv = document.createElement("div");
+      resultDiv.className = "resultItem";
+      resultDiv.innerHTML = `
+        <p>${result.cities[0]},</p>
+        <p>${result.cities[1]},</p>
+        <p>${result.cities[2]}</p>
+        <p class="area">Area: ${result.area} million Km<sup>2</sup></p>
+      `;
+      outputDiv.appendChild(resultDiv);
+    });
+  }
+
 function processData(csvData, city_names) {
     const rows = csvData.split("\r\n");
 
@@ -53,12 +91,38 @@ function processData(csvData, city_names) {
  
     // Latest result object
     const latestResult = {
-        cities: `${city_names[0]}, ${city_names[1]}, ${city_names[2]}`,
+        cities: [
+          document.getElementById("city1").value,
+          document.getElementById("city2").value,
+          document.getElementById("city3").value
+        ],
         area: areaResult
-    };
+      };
 
-    // Add the latest result to the historyResults array
-    historyResults.push(latestResult);
+    // Sort for easy equality checking
+    latestResult.cities = latestResult.cities.sort();
+    
+    let resultNew = false;
+    // Automatically add to history if no history
+    if(historyResults.length == 0){
+        resultNew = true;
+    }
+    else
+    {
+        resultNew = !historyResults.some(function(historyResult) {
+            let equal = true;
+                for (let idx = 0; idx < latestResult.cities.length; idx++) {
+                    equal &= historyResult.cities[idx] == latestResult.cities[idx];  
+                }
+            return equal
+            }
+        );
+    }
+
+    if(resultNew){
+        historyResults.push(latestResult);
+    }
+    
 
     // Sort the history by proximity to the target value
     historyResults.sort((a, b) => Math.abs(a.area - target_val) - Math.abs(b.area - target_val));
@@ -68,37 +132,11 @@ function processData(csvData, city_names) {
         historyResults = historyResults.slice(0, 9);
     }
 
-    // Clear the output div
-    const outputDiv = document.getElementById("output");
-    outputDiv.innerHTML = '';
-
-    // Display the latest result with a clear demarcation
-    const latestDiv = document.createElement("div");
-    latestDiv.style.fontWeight = 'bold';
-    latestDiv.style.marginBottom = '10px';
-    latestDiv.textContent = `Newest Result: Cities: ${latestResult.cities} - Area: ${latestResult.area} million Km^2`;
-    outputDiv.appendChild(latestDiv);
-
-    // Demarcation between latest result and history
-    const demarcationLine = document.createElement("hr");
-    outputDiv.appendChild(demarcationLine);
-
-    // Display the sorted history
-    historyResults.forEach(result => {
-        const resultDiv = document.createElement("div");
-        resultDiv.textContent = `Cities: ${result.cities} - Area: ${result.area} million Km^2`;
-        outputDiv.appendChild(resultDiv);
-    });
-
-//-------------------------------------------------------//
+    displayResults(latestResult, historyResults)
     
     for (let i = 0; i < city_coords.length; i++) {
         city_vecs[i] = coordsToVec(city_coords[i]);
     }
-
-
-//-------------------------------------------------------//
-
 
     drawSphericalTriangleOutline(spheres, lines, city_vecs, new_dist);
     newCentralMeridian = drawSphericalTriangleFill(ctx, city_vecs);
