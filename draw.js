@@ -1,8 +1,8 @@
 var new_dist = 4;
 var old_dist = 4;
 
-const target_val = (10 + Math.random() * 90).toFixed(2);
-document.getElementById('target').textContent = `Target: ${target_val} million Km^2`;
+const target_val = (10 + Math.random() * 90).toFixed(0);
+document.getElementById('target').textContent = `Target: ${target_val} million km²`;
 
 const container = document.getElementById('rightPanel');
 const outputDiv = document.getElementById("output");
@@ -14,7 +14,7 @@ const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(container.clientWidth, container.clientHeight);
 container.appendChild(renderer.domElement);
-renderer.setClearColor(0xe0e0e0, 1); // Set background to white
+renderer.setClearColor(0x000000, 1); // Set background to white
 
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
@@ -35,43 +35,63 @@ const mapTexture = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/
 
 // General parameters
 const radius = 1;
-const detail = 10;
-const delta = 0.01;
 
 // Create the sphere geometry
 const sphereGeometry = new THREE.SphereGeometry(radius, 160, 320);
-const wireframeGeometry = new THREE.IcosahedronGeometry(radius + delta, detail);
 const canvasGeometry = new THREE.SphereGeometry(radius, 160, 320);
-const wireframeEdgeGeometry = new THREE.WireframeGeometry(wireframeGeometry);
 
 // Create a material for the sphere (filled, optional color)
-const mapMaterial = new THREE.MeshBasicMaterial({
+const mapMaterial = new THREE.MeshPhongMaterial({
   map: mapTexture,
-  transparent: true,
-  opacity: 1.0
+  shininess: 2,  // Controls the shininess of the material
+  specular: 0x555555,  // Specular highlight color
 });
-
-const blackMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
 
 // Create a mesh object from the geometry and material
 const sphere = new THREE.Mesh(sphereGeometry, mapMaterial);
-const wireframe = new THREE.LineSegments(wireframeEdgeGeometry, blackMaterial);
 
-scene.add(sphere);
+// Create a group to hold the sphere and the light
+const earthGroup = new THREE.Group();
+
+// Add the sphere to the group
+earthGroup.add(sphere);
+
+// Add lighting to the scene
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+directionalLight.position.set(5, 3, 5).normalize(); // Position the light relative to the sphere
+earthGroup.add(directionalLight);  // Add the light to the group
+
+// Add an ambient light to the scene
+const ambientLight = new THREE.AmbientLight(0x202020); // Soft white light
+scene.add(ambientLight);
+
+// Add the entire group to the scene
+scene.add(earthGroup);
 
 camera.position.z = 5; // Move the camera back for better view
+// Create an offset vector
+const lightOffset = new THREE.Vector3(2, 2, -2);  // Adjust this vector as needed
+
+
+directionalLight.position.copy(camera.position + lightOffset);  // Set the light's initial position
+
 
 // Animation loop
 function animate() {
   requestAnimationFrame(animate);
+
+  // Update light position to follow the camera with the offset
+  const lightPosition = camera.position.clone().add(lightOffset);
+  directionalLight.position.copy(lightPosition);
+  directionalLight.target.position.copy(controls.object.position);  // Ensure the light targets the sphere
+
   controls.update();
   renderer.render(scene, camera);
 
   new_dist = controls.target.distanceTo(controls.object.position) - 1;
   tolerance = 0.01;
 
-  if ((Math.abs(new_dist - old_dist) > tolerance) &&
-      city_vecs[0] != null) {
+  if ((Math.abs(new_dist - old_dist) > tolerance) && city_vecs[0] != null) {
     old_dist = new_dist;
     drawSphericalTriangleOutline(spheres, lines, city_vecs, new_dist);
   }

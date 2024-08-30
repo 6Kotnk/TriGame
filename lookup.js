@@ -40,7 +40,7 @@ function displayResults(latestResult, historyResults) {
       <p>${latestResult.cities[0]},</p>
       <p>${latestResult.cities[1]},</p>
       <p>${latestResult.cities[2]}</p>
-      <p class="area">Area: ${latestResult.area} million Km<sup>2</sup></p>
+      <p class="area">Area: ${latestResult.area} million km<sup>2</sup></p>
     `;
     outputDiv.appendChild(latestDiv);
   
@@ -60,7 +60,7 @@ function displayResults(latestResult, historyResults) {
         <p>${result.cities[0]},</p>
         <p>${result.cities[1]},</p>
         <p>${result.cities[2]}</p>
-        <p class="area">Area: ${result.area} million Km<sup>2</sup></p>
+        <p class="area">Area: ${result.area} million km<sup>2</sup></p>
       `;
       outputDiv.appendChild(resultDiv);
     });

@@ -11,14 +11,14 @@ body, html {
   }
   
   #leftPanel {
-    width: 25%; /* Increased from 300px to 25% of viewport width */
+    width: 15%; /* Increased from 300px to 25% of viewport width */
     /*min-width: 250px;*/ /* Ensure it doesn't get too small on narrow screens */
     padding: 20px;
     background-color: #f0f0f0;
   }
   
   #rightPanel {
-    width: 75%; /* 80% of the width */
+    width: 85%; /* 80% of the width */
     overflow: hidden; /* Hide overflow */
   }
   
