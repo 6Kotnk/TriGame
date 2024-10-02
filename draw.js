@@ -50,40 +50,25 @@ const mapMaterial = new THREE.MeshPhongMaterial({
 // Create a mesh object from the geometry and material
 const sphere = new THREE.Mesh(sphereGeometry, mapMaterial);
 
-// Create a group to hold the sphere and the light
-const earthGroup = new THREE.Group();
-
-// Add the sphere to the group
-earthGroup.add(sphere);
-
 // Add lighting to the scene
 const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-directionalLight.position.set(5, 3, 5).normalize(); // Position the light relative to the sphere
-earthGroup.add(directionalLight);  // Add the light to the group
+directionalLight.position.set(5, 5, 2); // Position the light relative to the sphere
+
+camera.add(directionalLight);
+scene.add( camera );
 
 // Add an ambient light to the scene
 const ambientLight = new THREE.AmbientLight(0x202020); // Soft white light
 scene.add(ambientLight);
 
 // Add the entire group to the scene
-scene.add(earthGroup);
+scene.add(sphere);
 
 camera.position.z = 5; // Move the camera back for better view
-// Create an offset vector
-const lightOffset = new THREE.Vector3(2, 2, -2);  // Adjust this vector as needed
-
-
-directionalLight.position.copy(camera.position + lightOffset);  // Set the light's initial position
-
 
 // Animation loop
 function animate() {
   requestAnimationFrame(animate);
-
-  // Update light position to follow the camera with the offset
-  const lightPosition = camera.position.clone().add(lightOffset);
-  directionalLight.position.copy(lightPosition);
-  directionalLight.target.position.copy(controls.object.position);  // Ensure the light targets the sphere
 
   controls.update();
   renderer.render(scene, camera);
