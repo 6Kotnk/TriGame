@@ -1,3 +1,5 @@
+const target_tol = 0.1; //10%
+
 var spheres = Array(3).fill(null);
 var lines = Array(3).fill(null);
 var city_coords = Array(3).fill(null);
@@ -139,6 +141,14 @@ function processData(csvData, city_names) {
     }
 
     drawSphericalTriangleOutline(spheres, lines, city_vecs, new_dist);
-    newCentralMeridian = drawSphericalTriangleFill(ctx, city_vecs);
+
+    color = "cyan";
+
+    if( (areaResult < (target_val * (1 + target_tol))) && (areaResult > (target_val * (1 - target_tol))) )
+    {
+        color = "gold"
+    }
+
+    newCentralMeridian = drawSphericalTriangleFill(ctx, city_vecs, color);
 
 }
