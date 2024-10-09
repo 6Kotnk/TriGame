@@ -142,13 +142,31 @@ function processData(csvData, city_names) {
 
     drawSphericalTriangleOutline(spheres, lines, city_vecs, new_dist);
 
-    color = "cyan";
-
     if( (areaResult < (target_val * (1 + target_tol))) && (areaResult > (target_val * (1 - target_tol))) )
     {
-        color = "gold"
+        newCentralMeridian = drawSphericalTriangleFill(ctx, city_vecs, "gold");
+        document.getElementById('winPanel').style.display = 'block';
+
+        var duration = 5 * 1000; // Duration in milliseconds
+        var animationEnd = Date.now() + duration;
+        var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1000 };
+    
+        var interval = setInterval(function() {
+            var timeLeft = animationEnd - Date.now();
+    
+            if (timeLeft <= 0) {
+                return clearInterval(interval);
+            }
+    
+            var particleCount = 100 * (timeLeft / duration);
+            // Since particles fall down, start a bit higher than random
+            confetti(Object.assign({}, defaults, { particleCount, origin: { x: Math.random(), y: Math.random() - 0.2 } }));
+        }, 100);
+
+    }else{
+        newCentralMeridian = drawSphericalTriangleFill(ctx, city_vecs);
     }
 
-    newCentralMeridian = drawSphericalTriangleFill(ctx, city_vecs, color);
+    
 
 }

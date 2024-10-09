@@ -1,7 +1,8 @@
 var new_dist = 4;
 var old_dist = 4;
 
-const target_val = (10 + Math.random() * 90).toFixed(0);
+//const target_val = (10 + Math.random() * 90).toFixed(0);
+const target_val = 72;
 document.getElementById('target').textContent = `Target: ${target_val} million km²`;
 
 const container = document.getElementById('rightPanel');
