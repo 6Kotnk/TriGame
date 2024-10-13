@@ -11,6 +11,8 @@ var triMaterial
 
 let historyResults = [];
 
+var winState = 0;
+
 function fetchAndProcessCSV() {
     url = 'https://raw.githubusercontent.com/6Kotnk/TriGame/main/city_names.csv';
 
@@ -142,9 +144,20 @@ function processData(csvData, city_names) {
 
     drawSphericalTriangleOutline(spheres, lines, city_vecs, new_dist);
 
-    if( (areaResult < (target_val * (1 + target_tol))) && (areaResult > (target_val * (1 - target_tol))) )
+    if((areaResult == target_val) && winState < 2)
     {
         newCentralMeridian = drawSphericalTriangleFill(ctx, city_vecs, "gold");
+        epicWinGame();
+
+    }else if((areaResult < (target_val * (1 + target_tol))) && (areaResult > (target_val * (1 - target_tol)))  && winState < 1){
+        newCentralMeridian = drawSphericalTriangleFill(ctx, city_vecs, "gold");
+        winGame();
+    }else{
+        newCentralMeridian = drawSphericalTriangleFill(ctx, city_vecs);
+    }
+
+    function winGame() {
+        winState = 1;
         document.getElementById('winPanel').style.display = 'block';
 
         var duration = 5 * 1000; // Duration in milliseconds
@@ -162,11 +175,46 @@ function processData(csvData, city_names) {
             // Since particles fall down, start a bit higher than random
             confetti(Object.assign({}, defaults, { particleCount, origin: { x: Math.random(), y: Math.random() - 0.2 } }));
         }, 100);
-
-    }else{
-        newCentralMeridian = drawSphericalTriangleFill(ctx, city_vecs);
     }
 
-    
+    function epicWinGame() {
+        winState = 2;
+        document.getElementById('epicWinPanel').style.display = 'block';
 
+        var duration = 5 * 1000; // Duration in milliseconds
+        var animationEnd = Date.now() + duration;
+        var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1000 };
+    
+        var interval = setInterval(function() {
+            var timeLeft = animationEnd - Date.now();
+    
+            if (timeLeft <= 0) {
+                return clearInterval(interval);
+            }
+    
+            var particleCount = 500 * (timeLeft / duration);
+            // Since particles fall down, start a bit higher than random
+            confetti(Object.assign({}, defaults, { particleCount, origin: { x: Math.random(), y: Math.random() - 0.2 } }));
+        }, 10);
+    }
+
+
+
+}
+
+function resetGame() {
+    winState = 0;
+    document.getElementById('winPanel').style.display = 'none';
+    document.getElementById('epicWinPanel').style.display = 'none';
+    target_val = (10 + Math.random() * 90).toFixed(0);
+    document.getElementById('target').textContent = `Target: ${target_val} million km²`;
+    historyResults = [];
+    const outputDiv = document.getElementById("output");
+    outputDiv.innerHTML = '';
+
+}
+
+
+function continueGame() {
+    document.getElementById('winPanel').style.display = 'none';
 }
