@@ -212,6 +212,12 @@ function resetGame() {
     const outputDiv = document.getElementById("output");
     outputDiv.innerHTML = '';
 
+    for (let idx = 0; idx < lines.length; idx++) {
+        scene.remove(lines[idx]);
+        scene.remove(spheres[idx]);
+    }
+    scene.remove(mapTriangle);
+
 }
 
 
