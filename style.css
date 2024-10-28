@@ -19,6 +19,7 @@ body, html {
   }
   
   #rightPanel {
+    position: relative;
     width: 85%; /* 80% of the width */
     overflow: hidden; /* Hide overflow */
   }
@@ -91,6 +92,17 @@ body, html {
     z-index: 1000;
   }
   
+  
+  #tourbutton {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 5px 10px;
+    border-radius: 5px;
+    z-index: 1000;
+  }
+
   #MapCanvas {
     position: absolute;
     left: -9999px;
