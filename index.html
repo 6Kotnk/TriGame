@@ -15,17 +15,18 @@
         <div>City1: <input type="text" list="City_names" id="city1" value="Lima, PE"></div>
         <div>City2: <input type="text" list="City_names" id="city2" value="Sydney, AU"></div>
         <div>City3: <input type="text" list="City_names" id="city3" value="Nutley, US"></div>
-        <button onclick="fetchAndProcessCSV()" data-tg-tour="My first tour" data-tg-order="0">Submit</button>
+        <button onclick="fetchAndProcessCSV()">Submit</button>
       </div>
       <div id="output"></div>
     </div>
     <div id="rightPanel">
-      <div id="target" data-tg-tour="My first tour" data-tg-order="1"></div>
+      <div id="target"></div>
       <button id="tourbutton">Tutorial</button>
 
 
       <div id="winPanel">
         <h2>Congratulations, You Won!</h2>
+        Attempt counter: 
         <button onclick="resetGame()">Restart</button>
         <button onclick="continueGame()">Continue</button>
       </div>
