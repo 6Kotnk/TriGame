@@ -14,7 +14,7 @@
       <div id="cityInputs">
         <div>City1: <input type="text" list="City_names" id="city1" value="Lima, PE"></div>
         <div>City2: <input type="text" list="City_names" id="city2" value="Sydney, AU"></div>
-        <div>City3: <input type="text" list="City_names" id="city3" value="Nutley, US"></div>
+        <div>City3: <input type="text" list="City_names" id="city3" value="Ljubljana, SI"></div>
         <button onclick="fetchAndProcessCSV()">Submit</button>
       </div>
       <div id="output"></div>
@@ -25,16 +25,27 @@
 
 
       <div id="winPanel">
-        <h2>Congratulations, You Won!</h2>
-        Attempt counter: 
+        <span id="winLabel">
+          <h2>Congratulations, You Won!</h2>
+          Attempt counter: 
+        </span>
+        <span id="winValue">0</span>
+        <br>
+        <br>
         <button onclick="resetGame()">Restart</button>
         <button onclick="continueGame()">Continue</button>
       </div>
 
       <div id="epicWinPanel">
-        <h2>
-          <span style="color:#FF0000">E</span><span style="color:#FF5A00">p</span><span style="color:#FFB400">i</span><span style="color:#F0FF00">c</span> <span style="color:#96FF00">w</span><span style="color:#3CFF00">i</span><span style="color:#00FF1E">n</span> <span style="color:#00FF78">u</span><span style="color:#00FFD2">n</span><span style="color:#00D2FF">c</span><span style="color:#0078FF">l</span><span style="color:#001EFF">e</span> <span style="color:#3C00FF">D</span><span style="color:#9600FF">a</span><span style="color:#F000FF">v</span><span style="color:#FF00B4">e</span><span style="color:#FF005A">!</span>
-        </h2>
+        <span id="epicWinLabel"></span>
+          <h2>
+            <span style="color:#FF0000">E</span><span style="color:#FF5A00">p</span><span style="color:#FFB400">i</span><span style="color:#F0FF00">c</span> <span style="color:#96FF00">w</span><span style="color:#3CFF00">i</span><span style="color:#00FF1E">n</span> <span style="color:#00FF78">u</span><span style="color:#00FFD2">n</span><span style="color:#00D2FF">c</span><span style="color:#0078FF">l</span><span style="color:#001EFF">e</span> <span style="color:#3C00FF">D</span><span style="color:#9600FF">a</span><span style="color:#F000FF">v</span><span style="color:#FF00B4">e</span><span style="color:#FF005A">!</span>
+          </h2>
+          Attempt counter: 
+        </span>
+        <span id="epicWinValue">0</span>
+        <br>
+        <br>
         <button onclick="resetGame()">Restart</button>
       </div>
 

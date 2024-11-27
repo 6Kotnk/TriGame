@@ -149,7 +149,7 @@ function drawSphericalTriangleFill(ctx, vecs, color = "cyan") {
 }
 
 
-function drawSphericalTriangleOutline(spheres, lines, vecs, scale) {
+function drawSphericalTriangleOutline(spheres, lines, vecs, scale, lineColor = "blue", pointColor = "red") {
 
   for (let idx = 0; idx < vecs.length; idx++) {
 
@@ -158,12 +158,41 @@ function drawSphericalTriangleOutline(spheres, lines, vecs, scale) {
 
     scene.remove(lines[idx]);
     scene.remove(spheres[idx]);
-    lines[idx] = createLineBetweenPoints(current_vec, next_vec, scale);
-    spheres[idx] = createSphereAtPoint(current_vec, scale); // Create and assign the new sphere
+    lines[idx] = createLineBetweenPoints(current_vec, next_vec, scale, undefined, lineColor);
+    spheres[idx] = createSphereAtPoint(current_vec, scale, undefined, pointColor); // Create and assign the new sphere
 
   }
 
 }
+
+function drawSphericalTriangle(ctx, spheres, lines, vecs, scale, epicness) {
+
+  fillColor = ""
+  lineColor = ""
+  pointColor = ""
+
+
+  switch (epicness) {
+    case 1:
+      fillColor = "purple";
+      lineColor = "cyan"
+      pointColor = "red"
+      break;
+    case 2:
+      fillColor = "gold";
+      lineColor = "purple"
+      pointColor = "orange"
+      break;
+    default:
+      fillColor = "cyan";
+      lineColor = "blue"
+      pointColor = "red"
+  }
+
+  drawSphericalTriangleOutline(spheres, lines, vecs, scale, lineColor, pointColor);
+  newCentralMeridian = drawSphericalTriangleFill(ctx, vecs, fillColor);
+}
+
 
 function interpolateBetweenPoints(point1, point2, t) {
   

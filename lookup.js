@@ -1,5 +1,7 @@
 const target_tol = 0.1; //10%
 
+var guessCounter = 0;
+
 var spheres = Array(3).fill(null);
 var lines = Array(3).fill(null);
 var city_coords = Array(3).fill(null);
@@ -38,19 +40,36 @@ function displayResults(latestResult, historyResults) {
   
     // Display the latest result
     const latestDiv = document.createElement("div");
-    latestDiv.className = "resultItem newest";
+    latestDiv.className = "resultItem";
     latestDiv.innerHTML = `
-      <h3>Newest Result:</h3>
       <p>${latestResult.cities[0]},</p>
       <p>${latestResult.cities[1]},</p>
       <p>${latestResult.cities[2]}</p>
       <p class="area">Area: ${latestResult.area} million km<sup>2</sup></p>
     `;
-    outputDiv.appendChild(latestDiv);
-  
+
     // Add a separator
-    const separator = document.createElement("hr");
-    outputDiv.appendChild(separator);
+    const separator1 = document.createElement("hr");
+    const separator2 = document.createElement("hr");
+
+    const attemptCounter = document.createElement("div");
+    attemptCounter.className = "resultItem";
+    attemptCounter.innerHTML = `
+    Guess counter: 
+    ${guessCounter}
+    `;
+
+    outputDiv.appendChild(attemptCounter);
+
+    outputDiv.appendChild(separator1);
+
+    const latestHeader = document.createElement("h3");
+    latestHeader.textContent = "Newest Result:";
+    outputDiv.appendChild(latestHeader);
+
+    outputDiv.appendChild(latestDiv);
+
+    outputDiv.appendChild(separator2);
   
     // Display the history
     const historyHeader = document.createElement("h3");
@@ -124,6 +143,7 @@ function processData(csvData, city_names) {
     }
 
     if(resultNew){
+        guessCounter += 1;
         historyResults.push(latestResult);
     }
     
@@ -136,28 +156,34 @@ function processData(csvData, city_names) {
         historyResults = historyResults.slice(0, 9);
     }
 
+
     displayResults(latestResult, historyResults)
     
     for (let i = 0; i < city_coords.length; i++) {
         city_vecs[i] = coordsToVec(city_coords[i]);
     }
 
-    drawSphericalTriangleOutline(spheres, lines, city_vecs, new_dist);
-
     if((areaResult == target_val) && winState < 2)
     {
-        newCentralMeridian = drawSphericalTriangleFill(ctx, city_vecs, "gold");
-        epicWinGame();
+        drawSphericalTriangle(ctx, spheres, lines, city_vecs, new_dist, 2);
+        if(winState < 2)
+        {
+            epicWinGame();
+        }
 
-    }else if((areaResult < (target_val * (1 + target_tol))) && (areaResult > (target_val * (1 - target_tol)))  && winState < 1){
-        newCentralMeridian = drawSphericalTriangleFill(ctx, city_vecs, "gold");
-        winGame();
+    }else if((areaResult < (target_val * (1 + target_tol))) && (areaResult > (target_val * (1 - target_tol)))){
+        drawSphericalTriangle(ctx, spheres, lines, city_vecs, new_dist, 1);
+        if(winState < 1)
+        {
+            winGame();
+        }
     }else{
-        newCentralMeridian = drawSphericalTriangleFill(ctx, city_vecs);
+        drawSphericalTriangle(ctx, spheres, lines, city_vecs, new_dist, 0);
     }
 
     function winGame() {
         winState = 1;
+        document.getElementById('winValue').textContent = guessCounter;
         document.getElementById('winPanel').style.display = 'block';
 
         var duration = 5 * 1000; // Duration in milliseconds
@@ -179,6 +205,8 @@ function processData(csvData, city_names) {
 
     function epicWinGame() {
         winState = 2;
+        continueGame();
+        document.getElementById('epicWinValue').textContent = guessCounter;
         document.getElementById('epicWinPanel').style.display = 'block';
 
         var duration = 5 * 1000; // Duration in milliseconds
@@ -203,6 +231,7 @@ function processData(csvData, city_names) {
 }
 
 function resetGame() {
+    guessCounter = 0;
     winState = 0;
     document.getElementById('winPanel').style.display = 'none';
     document.getElementById('epicWinPanel').style.display = 'none';

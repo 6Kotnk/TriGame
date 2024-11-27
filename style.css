@@ -11,7 +11,7 @@ body, html {
   }
   
   #leftPanel {
-    width: 15%; /* Increased from 300px to 25% of viewport width */
+    width: 16%; /* Increased from 300px to 25% of viewport width */
     /*min-width: 250px;*/ /* Ensure it doesn't get too small on narrow screens */
     padding: 20px;
     background-color: #f0f0f0;
@@ -20,7 +20,7 @@ body, html {
   
   #rightPanel {
     position: relative;
-    width: 85%; /* 80% of the width */
+    width: 84%; /* 80% of the width */
     overflow: hidden; /* Hide overflow */
   }
   
@@ -33,7 +33,7 @@ body, html {
     position: absolute;
     inset: 0px;
     width: 20rem;
-    height: 6rem;
+    height: 8rem;
     max-width: 100vw;
     max-height: 100dvh;
     margin: auto;
@@ -47,7 +47,7 @@ body, html {
     position: absolute;
     inset: 0px;
     width: 20rem;
-    height: 6rem;
+    height: 8rem;
     max-width: 100vw;
     max-height: 100dvh;
     margin: auto;
