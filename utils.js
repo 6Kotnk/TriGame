@@ -165,13 +165,7 @@ function drawSphericalTriangleOutline(spheres, lines, vecs, scale, lineColor = "
 
 }
 
-function drawSphericalTriangle(ctx, spheres, lines, vecs, scale, epicness) {
-
-  fillColor = ""
-  lineColor = ""
-  pointColor = ""
-
-
+function setTriangleColor(epicness) {
   switch (epicness) {
     case 1:
       fillColor = "purple";
@@ -188,7 +182,9 @@ function drawSphericalTriangle(ctx, spheres, lines, vecs, scale, epicness) {
       lineColor = "blue"
       pointColor = "red"
   }
+}
 
+function drawSphericalTriangle(ctx, spheres, lines, vecs, scale) {
   drawSphericalTriangleOutline(spheres, lines, vecs, scale, lineColor, pointColor);
   newCentralMeridian = drawSphericalTriangleFill(ctx, vecs, fillColor);
 }

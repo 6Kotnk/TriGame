@@ -79,7 +79,7 @@ function animate() {
 
   if ((Math.abs(new_dist - old_dist) > tolerance) && city_vecs[0] != null) {
     old_dist = new_dist;
-    drawSphericalTriangleOutline(spheres, lines, city_vecs, new_dist);
+    drawSphericalTriangleOutline(spheres, lines, city_vecs, new_dist, lineColor, pointColor);
   }
 }
 

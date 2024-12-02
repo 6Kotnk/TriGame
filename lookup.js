@@ -7,11 +7,16 @@ var lines = Array(3).fill(null);
 var city_coords = Array(3).fill(null);
 var city_vecs = Array(3).fill(null);
 
-var triTexture
+var triTexture;
 var mapTriangle;
-var triMaterial
+var triMaterial;
 
 let historyResults = [];
+
+var fillColor = "cyan";
+var lineColor = "blue";
+var pointColor = "red";
+
 
 var winState = 0;
 
@@ -163,23 +168,22 @@ function processData(csvData, city_names) {
         city_vecs[i] = coordsToVec(city_coords[i]);
     }
 
+
     if((areaResult == target_val) && winState < 2)
     {
-        drawSphericalTriangle(ctx, spheres, lines, city_vecs, new_dist, 2);
         if(winState < 2)
         {
             epicWinGame();
         }
-
     }else if((areaResult < (target_val * (1 + target_tol))) && (areaResult > (target_val * (1 - target_tol)))){
-        drawSphericalTriangle(ctx, spheres, lines, city_vecs, new_dist, 1);
         if(winState < 1)
         {
             winGame();
         }
-    }else{
-        drawSphericalTriangle(ctx, spheres, lines, city_vecs, new_dist, 0);
     }
+
+    setTriangleColor(winState);
+    drawSphericalTriangle(ctx, spheres, lines, city_vecs, new_dist);
 
     function winGame() {
         winState = 1;
