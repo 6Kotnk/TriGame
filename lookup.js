@@ -235,8 +235,10 @@ function processData(csvData, city_names) {
 }
 
 function resetGame() {
+
     guessCounter = 0;
     winState = 0;
+
     document.getElementById('winPanel').style.display = 'none';
     document.getElementById('epicWinPanel').style.display = 'none';
     target_val = (10 + Math.random() * 90).toFixed(0);
@@ -249,8 +251,13 @@ function resetGame() {
         scene.remove(lines[idx]);
         scene.remove(spheres[idx]);
     }
+
     scene.remove(mapTriangle);
 
+    spheres = Array(3).fill(null);
+    lines = Array(3).fill(null);
+    city_coords = Array(3).fill(null);
+    city_vecs = Array(3).fill(null);
 }
 
 
