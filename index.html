@@ -15,13 +15,13 @@
         <div>City1: <input type="text" list="City_names" id="city1" value="Lima, PE"></div>
         <div>City2: <input type="text" list="City_names" id="city2" value="Sydney, AU"></div>
         <div>City3: <input type="text" list="City_names" id="city3" value="Ljubljana, SI"></div>
-        <button onclick="fetchAndProcessCSV()">Submit</button>
+        <button onclick="fetchAndProcessCSV()" id="submitButton">Submit</button>
       </div>
       <div id="output"></div>
     </div>
     <div id="rightPanel">
       <div id="target"></div>
-      <button id="tourbutton">Tutorial</button>
+      <button id="tourButton">Tutorial</button>
 
 
       <div id="winPanel">
@@ -58,7 +58,8 @@
   <script src="https://cdn.jsdelivr.net/npm/three@0.122.0/examples/js/controls/OrbitControls.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-  <script src="https://unpkg.com/@sjmc11/tourguidejs/dist/tour.js"></script>
+
+  <script src="https://unpkg.com/@sjmc11/tourguidejs/dist/tour.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <link rel="stylesheet" href="https://unpkg.com/@sjmc11/tourguidejs/dist/css/tour.min.css">
 
   <script src="utils.js"></script>

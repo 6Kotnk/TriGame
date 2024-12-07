@@ -1,14 +1,40 @@
 const steps = [{
-  title: "Welcome to Our Tour!",
-  content: "We are excited to show you the key features of our website. Click 'Next' to start the tour.",
+  title: "Welcome to the tutorial",
+  content: "Here is how to play the game",
   order: 0,
-  // No target for this step, as it's a title screen
+}, {
+  title: "The game",
+  content: "The objective of the game is to create a spherical triangle, between 3 cities.\n" + 
+           "The area of the triangle should be within 10% of the target",
+  order: 1,
 }, {
   title: "Target",
-  content: "This is your target area",
+  content: "This is your target area." + "The area of your triangle should be within 10% of this target",
   target: "#target",
-  order: 1,
-}, 
+  order: 2,
+}, {
+  title: "City inputs",
+  content: "Put 3 cities in here and see the area of the triangle they form.",
+  target: "#cityInputs",
+  propagateEvents: "true",
+  order: 3,
+}, {
+  title: "Submit button",
+  content: "Press this button to submit the triplet.",
+  target: "#submitButton",
+  propagateEvents: "true",
+  order: 4,
+}, {
+  title: "Dashboard",
+  content: "Here you can see how many guesses you have used, and their results.",
+  target: "#output",
+  order: 5,
+}, {
+  title: "The goal",
+  content: "Continue submiting guesses until you hit the target.\n" + 
+           "Good luck",
+  order: 6,
+}
 ];
 
 const tg = new tourguide.TourGuideClient({
@@ -19,5 +45,5 @@ function startTour() {
 	tg.start()
 }
 // Attach the touruide start evene to the button press
-var tourbutton = document.getElementById("tourbutton");
+var tourbutton = document.getElementById("tourButton");
 tourbutton.addEventListener("click", startTour);
