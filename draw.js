@@ -1,12 +1,6 @@
-var new_dist = 4;
-var old_dist = 4;
 
-//var target_val = (10 + Math.random() * 90).toFixed(0);
-var target_val = 73;
-document.getElementById('target').textContent = `Target: ${target_val} million km²`;
-
-const container = document.getElementById('rightPanel');
-const outputDiv = document.getElementById("output");
+/*
+const container = document.getElementById('container');
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
@@ -15,7 +9,10 @@ const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(container.clientWidth, container.clientHeight);
 container.appendChild(renderer.domElement);
-renderer.setClearColor(0x000000, 1); // Set background to white
+renderer.setClearColor(0x000000, 1); // Set background to black
+
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
@@ -23,64 +20,85 @@ controls.dampingFactor = 0.05;
 controls.screenSpacePanning = false;
 controls.minDistance = 1.15;
 controls.maxDistance = 4;
-//controls.maxPolarAngle = Math.PI;
+
+//https://github.com/franky-adl/threejs-earth/blob/main/src/assets/Albedo.jpg
+//https://raw.githubusercontent.com/6Kotnk/TriGame/main/WorldMap.jpg
+
 
 const textureLoader = new THREE.TextureLoader();
-const canvas = document.getElementById('MapCanvas');
-canvas.width = 3600;
-canvas.height = 1800;
 
-const ctx = canvas.getContext('2d');
+const albedoMap = textureLoader.load('https://raw.githubusercontent.com/franky-adl/threejs-earth/main/src/assets/Albedo.jpg');
+const bumpMap = textureLoader.load('https://raw.githubusercontent.com/franky-adl/threejs-earth/main/src/assets/Bump.jpg');
 
-const mapTexture = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/main/WorldMap.jpg');
+const cloudsMap = textureLoader.load('https://raw.githubusercontent.com/franky-adl/threejs-earth/main/src/assets/Clouds.png');
+
 
 // General parameters
 const radius = 1;
+const cloudHeight = 0.005;
 
 // Create the sphere geometry
-const sphereGeometry = new THREE.SphereGeometry(radius, 160, 320);
-const canvasGeometry = new THREE.SphereGeometry(radius, 160, 320);
+const earthGeometry = new THREE.SphereGeometry(radius, 160, 320);
+const cloudsGeometry = new THREE.SphereGeometry(radius + cloudHeight, 160, 320);
 
 // Create a material for the sphere (filled, optional color)
-const mapMaterial = new THREE.MeshPhongMaterial({
-  map: mapTexture,
-  shininess: 2,  // Controls the shininess of the material
-  specular: 0x555555,  // Specular highlight color
+const earthMaterial = new THREE.MeshStandardMaterial({
+  map: albedoMap,
+  bumpMap: bumpMap,
+  bumpScale: 0.03,
+  //shininess: 2,  // Controls the shininess of the material
+  //specular: 0x555555,  // Specular highlight color
+});
+
+const cloudsMaterial = new THREE.MeshStandardMaterial({
+  map: cloudsMap,
+  alphaMap: cloudsMap,
+  alphaTest: 0.5,
+  transparent: true
 });
 
 // Create a mesh object from the geometry and material
-const sphere = new THREE.Mesh(sphereGeometry, mapMaterial);
+const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+const clouds = new THREE.Mesh(cloudsGeometry, cloudsMaterial);
 
 // Add lighting to the scene
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+const directionalLight = new THREE.PointLight(0xffffff, 1);
 directionalLight.position.set(5, 5, 2); // Position the light relative to the sphere
+
+directionalLight.castShadow = true; // Enable shadow casting
+directionalLight.shadow.mapSize.width = 1024; // Shadow resolution
+directionalLight.shadow.mapSize.height = 1024;
+directionalLight.shadow.camera.near = 0.001; // Near clipping plane
+directionalLight.shadow.camera.far = 1000; // Far clipping plane
+
+earth.receiveShadow = true
+clouds.castShadow  = true
+directionalLight.castShadow = true;
 
 camera.add(directionalLight);
 scene.add( camera );
 
 // Add an ambient light to the scene
-const ambientLight = new THREE.AmbientLight(0x202020); // Soft white light
-scene.add(ambientLight);
+//const ambientLight = new THREE.AmbientLight(0x202020); // Soft white light
+//scene.add(ambientLight);
 
 // Add the entire group to the scene
-scene.add(sphere);
+scene.add(earth);
+scene.add(clouds);
 
 camera.position.z = 5; // Move the camera back for better view
+
+
 
 // Animation loop
 function animate() {
   requestAnimationFrame(animate);
 
   controls.update();
+  clouds.rotation.y += 0.001; // Slowly rotate clouds
+
   renderer.render(scene, camera);
 
-  new_dist = controls.target.distanceTo(controls.object.position) - 1;
-  tolerance = 0.01;
-
-  if ((Math.abs(new_dist - old_dist) > tolerance) && city_vecs[0] != null) {
-    old_dist = new_dist;
-    drawSphericalTriangleOutline(spheres, lines, city_vecs, new_dist, lineColor, pointColor);
-  }
 }
 
 // Start the animation loop
@@ -92,3 +110,94 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setSize(container.clientWidth, container.clientHeight);
 });
+*/
+
+/*
+const albedoMap = textureLoader.load('https://raw.githubusercontent.com/franky-adl/threejs-earth/main/src/assets/Albedo.jpg');
+const bumpMap = textureLoader.load('https://raw.githubusercontent.com/franky-adl/threejs-earth/main/src/assets/Bump.jpg');
+
+const cloudsMap = textureLoader.load('https://raw.githubusercontent.com/franky-adl/threejs-earth/main/src/assets/Clouds.png');
+*/
+
+
+const container = document.getElementById('container');
+
+// Set up the scene, camera, and renderer
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(container.clientWidth, container.clientHeight);
+container.appendChild(renderer.domElement);
+renderer.setClearColor(0x000000, 1); // Set background to black
+
+
+// Enable shadows in the renderer
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap ;
+
+const textureLoader = new THREE.TextureLoader();
+
+const albedoMap = textureLoader.load('https://raw.githubusercontent.com/franky-adl/threejs-earth/main/src/assets/Albedo.jpg');
+const bumpMap = textureLoader.load('https://raw.githubusercontent.com/franky-adl/threejs-earth/main/src/assets/Bump.jpg');
+const cloudsMap = textureLoader.load('https://raw.githubusercontent.com/franky-adl/threejs-earth/main/src/assets/Clouds.png');
+
+
+// Create a sphere to get a shadow
+const earthGeometry = new THREE.SphereGeometry(1, 3200, 3200);
+const earthMaterial = new THREE.MeshStandardMaterial({
+  map: albedoMap,
+  displacementMap: bumpMap,
+  displacementScale: 0.01,
+});
+const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+earth.receiveShadow = true;
+scene.add(earth);
+
+
+// Create a sphere to cast a shadow
+const cloudGeometry = new THREE.SphereGeometry(1.02, 32, 32);
+const cloudMaterial = new THREE.MeshStandardMaterial({
+  map: cloudsMap,
+  //side: THREE.DoubleSide,
+  alphaMap: cloudsMap,
+  //alphaTest: 0.5,
+  transparent: true,
+});
+
+
+//const sphereMaterial = new THREE.MeshStandardMaterial({ color: 0x0077ff });
+const clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
+//clouds.castShadow = true;
+scene.add(clouds);
+
+// Add a light source
+const light = new THREE.PointLight(0xffffff, 1, 100);
+light.position.set(5, 5, 5);
+light.castShadow = true;
+
+camera.add(light);
+scene.add( camera );
+
+// Set light shadow properties
+light.shadow.mapSize.width = 2**10; // Higher values result in better shadow quality
+light.shadow.mapSize.height = 2**10;
+light.shadow.camera.near = 0.5;
+light.shadow.camera.far = 100;
+
+// Set the camera position
+camera.position.set(5, 5, 5);
+camera.lookAt(0, 0, 0);
+
+// Add OrbitControls
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.05;
+
+// Render loop
+function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+    clouds.rotation.y += 0.001; // Slowly rotate clouds
+    renderer.render(scene, camera);
+}
+animate();

@@ -9,73 +9,13 @@
 <body>
 
   <div id="container">
-    <div id="leftPanel">
-
-      <div id="cityInputs">
-        <div>City1: <input type="text" list="City_names" id="city1" value="Lima, PE"></div>
-        <div>City2: <input type="text" list="City_names" id="city2" value="Sydney, AU"></div>
-        <div>City3: <input type="text" list="City_names" id="city3" value="Ljubljana, SI"></div>
-        <button onclick="fetchAndProcessCSV()">Submit</button>
-      </div>
-      <div id="output"></div>
-    </div>
-    <div id="rightPanel">
-      <div id="target"></div>
-      <button id="tourbutton">Tutorial</button>
-
-
-      <div id="winPanel">
-        <span id="winLabel">
-          <h2>Congratulations, You Won!</h2>
-          Attempt counter: 
-        </span>
-        <span id="winValue">0</span>
-        <br>
-        <br>
-        <button onclick="resetGame()">Restart</button>
-        <button onclick="continueGame()">Continue</button>
-      </div>
-
-      <div id="epicWinPanel">
-        <span id="epicWinLabel"></span>
-          <h2>
-            <span style="color:#FF0000">E</span><span style="color:#FF5A00">p</span><span style="color:#FFB400">i</span><span style="color:#F0FF00">c</span> <span style="color:#96FF00">w</span><span style="color:#3CFF00">i</span><span style="color:#00FF1E">n</span> <span style="color:#00FF78">u</span><span style="color:#00FFD2">n</span><span style="color:#00D2FF">c</span><span style="color:#0078FF">l</span><span style="color:#001EFF">e</span> <span style="color:#3C00FF">D</span><span style="color:#9600FF">a</span><span style="color:#F000FF">v</span><span style="color:#FF00B4">e</span><span style="color:#FF005A">!</span>
-          </h2>
-          Attempt counter: 
-        </span>
-        <span id="epicWinValue">0</span>
-        <br>
-        <br>
-        <button onclick="resetGame()">Restart</button>
-      </div>
-
-    </div>
   </div>
 
-  <canvas id="MapCanvas" width="3600" height="1800"></canvas>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/three@0.122.0/build/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.122.0/examples/js/controls/OrbitControls.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
-  <script src="https://unpkg.com/@sjmc11/tourguidejs/dist/tour.js"></script>
-  <link rel="stylesheet" href="https://unpkg.com/@sjmc11/tourguidejs/dist/css/tour.min.css">
-
-  <script src="utils.js"></script>
-  <script src="lookup.js"></script>
   <script src="draw.js"></script>
-  <script src="tour.js"></script>
- 
-  <script>
-    url = 'https://raw.githubusercontent.com/6Kotnk/TriGame/main/datalist.html';
-    
-    fetch(url)
-      .then(response => response.text())
-      .then(data => {
-        document.body.insertAdjacentHTML('beforeend', data);
-      })
-      .catch(error => console.error('Error loading datalist:', error));
-  </script>
+
 
  </body>
 </html>
