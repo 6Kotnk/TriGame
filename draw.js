@@ -130,11 +130,6 @@ renderer.setSize(container.clientWidth, container.clientHeight);
 container.appendChild(renderer.domElement);
 renderer.setClearColor(0x000000, 1); // Set background to black
 
-
-// Enable shadows in the renderer
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap ;
-
 const textureLoader = new THREE.TextureLoader();
 
 const albedoMap = textureLoader.load('https://raw.githubusercontent.com/franky-adl/threejs-earth/main/src/assets/Albedo.jpg');
@@ -143,14 +138,13 @@ const cloudsMap = textureLoader.load('https://raw.githubusercontent.com/franky-a
 
 
 // Create a sphere to get a shadow
-const earthGeometry = new THREE.SphereGeometry(1, 3200, 3200);
+const earthGeometry = new THREE.SphereGeometry(1, 32, 32);
 const earthMaterial = new THREE.MeshStandardMaterial({
   map: albedoMap,
-  displacementMap: bumpMap,
-  displacementScale: 0.01,
+  bumpMap: bumpMap,
+  bumpScale: 0.01,
 });
 const earth = new THREE.Mesh(earthGeometry, earthMaterial);
-earth.receiveShadow = true;
 scene.add(earth);
 
 
@@ -158,31 +152,22 @@ scene.add(earth);
 const cloudGeometry = new THREE.SphereGeometry(1.02, 32, 32);
 const cloudMaterial = new THREE.MeshStandardMaterial({
   map: cloudsMap,
-  //side: THREE.DoubleSide,
   alphaMap: cloudsMap,
-  //alphaTest: 0.5,
   transparent: true,
 });
 
 
 //const sphereMaterial = new THREE.MeshStandardMaterial({ color: 0x0077ff });
 const clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
-//clouds.castShadow = true;
 scene.add(clouds);
 
 // Add a light source
 const light = new THREE.PointLight(0xffffff, 1, 100);
 light.position.set(5, 5, 5);
-light.castShadow = true;
 
 camera.add(light);
 scene.add( camera );
 
-// Set light shadow properties
-light.shadow.mapSize.width = 2**10; // Higher values result in better shadow quality
-light.shadow.mapSize.height = 2**10;
-light.shadow.camera.near = 0.5;
-light.shadow.camera.far = 100;
 
 // Set the camera position
 camera.position.set(5, 5, 5);
