@@ -19,6 +19,8 @@ const lightMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/Tr
 const oceanMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/newgfx/assets/oceanMap8k.png');
 const skyMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/newgfx/assets/skyMap16k.jpg');
 
+skyMap.mapping = THREE.EquirectangularReflectionMapping;
+scene.background = skyMap;
 
 
 // Create a sphere to get a shadow
@@ -28,6 +30,8 @@ const earthMaterial = new THREE.MeshStandardMaterial({
   bumpMap: bumpMap,
   bumpScale: 0.01,
 });
+
+const outlineGeometry = new THREE.SphereGeometry(1.01, 32, 32);
 const outlineMaterial = new THREE.MeshStandardMaterial({
   map: outlineMap,
   alphaMap: outlineMap,
@@ -47,7 +51,7 @@ const cloudMaterial = new THREE.MeshStandardMaterial({
 
 const earth = new THREE.Mesh(earthGeometry, earthMaterial);
 scene.add(earth);
-const outlines = new THREE.Mesh(earthGeometry, outlineMaterial);
+const outlines = new THREE.Mesh(outlineGeometry, outlineMaterial);
 scene.add(outlines);
 const clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
 scene.add(clouds);
