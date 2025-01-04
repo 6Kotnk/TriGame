@@ -11,13 +11,13 @@ renderer.setClearColor(0x000000, 1); // Set background to black
 const textureLoader = new THREE.TextureLoader();
 
 const albedoMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/newgfx/assets/albedoMap8k.jpg');
-const bumpMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/newgfx/assets/bumpMap8k.jpg');
-const cloudsMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/newgfx/assets/cloudMap8k.jpg');
+const bumpMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/newgfx/assets/bumpMap8k.png');
+const cloudsMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/newgfx/assets/cloudMap8k.png');
 
-const outlineMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/newgfx/assets/countryOutlineMap8k.jpg');
-const lightMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/newgfx/assets/lightMap8k.jpg');
-const oceanMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/newgfx/assets/oceanMap8k.jpg');
-const skyMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/newgfx/assets/skyMap16k.jpg');
+const outlineMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/newgfx/assets/countryOutlineMap8k.png');
+const lightMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/newgfx/assets/lightMap8k.png');
+const oceanMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/newgfx/assets/oceanMap8k.png');
+const skyMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/newgfx/assets/skyMap16k.png');
 
 
 
