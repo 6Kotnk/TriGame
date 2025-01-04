@@ -17,7 +17,7 @@ const cloudsMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/T
 const outlineMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/newgfx/assets/countryOutlineMap8k.png');
 const lightMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/newgfx/assets/lightMap8k.png');
 const oceanMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/newgfx/assets/oceanMap8k.png');
-const skyMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/newgfx/assets/skyMap16k.png');
+const skyMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/newgfx/assets/skyMap16k.jpg');
 
 
 
@@ -28,9 +28,11 @@ const earthMaterial = new THREE.MeshStandardMaterial({
   bumpMap: bumpMap,
   bumpScale: 0.01,
 });
-const earth = new THREE.Mesh(earthGeometry, earthMaterial);
-scene.add(earth);
-
+const outlineMaterial = new THREE.MeshStandardMaterial({
+  map: outlineMap,
+  alphaMap: outlineMap,
+  transparent: true,
+});
 
 // Create a sphere to cast a shadow
 const cloudGeometry = new THREE.SphereGeometry(1.02, 32, 32);
@@ -42,6 +44,11 @@ const cloudMaterial = new THREE.MeshStandardMaterial({
 
 
 //const sphereMaterial = new THREE.MeshStandardMaterial({ color: 0x0077ff });
+
+const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+scene.add(earth);
+const outlines = new THREE.Mesh(earthGeometry, outlineMaterial);
+scene.add(outlines);
 const clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
 scene.add(clouds);
 
@@ -81,7 +88,11 @@ function getControlsZoom( )
 		zoomResult.innerHTML = 'Zoom = '+ zoom;
 
     camera.children[0].position.set(5,5, 2*zoom);
-    clouds.material.opacity = 1.5/zoom - 0.5;
+    //clouds.material.opacity = 1.5/(zoom^2) - 0.5;
+    var opacity = (zoom-1)**3/2.4
+
+    clouds.material.opacity = 1 - opacity;
+    outlines.material.opacity = opacity;
 
 }
 
