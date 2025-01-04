@@ -31,7 +31,7 @@ const earthMaterial = new THREE.MeshStandardMaterial({
   bumpScale: 0.01,
 });
 
-const outlineGeometry = new THREE.SphereGeometry(1.01, 32, 32);
+const outlineGeometry = new THREE.SphereGeometry(1, 32, 32);
 const outlineMaterial = new THREE.MeshStandardMaterial({
   map: outlineMap,
   alphaMap: outlineMap,
