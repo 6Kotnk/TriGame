@@ -3,10 +3,10 @@ const container = document.getElementById('container');
 // Set up the scene, camera, and renderer
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer( { alpha: true } );
 renderer.setSize(container.clientWidth, container.clientHeight);
 container.appendChild(renderer.domElement);
-renderer.setClearColor(0x000000, 1); // Set background to black
+renderer.setClearColor( 0x000000, 0 ); // the default
 
 const textureLoader = new THREE.TextureLoader();
 
