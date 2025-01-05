@@ -34,9 +34,10 @@ const earthMaterial = new THREE.MeshStandardMaterial({
 const outlineGeometry = new THREE.SphereGeometry(1, 32, 32);
 const outlineMaterial = new THREE.MeshStandardMaterial({
   map: outlineMap,
-  alphaMap: outlineMap,
   transparent: true,
-});
+})
+
+
 
 // Create a sphere to cast a shadow
 const cloudGeometry = new THREE.SphereGeometry(1.02, 32, 32);
