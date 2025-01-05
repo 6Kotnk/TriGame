@@ -17,7 +17,7 @@ const cloudsMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/T
 const outlineMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/newgfx/assets/countryOutlineMap8k.png');
 const lightMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/newgfx/assets/lightMap8k.png');
 const oceanMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/newgfx/assets/oceanMap8k.png');
-const skyMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/newgfx/assets/skyMap16k.jpg');
+const skyMap = textureLoader.load('https://raw.githubusercontent.com/6Kotnk/TriGame/newgfx/assets/skyMap4k.jpg');
 
 skyMap.mapping = THREE.EquirectangularReflectionMapping;
 scene.background = skyMap;
