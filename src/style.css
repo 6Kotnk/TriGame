@@ -1,0 +1,106 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+}
+
+#container {
+  display: flex;
+  height: 100vh; /* Full viewport height */
+}
+
+#leftPanel {
+  width: 16%; /* Increased from 300px to 25% of viewport width */
+  /*min-width: 250px;*/ /* Ensure it doesn't get too small on narrow screens */
+  padding: 20px;
+  background-color: #f0f0f0;
+  overflow-x: scroll;
+}
+
+#rightPanel {
+  position: relative;
+  width: 84%; /* 80% of the width */
+  overflow: hidden; /* Hide overflow */
+}
+
+#winPanel {
+  display: none;
+  position: absolute;
+  inset: 0px;
+  width: 20rem;
+  height: 8rem;
+  max-width: 100vw;
+  max-height: 100dvh;
+  margin: auto;
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+#epicWinPanel {
+  display: none;
+  position: absolute;
+  inset: 0px;
+  width: 20rem;
+  height: 8rem;
+  max-width: 100vw;
+  max-height: 100dvh;
+  margin: auto;
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+#cityInputs div {
+  margin-bottom: 10px;
+}
+
+#dashboard {
+  margin-top: 20px;
+}
+
+.resultItem {
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.resultItem p {
+  margin: 0;
+  padding: 2px 0;
+}
+
+.resultItem .area {
+  font-weight: bold;
+  color: #0066cc;
+}
+
+#target {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 5px 10px;
+  border-radius: 5px;
+  z-index: 1000;
+}
+
+#tourButton {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 5px 10px;
+  border-radius: 5px;
+  z-index: 1000;
+}
+
+#MapCanvas {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  visibility: hidden;
+}
