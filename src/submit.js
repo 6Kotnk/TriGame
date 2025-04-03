@@ -10,7 +10,18 @@ function submitCities() {
   for (let idx = 0; idx < cityCoords.length; idx++) {
     //spheres[idx] = UTILS.createSphereAtPoint(scene, vec3, 1, undefined, "red"); // Create and assign the new sphere
 
-    UTILS.moveSphereToCoord(spheres[idx], cityCoords[idx]);
+    if(cityCoords[idx])
+    {
+      try {
+        UTILS.moveSphereToCoord(spheres[idx], cityCoords[idx]);
+      } catch (error) {
+        document.getElementById('dashboard').innerHTML = "Error loading data: " + error;
+      }
+    }
+    else
+    {
+      document.getElementById('dashboard').innerHTML = "Make sure all cities are valid before submiting";
+    }
 
   }
 }

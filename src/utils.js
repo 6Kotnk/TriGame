@@ -25,15 +25,12 @@ export function moveSphereToCoord(sphere, coord) {
 
   let position = new THREE.Vector3();
 
-  try {
-    position.setFromSphericalCoords(
-      1,
-      degToRad(-coord[0] + 90),
-      degToRad( coord[1] + 90),
-    );
-  } catch (error) {
-    document.getElementById('dashboard').innerHTML = "Error loading data: " + error;
-  }
+  position.setFromSphericalCoords(
+    1,
+    degToRad(-coord[0] + 90),
+    degToRad( coord[1] + 90),
+  );
+
   sphere.position.copy(position);
   return sphere;
 }
