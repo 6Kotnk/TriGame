@@ -31,6 +31,12 @@ export function moveSphereToCoord(sphere, coord) {
     degToRad( coord[1] + 90),
   );
 
+  const hasNaN = [position.x, position.y, position.z].some(Number.isNaN);
+
+  if (hasNaN) {
+      throw new Error(`Calculation resulted in NaN position components for input coord: ${JSON.stringify(coord)}.`);
+  }
+
   sphere.position.copy(position);
   return sphere;
 }

@@ -49,8 +49,10 @@ function handleChange(event) {
   if (selectedOption) {
     cityCoordStr = selectedOption.getAttribute("data-coords");
     inputs[inputIdx].style.backgroundColor = '#90EE90'; // Light green for match
+    cityCoords[inputIdx] = cityCoordStr.split(", ").map(Number)
   } else {
     inputs[inputIdx].style.backgroundColor = '#FFB6C1'; // Light pink for no match
+    cityCoords[inputIdx] = null
     /*
     // Fallback to searching the cities array if the option isn't found in the datalist
     const selectedCity = cities.find(city => city.name === inputValue);
@@ -60,6 +62,6 @@ function handleChange(event) {
 
 
   }
-  cityCoords[inputIdx] = cityCoordStr.split(", ").map(Number)
+  
   datalist.innerHTML = ""; // Clear old suggestions
 }

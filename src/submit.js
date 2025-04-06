@@ -7,21 +7,35 @@ window.submitCities = submitCities;
 
 function submitCities() {
 
-  for (let idx = 0; idx < cityCoords.length; idx++) {
-    //spheres[idx] = UTILS.createSphereAtPoint(scene, vec3, 1, undefined, "red"); // Create and assign the new sphere
+  const dashboard = document.getElementById('dashboard');
+  if (!dashboard) {
+    console.error("Dashboard element not found!");
+    return; // Exit if the dashboard element doesn't exist
+  }
 
-    if(cityCoords[idx])
-    {
-      try {
-        UTILS.moveSphereToCoord(spheres[idx], cityCoords[idx]);
-      } catch (error) {
-        document.getElementById('dashboard').innerHTML = "Error loading data: " + error;
-      }
-    }
-    else
-    {
-      document.getElementById('dashboard').innerHTML = "Make sure all cities are valid before submiting";
-    }
+  let allCoordsValid = true; // Assume all coordinates are valid initially
 
+  for (let i = 0; i < cityCoords.length; i++) {
+    // Check if the current coordinate is "falsy" (null, undefined, etc.)
+    if (!cityCoords[i]) {
+      allCoordsValid = false; // Found an invalid coordinate
+      break; // Stop checking immediately, no need to check the rest
+    }
+  }
+
+  if (!allCoordsValid) {
+    dashboard.innerHTML = "Make sure all cities are valid before submitting";
+    return;
+  }
+
+  dashboard.innerHTML = "";
+
+  try {
+    // Loop through and move spheres now that we know all coords are valid
+    for (let idx = 0; idx < cityCoords.length; idx++) {
+      UTILS.moveSphereToCoord(spheres[idx], cityCoords[idx]);
+    }
+  } catch (error) {
+    dashboard.innerHTML = "Error loading data during sphere movement: " + error;
   }
 }
