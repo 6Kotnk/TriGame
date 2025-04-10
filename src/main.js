@@ -13,13 +13,14 @@ import oceanMapPath from    './assets/img/oceanMap8k.png'
 import skyMapPath from      './assets/img/starMap8k.jpg'
 
 export const spheres = Array(3).fill(null);
+export const scene = new THREE.Scene();
 
 var target_val = 73;
 document.getElementById('target').textContent = `Target: ${target_val} million km²`;
 const container = document.getElementById('rightPanel');
 
 // Set up the scene, camera, and renderer
-const scene = new THREE.Scene();
+
 const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(container.clientWidth, container.clientHeight);
@@ -70,10 +71,15 @@ const cloudMaterial = new THREE.MeshStandardMaterial({
 });
 
 const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+earth.renderOrder = 1;
 scene.add(earth);
+
 const outlines = new THREE.Mesh(outlineGeometry, outlineMaterial);
+outlines.renderOrder = 2;
 scene.add(outlines);
+
 const clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
+clouds.renderOrder = 4;
 scene.add(clouds);
 
 // Add a light source
@@ -108,11 +114,10 @@ function getControlsZoom( )
 				zoom = Math.round(zoom*1e4)/1e4;
 
     camera.children[0].position.set(5,5, 2*zoom);
-    clouds.material.opacity = 1.5/(zoom^2) - 0.5;
     var opacity = (zoom-1)**3/2.4
 
     clouds.material.opacity = 1 - opacity;
-    outlines.material.opacity = opacity;
+    outlines.material.opacity = Math.min(1,opacity);
 
     var sphereSize = 3/zoom;
 

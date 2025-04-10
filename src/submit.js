@@ -35,6 +35,8 @@ function submitCities() {
     for (let idx = 0; idx < cityCoords.length; idx++) {
       UTILS.moveSphereToCoord(spheres[idx], cityCoords[idx]);
     }
+    UTILS.drawSphericalTriangleFill(cityCoords);
+
   } catch (error) {
     dashboard.innerHTML = "Error loading data during sphere movement: " + error;
   }
