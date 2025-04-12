@@ -50,17 +50,42 @@ scene.background = skyMap;
 
 // Create a sphere to get a shadow
 const earthGeometry = new THREE.SphereGeometry(1, 32, 32);
+const cloudGeometry = new THREE.SphereGeometry(1.01, 32, 32);
+
 const earthMaterial = new THREE.MeshStandardMaterial({
   map: albedoMap,
   bumpMap: bumpMap,
   bumpScale: 5,
 });
 
-const outlineGeometry = new THREE.SphereGeometry(1, 32, 32);
 const outlineMaterial = new THREE.MeshStandardMaterial({
   map: outlineMap,
   transparent: true,
 })
+
+const cloudMaterial = new THREE.MeshStandardMaterial({
+  map: cloudsMap,
+  alphaMap: cloudsMap,
+  transparent: true,
+});
+
+/*
+  let triTexture = new THREE.CanvasTexture(canvas);
+  triTexture.wrapS = THREE.RepeatWrapping;
+
+  triTexture.offset.x = (-newCentralMeridian) / 360;
+
+  let triMaterial = new THREE.MeshStandardMaterial(
+    { map: triTexture,     
+      transparent: true,
+      opacity: 0.5});
+
+  const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
+
+  let mapTriangle = new THREE.Mesh(sphereGeometry, triMaterial);
+  mapTriangle.renderOrder = 3;
+  scene.add(mapTriangle);
+
 
 // Create a sphere to cast a shadow
 const cloudGeometry = new THREE.SphereGeometry(1.01, 32, 32);
@@ -70,11 +95,13 @@ const cloudMaterial = new THREE.MeshStandardMaterial({
   transparent: true,
 });
 
+*/
+
 const earth = new THREE.Mesh(earthGeometry, earthMaterial);
 earth.renderOrder = 1;
 scene.add(earth);
 
-const outlines = new THREE.Mesh(outlineGeometry, outlineMaterial);
+const outlines = new THREE.Mesh(earthGeometry, outlineMaterial);
 outlines.renderOrder = 2;
 scene.add(outlines);
 
