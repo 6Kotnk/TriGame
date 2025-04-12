@@ -1,5 +1,6 @@
 import { cityCoords } from './cities.js';
 import { spheres } from './main.js';
+import { drawSphericalTriangleFill } from './triangle.js';
 import * as UTILS from './utils.js';
 
 export { submitCities };
@@ -35,7 +36,7 @@ function submitCities() {
     for (let idx = 0; idx < cityCoords.length; idx++) {
       UTILS.moveSphereToCoord(spheres[idx], cityCoords[idx]);
     }
-    UTILS.drawSphericalTriangleFill(cityCoords);
+    drawSphericalTriangleFill(cityCoords);
 
   } catch (error) {
     dashboard.innerHTML = "Error loading data during sphere movement: " + error;
