@@ -6,6 +6,21 @@ import * as UTILS from './utils.js';
 const mapScale = 10;
 const divs = 100;
 
+function wrap360(value) {
+  return ((value % 360) + 360) % 360;
+}
+
+function toLatLon(vec, c_mer = 0) {
+  const longitude = Math.PI - Math.atan2(vec.z,vec.x);
+  const latitude =  Math.acos(vec.y);
+
+  // Convert radians to degrees
+  const longitudeDegrees = wrap360((longitude * 180 / Math.PI) - c_mer);
+  const latitudeDegrees = latitude * 180 / Math.PI;
+
+  return { longitude: longitudeDegrees, latitude: latitudeDegrees };
+}
+
 function interpolateBetweenPoints(point1, point2, t) {
   
   let n = new THREE.Vector3().crossVectors(point1, point2);
@@ -19,19 +34,69 @@ function interpolateBetweenPoints(point1, point2, t) {
   return r;
 }
 
-function wrap360(value) {
-  return ((value % 360) + 360) % 360;
-}
+export function drawSphericalTriangleFill(coords, color = "cyan") {
+  var vecs = Array(3).fill(null);
+  for (let idx = 0; idx < vecs.length; idx++) {
+    vecs[idx] = new THREE.Vector3();
+    vecs[idx].setFromSphericalCoords(
+      1,
+      UTILS.degToRad(-coords[idx][0] + 90),
+      UTILS.degToRad( coords[idx][1] + 90),
+    );
+  }
 
-function toLatLon(vec, c_mer = 0) {
-    const longitude = Math.PI - Math.atan2(vec.z,vec.x);
-    const latitude =  Math.acos(vec.y);
-  
-    // Convert radians to degrees
-    const longitudeDegrees = wrap360((longitude * 180 / Math.PI) - c_mer);
-    const latitudeDegrees = latitude * 180 / Math.PI;
+  const ctx = canvas.getContext('2d');
 
-    return { longitude: longitudeDegrees, latitude: latitudeDegrees };
+  let longitudes = [];
+
+  vecs.forEach((vec, index) => {
+    let { longitude: lon } = toLatLon(vec);
+    longitudes[index] = lon;
+  });
+
+  let newCentralMeridian = (Math.min(...longitudes) + Math.max(...longitudes)) / 2;
+  if((Math.max(...longitudes) - Math.min(...longitudes)) < 180)
+  {
+    newCentralMeridian -= 180;
+  }
+
+  let { longitude: curr_lon, latitude: curr_lat } = toLatLon(vecs[0], newCentralMeridian);
+  let next_lon = 0;
+  let next_lat = 0;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctx.moveTo(curr_lon, curr_lat);
+  ctx.beginPath();      // Start the path for the triangle
+
+  let r = new THREE.Vector3();
+
+  for (let idx = 0; idx < vecs.length; idx++) {
+
+    let current_vec = vecs[idx];
+    let next_vec = vecs[(idx + 1) % vecs.length];
+
+    for (let t = 0; t < current_vec.angleTo(next_vec); t += 2*Math.PI/divs) {
+      r = interpolateBetweenPoints(current_vec,next_vec,t);
+      ({ longitude: next_lon, latitude: next_lat } = toLatLon(r, newCentralMeridian));
+      drawLine(ctx, curr_lon, curr_lat, next_lon, next_lat)
+      curr_lon = next_lon;
+      curr_lat = next_lat;
+    }
+  }
+
+  ctx.closePath();      // Close the path (draw line back to the first vertex)
+  ctx.fillStyle = color; // Set the fill color
+  ctx.fill();            // Fill the triangle
+
+  let newMap = new THREE.CanvasTexture(canvas);
+  let oldMap = triFillMaterial.map; 
+  newMap.wrapS = THREE.RepeatWrapping;
+
+  newMap.offset.x = (-newCentralMeridian) / 360;
+  triFillMaterial.map = newMap;
+  oldMap.dispose();
+
 }
 
 function drawLine(ctx, curr_lon, curr_lat, next_lon, next_lat) {
@@ -65,85 +130,7 @@ function drawLine(ctx, curr_lon, curr_lat, next_lon, next_lat) {
     next_lon += 180;
     curr_lat += 90;
     next_lat += 90;
-    
   }
   
   ctx.lineTo(next_lon*mapScale, next_lat*mapScale);
-}
-
-export function drawSphericalTriangleFill(coords, color = "cyan") {
-
-
-  var vecs = Array(3).fill(null);
-
-
-  for (let idx = 0; idx < vecs.length; idx++) {
-    vecs[idx] = new THREE.Vector3();
-    vecs[idx].setFromSphericalCoords(
-      1,
-      UTILS.degToRad(-coords[idx][0] + 90),
-      UTILS.degToRad( coords[idx][1] + 90),
-    );
-  }
-
-
-  const ctx = canvas.getContext('2d');
-
-  let longitudes = [];
-
-  vecs.forEach((vec, index) => {
-    let { longitude: lon } = toLatLon(vec);
-    longitudes[index] = lon;
-  });
-
-  let newCentralMeridian = (Math.min(...longitudes) + Math.max(...longitudes)) / 2;
-  if((Math.max(...longitudes) - Math.min(...longitudes)) < 180)
-  {
-    newCentralMeridian -= 180;
-  }
-
-  let { longitude: curr_lon, latitude: curr_lat } = toLatLon(vecs[0], newCentralMeridian);
-  let next_lon = 0;
-  let next_lat = 0;
-/*
-  if(mapTriangle){
-    scene.remove(mapTriangle);
-  }
-*/  
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  ctx.moveTo(curr_lon, curr_lat);
-  ctx.beginPath();      // Start the path for the triangle
-
-  let r = new THREE.Vector3();
-
-  for (let idx = 0; idx < vecs.length; idx++) {
-
-    let current_vec = vecs[idx];
-    let next_vec = vecs[(idx + 1) % vecs.length];
-
-    for (let t = 0; t < current_vec.angleTo(next_vec); t += 2*Math.PI/divs) {
-      r = interpolateBetweenPoints(current_vec,next_vec,t);
-      ({ longitude: next_lon, latitude: next_lat } = toLatLon(r, newCentralMeridian));
-      drawLine(ctx, curr_lon, curr_lat, next_lon, next_lat)
-      curr_lon = next_lon;
-      curr_lat = next_lat;
-    }
-    
-  }
-
-  ctx.closePath();      // Close the path (draw line back to the first vertex)
-  ctx.fillStyle = color; // Set the fill color
-  ctx.fill();            // Fill the triangle
-
-  let newMap = new THREE.CanvasTexture(canvas);
-  let oldMap = triFillMaterial.map; 
-  newMap.wrapS = THREE.RepeatWrapping;
-
-  newMap.offset.x = (-newCentralMeridian) / 360;
-  triFillMaterial.map = newMap;
-  oldMap.dispose();
-
-  return newCentralMeridian
-
 }

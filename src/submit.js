@@ -1,6 +1,6 @@
 import { cityCoords } from './cities.js';
 import { spheres } from './main.js';
-import { drawSphericalTriangleFill } from './triangle.js';
+import { drawSphericalTriangleFill } from './triangleFill.js';
 import * as UTILS from './utils.js';
 
 export { submitCities };
