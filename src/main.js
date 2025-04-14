@@ -14,6 +14,8 @@ import skyMapPath from      './assets/img/starMap8k.jpg'
 
 export const spheres = Array(3).fill(null);
 export const scene = new THREE.Scene();
+export const canvas = document.getElementById('MapCanvas');
+
 
 var target_val = 73;
 document.getElementById('target').textContent = `Target: ${target_val} million km²`;
@@ -23,14 +25,17 @@ const container = document.getElementById('rightPanel');
 
 const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
+
+
 renderer.setSize(container.clientWidth, container.clientHeight);
 container.appendChild(renderer.domElement);
 renderer.setClearColor( 0x000000, 0 ); // the default
+canvas.width = 3600;
+canvas.height = 1800;
 
 for (let idx = 0; idx < spheres.length; idx++) {
   spheres[idx] = UTILS.createSphere(scene);
 }
-
 
 const textureLoader = new THREE.TextureLoader();
 
@@ -42,6 +47,9 @@ const outlineMap = textureLoader.load(outlineMapPath);
 const lightMap = textureLoader.load(lightMapPath);
 const oceanMap = textureLoader.load(oceanMapPath);
 const skyMap = textureLoader.load(skyMapPath);
+
+const triFillMap = new THREE.CanvasTexture(canvas);
+triFillMap.wrapS = THREE.RepeatWrapping;
 
 skyMap.colorSpace = THREE.SRGBColorSpace;
 
@@ -58,9 +66,15 @@ const earthMaterial = new THREE.MeshStandardMaterial({
   bumpScale: 5,
 });
 
-const outlineMaterial = new THREE.MeshStandardMaterial({
+const countryOutlineMaterial = new THREE.MeshStandardMaterial({
   map: outlineMap,
   transparent: true,
+})
+
+export const triFillMaterial = new THREE.MeshStandardMaterial({
+  map: triFillMap,
+  transparent: true,
+  opacity: 0.5,
 })
 
 const cloudMaterial = new THREE.MeshStandardMaterial({
@@ -101,9 +115,13 @@ const earth = new THREE.Mesh(earthGeometry, earthMaterial);
 earth.renderOrder = 1;
 scene.add(earth);
 
-const outlines = new THREE.Mesh(earthGeometry, outlineMaterial);
-outlines.renderOrder = 2;
-scene.add(outlines);
+const countryOutlines = new THREE.Mesh(earthGeometry, countryOutlineMaterial);
+countryOutlines.renderOrder = 2;
+scene.add(countryOutlines);
+
+const triFill = new THREE.Mesh(earthGeometry, triFillMaterial);
+triFill.renderOrder = 3;
+scene.add(triFill);
 
 const clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
 clouds.renderOrder = 4;
@@ -144,7 +162,7 @@ function getControlsZoom( )
     var opacity = (zoom-1)**3/2.4
 
     clouds.material.opacity = 1 - opacity;
-    outlines.material.opacity = Math.min(1,opacity);
+    countryOutlines.material.opacity = Math.min(1,opacity);
 
     var sphereSize = 3/zoom;
 

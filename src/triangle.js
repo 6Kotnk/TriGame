@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import { scene } from './main.js';
+import { canvas } from './main.js';
+import { triFillMaterial } from './main.js';
 import * as UTILS from './utils.js';
 
 const mapScale = 10;
@@ -72,9 +73,6 @@ function drawLine(ctx, curr_lon, curr_lat, next_lon, next_lat) {
 
 export function drawSphericalTriangleFill(coords, color = "cyan") {
 
-  const canvas = document.getElementById('MapCanvas');
-  canvas.width = 3600;
-  canvas.height = 1800;
 
   var vecs = Array(3).fill(null);
 
@@ -138,21 +136,13 @@ export function drawSphericalTriangleFill(coords, color = "cyan") {
   ctx.fillStyle = color; // Set the fill color
   ctx.fill();            // Fill the triangle
 
-  let triTexture = new THREE.CanvasTexture(canvas);
-  triTexture.wrapS = THREE.RepeatWrapping;
+  let newMap = new THREE.CanvasTexture(canvas);
+  let oldMap = triFillMaterial.map; 
+  newMap.wrapS = THREE.RepeatWrapping;
 
-  triTexture.offset.x = (-newCentralMeridian) / 360;
-
-  let triMaterial = new THREE.MeshStandardMaterial(
-    { map: triTexture,     
-      transparent: true,
-      opacity: 0.5});
-
-  const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
-
-  let mapTriangle = new THREE.Mesh(sphereGeometry, triMaterial);
-  mapTriangle.renderOrder = 3;
-  scene.add(mapTriangle);
+  newMap.offset.x = (-newCentralMeridian) / 360;
+  triFillMaterial.map = newMap;
+  oldMap.dispose();
 
   return newCentralMeridian
 
