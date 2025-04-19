@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
-import * as UTILS from './utils.js';
+import { createSphere } from './triangleVerts.js';
 
 import albedoMapPath from   './assets/img/albedoMap8k.jpg'
 import bumpMapPath from     './assets/img/bumpMap8k.png'
@@ -34,7 +34,7 @@ canvas.width = 3600;
 canvas.height = 1800;
 
 for (let idx = 0; idx < spheres.length; idx++) {
-  spheres[idx] = UTILS.createSphere(scene);
+  spheres[idx] = createSphere(scene);
 }
 
 const textureLoader = new THREE.TextureLoader();
@@ -83,33 +83,6 @@ const cloudMaterial = new THREE.MeshStandardMaterial({
   transparent: true,
 });
 
-/*
-  let triTexture = new THREE.CanvasTexture(canvas);
-  triTexture.wrapS = THREE.RepeatWrapping;
-
-  triTexture.offset.x = (-newCentralMeridian) / 360;
-
-  let triMaterial = new THREE.MeshStandardMaterial(
-    { map: triTexture,     
-      transparent: true,
-      opacity: 0.5});
-
-  const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
-
-  let mapTriangle = new THREE.Mesh(sphereGeometry, triMaterial);
-  mapTriangle.renderOrder = 3;
-  scene.add(mapTriangle);
-
-
-// Create a sphere to cast a shadow
-const cloudGeometry = new THREE.SphereGeometry(1.01, 32, 32);
-const cloudMaterial = new THREE.MeshStandardMaterial({
-  map: cloudsMap,
-  alphaMap: cloudsMap,
-  transparent: true,
-});
-
-*/
 
 const earth = new THREE.Mesh(earthGeometry, earthMaterial);
 earth.renderOrder = 1;
