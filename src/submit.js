@@ -1,8 +1,9 @@
 import { cityCoords } from './cities.js';
 import { spheres } from './main.js';
+import { arcs } from './main.js';
 import { drawSphericalTriangleFill } from './triangleFill.js';
 import { moveSphereToCoord } from './triangleVerts.js';
-import { createLineBetweenPoints } from './triangleOutline.js';
+import { drawSphericalTriangleEdge } from './triangleOutline.js';
 
 export { submitCities };
 window.submitCities = submitCities;
@@ -35,8 +36,8 @@ function submitCities() {
   try {
     // Loop through and move spheres now that we know all coords are valid
     for (let idx = 0; idx < cityCoords.length; idx++) {
-      moveSphereToCoord(spheres[idx], cityCoords[idx]);
-      createLineBetweenPoints(cityCoords[idx], cityCoords[(idx + 1)%3]);
+      //moveSphereToCoord(spheres[idx], cityCoords[idx]);
+      drawSphericalTriangleEdge(arcs[idx], cityCoords[idx], cityCoords[(idx + 1)%3]);
     }
     drawSphericalTriangleFill(cityCoords);
 

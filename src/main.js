@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
 import { createSphere } from './triangleVerts.js';
+import { createArc } from './triangleOutline.js';
 
 import albedoMapPath from   './assets/img/albedoMap8k.jpg'
 import bumpMapPath from     './assets/img/bumpMap8k.png'
@@ -13,6 +14,7 @@ import oceanMapPath from    './assets/img/oceanMap8k.png'
 import skyMapPath from      './assets/img/starMap8k.jpg'
 
 export const spheres = Array(3).fill(null);
+export const arcs = Array(3).fill(null);
 export const scene = new THREE.Scene();
 export const canvas = document.getElementById('MapCanvas');
 
@@ -34,7 +36,11 @@ canvas.width = 3600;
 canvas.height = 1800;
 
 for (let idx = 0; idx < spheres.length; idx++) {
-  spheres[idx] = createSphere(scene);
+  //spheres[idx] = createSphere(scene);
+}
+
+for (let idx = 0; idx < spheres.length; idx++) {
+  arcs[idx] = createArc(scene);
 }
 
 const textureLoader = new THREE.TextureLoader();
@@ -54,7 +60,8 @@ triFillMap.wrapS = THREE.RepeatWrapping;
 skyMap.colorSpace = THREE.SRGBColorSpace;
 
 skyMap.mapping = THREE.EquirectangularReflectionMapping;
-scene.background = skyMap;
+//scene.background = skyMap;
+scene.background = new THREE.Color("gray");
 
 // Create a sphere to get a shadow
 const earthGeometry = new THREE.SphereGeometry(1, 32, 32);
@@ -86,19 +93,19 @@ const cloudMaterial = new THREE.MeshStandardMaterial({
 
 const earth = new THREE.Mesh(earthGeometry, earthMaterial);
 earth.renderOrder = 1;
-scene.add(earth);
+//scene.add(earth);
 
 const countryOutlines = new THREE.Mesh(earthGeometry, countryOutlineMaterial);
 countryOutlines.renderOrder = 2;
-scene.add(countryOutlines);
+//scene.add(countryOutlines);
 
 const triFill = new THREE.Mesh(earthGeometry, triFillMaterial);
 triFill.renderOrder = 3;
-scene.add(triFill);
+//scene.add(triFill);
 
 const clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
 clouds.renderOrder = 4;
-scene.add(clouds);
+//scene.add(clouds);
 
 // Add a light source
 const light = new THREE.DirectionalLight(0xffffff, 1);
@@ -134,13 +141,13 @@ function getControlsZoom( )
     camera.children[0].position.set(5,5, 2*zoom);
     var opacity = (zoom-1)**3/2.4
 
-    clouds.material.opacity = 1 - opacity;
-    countryOutlines.material.opacity = Math.min(1,opacity);
+    //clouds.material.opacity = 1 - opacity;
+    //countryOutlines.material.opacity = Math.min(1,opacity);
 
     var sphereSize = 3/zoom;
 
     for (let idx = 0; idx < spheres.length; idx++) {
-      spheres[idx].scale.set(sphereSize,sphereSize,sphereSize);
+      //spheres[idx].scale.set(sphereSize,sphereSize,sphereSize);
     }
 
 }
