@@ -36,9 +36,14 @@ function submitCities() {
   try {
     // Loop through and move spheres now that we know all coords are valid
     for (let idx = 0; idx < cityCoords.length; idx++) {
-      //moveSphereToCoord(spheres[idx], cityCoords[idx]);
+      moveSphereToCoord(spheres[idx], cityCoords[idx]);
       drawSphericalTriangleEdge(arcs[idx], cityCoords[idx], cityCoords[(idx + 1)%3]);
     }
+
+    //moveSphereToCoord(spheres[0], cityCoords[0]);
+    //moveSphereToCoord(spheres[1], cityCoords[1]);
+    //drawSphericalTriangleEdge(arcs[0], cityCoords[0], cityCoords[1]);
+
     drawSphericalTriangleFill(cityCoords);
 
   } catch (error) {

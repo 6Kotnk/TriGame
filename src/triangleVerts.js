@@ -28,3 +28,9 @@ export function moveSphereToCoord(sphere, coord) {
   sphere.position.copy(position);
   return sphere;
 }
+
+export function setSphereScale(spheres, scale) {
+  for (let idx = 0; idx < spheres.length; idx++) {
+    spheres[idx].scale.set(scale,scale,scale);
+  }
+}
