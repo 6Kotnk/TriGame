@@ -51,7 +51,7 @@ function SLERPTangent(p, q, t) {
 
   return result;
 }
-export function drawSphericalTriangleEdge(arc, coord1, coord2, scale = 1, radius = 0.01, color = 0x0000ff) {
+export function drawSphericalTriangleEdge(arc, coord1, coord2, radius = 0.01, color = 0x0000ff) {
 
   var vec1 = UTILS.coordToVec(coord1);
   var vec2 = UTILS.coordToVec(coord2);
@@ -75,7 +75,7 @@ export function setArcScale(arcs, scale) {
   for (let arcIdx = 0; arcIdx < arcs.length; arcIdx++) {
     const arc = arcs[arcIdx];
     for (let cylinderIdx = 0; cylinderIdx < arc.length; cylinderIdx++) {
-      arc[cylinderIdx].scale.set(scale,scale,scale);
+      arc[cylinderIdx].scale.set(scale,1,scale);
     }
   }
 }

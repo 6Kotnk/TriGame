@@ -147,7 +147,7 @@ function getControlsZoom( )
     var scale = 3/zoom;
 
     setSphereScale(spheres, scale)
-    setArcScale(spheres, scale)
+    setArcScale(arcs, scale)
     /*
     for (let idx = 0; idx < spheres.length; idx++) {
       spheres[idx].scale.set(sphereSize,sphereSize,sphereSize);
