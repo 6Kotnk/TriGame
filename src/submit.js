@@ -1,3 +1,5 @@
+import * as THREE from 'three';
+
 import { cityCoords } from './cities.js';
 import { spheres, arcs, triFill } from './main.js';
 
@@ -7,27 +9,54 @@ import { drawFill } from './triangleFill.js';
 
 window.submitCities = submitCities;
 
+function degToRad(deg) {
+  return deg * Math.PI / 180;
+}
+
+function coordsToVecs(coords) {
+
+  const vecs = Array(coords.length).fill(null);
+
+  for (let idx = 0; idx < vecs.length; idx++) {
+    vecs[idx] = new THREE.Vector3();
+
+    vecs[idx].setFromSphericalCoords(
+      1,
+      degToRad(-coords[idx][0] + 90),
+      degToRad( coords[idx][1] + 90),
+    );
+    const hasNaN = [vecs[idx].x, vecs[idx].y, vecs[idx].z].some(Number.isNaN);
+    if (hasNaN) {
+        throw new Error("NaN Error when translating coordinates to vector");
+    }
+
+  }
+
+  return vecs;
+}
+
 function configureTriangle(coords, spheres, arcs, fill, colors) {
+  const vecs = coordsToVecs(coords);
 
-  configureSpheres(coords, spheres, colors.spheres);
-  configureArcs(coords, arcs, colors.arcs);
-  configureFill(coords, fill, colors.fill);
+  configureSpheres(vecs, spheres, colors.spheres);
+  configureArcs(vecs, arcs, colors.arcs);
+  configureFill(vecs, fill, colors.fill);
 }
 
-function configureSpheres(coords, spheres, color) {
-  for (let idx = 0; idx < coords.length; idx++) {
-    configureSphere(spheres[idx], coords[idx], color);
+function configureSpheres(vecs, spheres, color) {
+  for (let idx = 0; idx < vecs.length; idx++) {
+    configureSphere(spheres[idx], vecs[idx], color);
   }
 }
 
-function configureArcs(coords, arcs, color) {
-  for (let idx = 0; idx < coords.length; idx++) {
-    configureArc(arcs[idx], coords[idx], coords[(idx + 1)%3], color);
+function configureArcs(vecs, arcs, color) {
+  for (let idx = 0; idx < vecs.length; idx++) {
+    configureArc(arcs[idx], vecs[idx], vecs[(idx + 1) % 3], color);
   }
 }
 
-function configureFill(coords, fill, color) {
-  drawFill(coords, fill, color);
+function configureFill(vecs, fill, color) {
+  drawFill(vecs, fill, color);
 }
 
 export function submitCities() {
@@ -65,6 +94,6 @@ export function submitCities() {
     configureTriangle(cityCoords, spheres, arcs, triFill, colors)
 
   } catch (error) {
-    dashboard.innerHTML = "Error loading data during triangle movement: " + error;
+    dashboard.innerHTML = "Error loading data during triangle movement: " + error.stack;
   }
 }

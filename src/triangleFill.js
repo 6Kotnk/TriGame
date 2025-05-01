@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { canvas } from './main.js';
-import * as UTILS from './utils.js';
 
 const mapScale = 10;
 const divs = 100;
@@ -33,16 +32,7 @@ function interpolateBetweenPoints(point1, point2, t) {
   return r;
 }
 
-export function drawFill(coords, fill, color) {
-  var vecs = Array(3).fill(null);
-  for (let idx = 0; idx < vecs.length; idx++) {
-    vecs[idx] = new THREE.Vector3();
-    vecs[idx].setFromSphericalCoords(
-      1,
-      UTILS.degToRad(-coords[idx][0] + 90),
-      UTILS.degToRad( coords[idx][1] + 90),
-    );
-  }
+export function drawFill(vecs, fill, color) {
 
   const ctx = canvas.getContext('2d');
 

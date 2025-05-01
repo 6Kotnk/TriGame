@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import * as UTILS from './utils.js';
 
 export function createArc(scene) {
   //const arc = Array(315).fill(null); // 100 pi + 1
@@ -52,15 +51,12 @@ function SLERPTangent(p, q, t) {
   return result;
 }
 
-export function configureArc(arc, coord1, coord2, color = "blue") {
-  moveArcToCoordPair(arc, coord1, coord2);
+export function configureArc(arc, vec1, vec2, color = "blue") {
+  moveArcToCoordPair(arc, vec1, vec2);
   setArcColor(arc, color);
 }
 
-function moveArcToCoordPair(arc, coord1, coord2) {
-
-  var vec1 = UTILS.coordToVec(coord1);
-  var vec2 = UTILS.coordToVec(coord2);
+function moveArcToCoordPair(arc, vec1, vec2) {
   
   const arcAngle = vec2.angleTo(vec1);
 
