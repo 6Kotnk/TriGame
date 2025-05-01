@@ -20,8 +20,6 @@ export const spheres = Array(3).fill(null);
 export const arcs = Array(3).fill(null);
 export {triFill};
 
-var target_val = 73;
-document.getElementById('target').textContent = `Target: ${target_val} million km²`;
 const container = document.getElementById('rightPanel');
 
 // Set up the scene, camera, and renderer
