@@ -1,14 +1,36 @@
 import { cityCoords } from './cities.js';
-import { spheres } from './main.js';
-import { arcs } from './main.js';
-import { drawSphericalTriangleFill } from './triangleFill.js';
-import { moveSphereToCoord } from './triangleVerts.js';
-import { drawSphericalTriangleEdge } from './triangleOutline.js';
+import { spheres, arcs, triFill } from './main.js';
 
-export { submitCities };
+import { configureSphere } from './triangleVerts.js';
+import { configureArc } from './triangleOutline.js';
+import { drawFill } from './triangleFill.js';
+
 window.submitCities = submitCities;
 
-function submitCities() {
+function configureTriangle(coords, spheres, arcs, fill, colors) {
+
+  configureSpheres(coords, spheres, colors.spheres);
+  configureArcs(coords, arcs, colors.arcs);
+  configureFill(coords, fill, colors.fill);
+}
+
+function configureSpheres(coords, spheres, color) {
+  for (let idx = 0; idx < coords.length; idx++) {
+    configureSphere(spheres[idx], coords[idx], color);
+  }
+}
+
+function configureArcs(coords, arcs, color) {
+  for (let idx = 0; idx < coords.length; idx++) {
+    configureArc(arcs[idx], coords[idx], coords[(idx + 1)%3], color);
+  }
+}
+
+function configureFill(coords, fill, color) {
+  drawFill(coords, fill, color);
+}
+
+export function submitCities() {
 
   const dashboard = document.getElementById('dashboard');
   if (!dashboard) {
@@ -34,19 +56,15 @@ function submitCities() {
   dashboard.innerHTML = "";
 
   try {
-    // Loop through and move spheres now that we know all coords are valid
-    for (let idx = 0; idx < cityCoords.length; idx++) {
-      moveSphereToCoord(spheres[idx], cityCoords[idx]);
-      drawSphericalTriangleEdge(arcs[idx], cityCoords[idx], cityCoords[(idx + 1)%3]);
-    }
 
-    //moveSphereToCoord(spheres[0], cityCoords[0]);
-    //moveSphereToCoord(spheres[1], cityCoords[1]);
-    //drawSphericalTriangleEdge(arcs[0], cityCoords[0], cityCoords[1]);
-
-    drawSphericalTriangleFill(cityCoords);
+    const colors = {
+      spheres: "white",
+      arcs: "white",
+      fill: "cyan",
+    };
+    configureTriangle(cityCoords, spheres, arcs, triFill, colors)
 
   } catch (error) {
-    dashboard.innerHTML = "Error loading data during sphere movement: " + error;
+    dashboard.innerHTML = "Error loading data during triangle movement: " + error;
   }
 }

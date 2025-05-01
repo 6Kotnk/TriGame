@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { canvas } from './main.js';
-import { triFillMaterial } from './main.js';
 import * as UTILS from './utils.js';
 
 const mapScale = 10;
@@ -34,7 +33,7 @@ function interpolateBetweenPoints(point1, point2, t) {
   return r;
 }
 
-export function drawSphericalTriangleFill(coords, color = "cyan") {
+export function drawFill(coords, fill, color) {
   var vecs = Array(3).fill(null);
   for (let idx = 0; idx < vecs.length; idx++) {
     vecs[idx] = new THREE.Vector3();
@@ -90,11 +89,11 @@ export function drawSphericalTriangleFill(coords, color = "cyan") {
   ctx.fill();            // Fill the triangle
 
   let newMap = new THREE.CanvasTexture(canvas);
-  let oldMap = triFillMaterial.map; 
+  let oldMap = fill.material.map; 
   newMap.wrapS = THREE.RepeatWrapping;
 
   newMap.offset.x = (-newCentralMeridian) / 360;
-  triFillMaterial.map = newMap;
+  fill.material.map = newMap;
   oldMap.dispose();
 
 }

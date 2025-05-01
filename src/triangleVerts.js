@@ -5,11 +5,18 @@ export function createSphere(scene) {
   const geometry = new THREE.SphereGeometry(0.02, 32, 32);
   const material = new THREE.MeshBasicMaterial();
   const sphere = new THREE.Mesh(geometry, material);
+  sphere.material.color.set('red');
   scene.add(sphere);
   return sphere;
 }
   
-export function moveSphereToCoord(sphere, coord) {
+export function configureSphere(sphere, coord, color) {
+  moveSphereToCoord(sphere, coord);
+  setSphereColor(sphere, color)
+
+}
+
+function moveSphereToCoord(sphere, coord) {
 
   let position = new THREE.Vector3();
 
@@ -29,8 +36,12 @@ export function moveSphereToCoord(sphere, coord) {
   return sphere;
 }
 
-export function setSphereScale(spheres, scale) {
+export function setSpheresScale(spheres, scale) {
   for (let idx = 0; idx < spheres.length; idx++) {
     spheres[idx].scale.set(scale,scale,scale);
   }
+}
+
+function setSphereColor(sphere, color) {
+  sphere.material.color.set(color);
 }

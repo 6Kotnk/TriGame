@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
-import { createSphere, setSphereScale } from './triangleVerts.js';
-import { createArc, setArcScale } from './triangleOutline.js';
+import { createSphere, setSpheresScale } from './triangleVerts.js';
+import { createArc, setArcsScale } from './triangleOutline.js';
 
 import albedoMapPath from   './assets/img/albedoMap8k.jpg'
 import bumpMapPath from     './assets/img/bumpMap8k.png'
@@ -13,11 +13,12 @@ import oceanMapPath from    './assets/img/oceanMap8k.png'
 
 import skyMapPath from      './assets/img/starMap8k.jpg'
 
-export const spheres = Array(3).fill(null);
-export const arcs = Array(3).fill(null);
-export const scene = new THREE.Scene();
+const scene = new THREE.Scene();
 export const canvas = document.getElementById('MapCanvas');
 
+export const spheres = Array(3).fill(null);
+export const arcs = Array(3).fill(null);
+export {triFill};
 
 var target_val = 73;
 document.getElementById('target').textContent = `Target: ${target_val} million km²`;
@@ -144,15 +145,11 @@ function getControlsZoom( )
     clouds.material.opacity = 1 - opacity;
     countryOutlines.material.opacity = Math.min(1,opacity);
 
-    var scale = 3/zoom;
+    var scale = 1/zoom;
 
-    setSphereScale(spheres, scale)
-    setArcScale(arcs, scale)
-    /*
-    for (let idx = 0; idx < spheres.length; idx++) {
-      spheres[idx].scale.set(sphereSize,sphereSize,sphereSize);
-    }
-*/
+    setSpheresScale(spheres, scale)
+    setArcsScale(arcs, scale)
+
 }
 
 // Render loop

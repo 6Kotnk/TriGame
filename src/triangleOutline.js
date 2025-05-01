@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import * as UTILS from './utils.js';
-import { scene } from './main.js';
 
 export function createArc(scene) {
   //const arc = Array(315).fill(null); // 100 pi + 1
@@ -13,8 +12,9 @@ export function createArc(scene) {
 
 export function createCylinder(scene) {
   const geometry = new THREE.CylinderGeometry(0.01, 0.01, 0.01, 16);
-  const material = new THREE.MeshBasicMaterial();
+  const material = new THREE.MeshBasicMaterial("");
   const cylinder = new THREE.Mesh(geometry, material);
+  cylinder.material.color.set('blue');
   scene.add(cylinder);
   return cylinder;
 }
@@ -51,7 +51,13 @@ function SLERPTangent(p, q, t) {
 
   return result;
 }
-export function drawSphericalTriangleEdge(arc, coord1, coord2, radius = 0.01, color = 0x0000ff) {
+
+export function configureArc(arc, coord1, coord2, color = "blue") {
+  moveArcToCoordPair(arc, coord1, coord2);
+  setArcColor(arc, color);
+}
+
+function moveArcToCoordPair(arc, coord1, coord2) {
 
   var vec1 = UTILS.coordToVec(coord1);
   var vec2 = UTILS.coordToVec(coord2);
@@ -71,11 +77,17 @@ export function drawSphericalTriangleEdge(arc, coord1, coord2, radius = 0.01, co
   return arc;
 }
 
-export function setArcScale(arcs, scale) {
+export function setArcsScale(arcs, scale) {
   for (let arcIdx = 0; arcIdx < arcs.length; arcIdx++) {
     const arc = arcs[arcIdx];
     for (let cylinderIdx = 0; cylinderIdx < arc.length; cylinderIdx++) {
       arc[cylinderIdx].scale.set(scale,1,scale);
     }
+  }
+}
+
+function setArcColor(arc, color) {
+  for (let cylinderIdx = 0; cylinderIdx < arc.length; cylinderIdx++) {
+    arc[cylinderIdx].material.color.set(color);
   }
 }

@@ -60,7 +60,6 @@ function handleChange(event) {
       cityCoordStr = selectedCity.coords;
     }*/
 
-
   }
   
   datalist.innerHTML = ""; // Clear old suggestions
