@@ -22,7 +22,34 @@
       </div>
       <div id="rightPanel">
         <div id="target"></div>
+
         <button id="tourButton">Tutorial</button>
+
+        <div id="winPanel">
+          <span id="winLabel">
+            <h2>Congratulations, You Won!</h2>
+            Attempt counter: 
+          </span>
+          <span id="winValue">0</span>
+          <br>
+          <br>
+          <button onclick="resetGame()">Restart</button>
+          <button onclick="continueGame()">Continue</button>
+        </div>
+  
+        <div id="epicWinPanel">
+          <span id="epicWinLabel"></span>
+            <h2>
+              <span style="color:#FF0000">E</span><span style="color:#FF5A00">p</span><span style="color:#FFB400">i</span><span style="color:#F0FF00">c</span> <span style="color:#96FF00">w</span><span style="color:#3CFF00">i</span><span style="color:#00FF1E">n</span> <span style="color:#00FF78">u</span><span style="color:#00FFD2">n</span><span style="color:#00D2FF">c</span><span style="color:#0078FF">l</span><span style="color:#001EFF">e</span> <span style="color:#3C00FF">D</span><span style="color:#9600FF">a</span><span style="color:#F000FF">v</span><span style="color:#FF00B4">e</span><span style="color:#FF005A">!</span>
+            </h2>
+            Attempt counter: 
+          </span>
+          <span id="epicWinValue">0</span>
+          <br>
+          <br>
+          <button onclick="resetGame()">Restart</button>
+        </div>
+
       </div>
     </div>
   
@@ -34,5 +61,6 @@
     <script type="module" src="/src/cities.js"></script>
     <script type="module" src="/src/submit.js"></script>
     <script type="module" src="/src/dashboard.js"></script>
+    <script type="module" src="/src/gamestate.js"></script>
   </body>
 </html>
