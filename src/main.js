@@ -20,6 +20,12 @@ export const spheres = Array(3).fill(null);
 export const arcs = Array(3).fill(null);
 export {triFill};
 
+import { SphericalTriangle } from './triangle.js';
+
+const test = new SphericalTriangle(scene, canvas);
+
+
+
 const container = document.getElementById('rightPanel');
 
 // Set up the scene, camera, and renderer

@@ -6,6 +6,42 @@ import { configureSphere } from './triangleVerts.js';
 import { configureArc } from './triangleOutline.js';
 import { drawFill } from './triangleFill.js';
 
+/*
+import { SphericalTriangleVertex } from './SphericalTriangleVertex.js';
+import { SphericalTriangleEdge } from './SphericalTriangleEdge.js';
+import { SphericalTriangleFill } from './SphericalTriangleFill.js';
+*/
+
+import { SphericalTriangleVertex } from './triangleVerts.js';
+import { SphericalTriangleEdge } from './triangleOutline.js';
+import { SphericalTriangleFill } from './triangleFill.js';
+
+export {SphericalTriangle};
+
+class SphericalTriangle {
+
+  constructor(scene, canvas) {
+
+    this.verts = Array(3).fill(null);
+    this.edges = Array(3).fill(null);
+
+    for (let vert = 0; vert < verts.length; vert++) {
+      this.verts[idx] = new SphericalTriangleVertex(scene);
+    }
+
+    for (let edge = 0; edge < edges.length; edge++) {
+      this.edges[idx] = new SphericalTriangleEdge(scene);
+    }
+
+    this.fill = new SphericalTriangleFill(scene, canvas);
+
+  }
+
+}
+
+
+
+
 function degToRad(deg) {
   return deg * Math.PI / 180;
 }

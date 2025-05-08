@@ -22,8 +22,9 @@ class GameStateMachine  {
       this.epicWinGame();
     }
     else if( targetTol < Math.abs(attemptVal- this.targetVal) ) {
-      if(this.currentState == GameState.NOT_CLOSE)
-      this.winGame();
+      if(this.currentState == GameState.NOT_CLOSE) {
+        this.winGame();
+      }
     }
   }
 
