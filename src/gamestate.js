@@ -21,7 +21,7 @@ class GameStateMachine  {
     if(attemptVal == this.targetVal) {
       this.epicWinGame();
     }
-    else if( targetTol < Math.abs(attemptVal- this.targetVal) ) {
+    else if( targetTol > Math.abs(attemptVal- this.targetVal) ) {
       if(this.currentState == GameState.NOT_CLOSE) {
         this.winGame();
       }
@@ -65,7 +65,7 @@ class GameStateMachine  {
 
 }
 
-export const gameSM = new GameStateMachine(10);
+export const gameSM = new GameStateMachine(10.49);
 
 function resetGame() {
   gameSM.resetGame();

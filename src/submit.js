@@ -1,8 +1,10 @@
 import { cityCoords } from './cities.js';
 
-import { configureTriangle, triangleArea } from './triangle.js';
+//import { configureTriangle, triangleArea } from './triangle.js';
 import { updateDashboard } from './dashboard.js';
 import { gameSM } from './gamestate.js';
+
+import { triangle } from './main.js';
 
 
 window.submitCities = submitCities;
@@ -35,18 +37,21 @@ export function submitCities() {
   try {
 
     const colors = {
-      spheres: "white",
-      arcs: "white",
+      verts: "white",
+      edges: "white",
       fill: "cyan",
     };
+    /*
     configureTriangle(cityCoords, colors);
+    */
+    triangle.setCoords(cityCoords);
+    triangle.setColors(colors);
+    triangle.reconfigure();
 
-
-
-    const attemptVal = (triangleArea(cityCoords)/ 1e6).toFixed(2);
+    const attemptVal = (triangle.getArea()/ 1e6).toFixed(2);
     updateDashboard(attemptVal, gameSM);
     gameSM.evaluateGuess(attemptVal);
-
+    
 
   } catch (error) {
     dashboard.innerHTML = "Error loading data during triangle movement: " + error.stack;
