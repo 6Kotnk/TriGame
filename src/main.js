@@ -101,30 +101,26 @@ controls.dampingFactor = 0.05;
 controls.screenSpacePanning = false;
 controls.minDistance = 1.15;
 controls.maxDistance = 4;
+controls.enablePan = false;
 
 controls.addEventListener( 'change', getControlsZoom );
 
-var originalDistance = null
-
-function getControlsZoom( )
+function getControlsZoom()
 {
-		if( originalDistance == null )
-				originalDistance = controls.getDistance( );
-	
-		var zoom = originalDistance / controls.getDistance( );
-				zoom = Math.round(zoom*1e4)/1e4;
+  
+  const zoom = controls.maxDistance / controls.getDistance();
 
-    camera.children[0].position.set(5,5, 2*zoom);
-    var opacity = (zoom-1)**3/2.4
+  const opacity = (zoom-1)**3/2.4
+  const scale = 1/zoom;
 
-    clouds.material.opacity = 1 - opacity;
-    countryOutlines.material.opacity = Math.min(1,opacity);
+  camera.children[0].position.set(5,5, 2*zoom);
+  clouds.material.opacity = 1 - opacity;
+  countryOutlines.material.opacity = Math.min(1,opacity);
 
-    var scale = 1/zoom;
-
-    triangle.setScale(scale)
+  triangle.setScale(scale)
 
 }
+
 
 // Render loop
 function animate() {

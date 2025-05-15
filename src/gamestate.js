@@ -15,6 +15,9 @@ class GameStateMachine  {
     this.guessCounter = 0;
     this.currentState = GameState.NOT_CLOSE;
     document.getElementById('target').textContent = `Target: ${initialTarget} million km²`;
+
+    window.resetGame = this.resetGame;
+    window.continueGame = this.continueGame;
   }
 
   evaluateGuess(attemptVal) {
@@ -67,14 +70,3 @@ class GameStateMachine  {
 
 export const gameSM = new GameStateMachine(10.49);
 
-function resetGame() {
-  gameSM.resetGame();
-  resetDashboard();
-}
-
-function continueGame() {
-  gameSM.continueGame();
-}
-
-window.resetGame = resetGame;
-window.continueGame = continueGame;
