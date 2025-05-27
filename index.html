@@ -9,58 +9,81 @@
     <div id="container">
       <div id="leftPanel">
         <div id="cityInputs">
-          <div>City1: <input type="text" list="cities" id="city1" placeholder="Select a city" autocomplete="off"></div>
-          <div>City2: <input type="text" list="cities" id="city2" placeholder="Select a city" autocomplete="off"></div>
-          <div>City3: <input type="text" list="cities" id="city3" placeholder="Select a city" autocomplete="off"></div>
-
+          <div>City1: <input type="text" list="cities" id="city1" placeholder="Select a city" autocomplete="off"><span id="city1Lock"></span></div>
+          <div>City2: <input type="text" list="cities" id="city2" placeholder="Select a city" autocomplete="off"><span id="city2Lock"></span></div>
+          <div>City3: <input type="text" list="cities" id="city3" placeholder="Select a city" autocomplete="off"><span id="city3Lock"></span></div>
           <datalist id="cities">
           </datalist>
-
-          <button onclick="submitCities()" id=submitButton>Submit</button>
+          <button onclick="submitGuess()" id="submitButton">Submit</button>
         </div>
-        <div id="dashboard"></div>
+        <div id="dashboard">
+       
+          <div id="error">
+          </div>
+          <div id="guessCounter" class="resultItem">
+            Guesses left: <span id="guessCounterValueDisplayPanel">5</span>
+          </div>
+          <div id="history">
+          </div>
+        </div>
       </div>
       <div id="rightPanel">
         <div id="target"></div>
-
         <button id="tourButton">Tutorial</button>
-
-        <div id="winPanel">
+        <div id="difficultyPanel" class="panel">
+          <span id="difficultyLabel">
+            <h2>Select your difficulty</h2>
+          </span>
+          <br>
+          <br>
+          <button onclick="startGame(0)">Easy</button>
+          <button onclick="startGame(1)">Medium</button>
+          <button onclick="startGame(2)">Hard</button>
+        </div>
+        <div id="losePanel" class="panel">
+          <span id="loseLabel">
+            <h2>Congratulations, You lost!</h2>
+          </span>
+          <br>
+          <br>
+          <button onclick="resetGame()">Restart</button>
+        </div>
+        <div id="winPanel" class="panel">
           <span id="winLabel">
             <h2>Congratulations, You Won!</h2>
-            Attempt counter: 
+            Guesses left: <span id="guessCounterValueWinPanel">0</span>
           </span>
-          <span id="winValue">0</span>
           <br>
           <br>
           <button onclick="resetGame()">Restart</button>
           <button onclick="continueGame()">Continue</button>
         </div>
-  
-        <div id="epicWinPanel">
+ 
+        <div id="epicWinPanel" class="panel">
           <span id="epicWinLabel"></span>
             <h2>
               <span style="color:#FF0000">E</span><span style="color:#FF5A00">p</span><span style="color:#FFB400">i</span><span style="color:#F0FF00">c</span> <span style="color:#96FF00">w</span><span style="color:#3CFF00">i</span><span style="color:#00FF1E">n</span> <span style="color:#00FF78">u</span><span style="color:#00FFD2">n</span><span style="color:#00D2FF">c</span><span style="color:#0078FF">l</span><span style="color:#001EFF">e</span> <span style="color:#3C00FF">D</span><span style="color:#9600FF">a</span><span style="color:#F000FF">v</span><span style="color:#FF00B4">e</span><span style="color:#FF005A">!</span>
             </h2>
-            Attempt counter: 
+            Attempt counter: <span id="guessCounterValueEpicWinPanel">0</span>
           </span>
-          <span id="epicWinValue">0</span>
           <br>
           <br>
           <button onclick="resetGame()">Restart</button>
         </div>
-
       </div>
     </div>
-  
+ 
     <canvas id="MapCanvas" width="360" height="180"></canvas>
-  
+ 
     </div>
+    <script type="module" src="/src/code/main.js"></script>
+    <!--
     <script type="module" src="/src/main.js"></script>
     <script type="module" src="/src/tour.js"></script>
     <script type="module" src="/src/cities.js"></script>
     <script type="module" src="/src/submit.js"></script>
     <script type="module" src="/src/dashboard.js"></script>
     <script type="module" src="/src/gamestate.js"></script>
+    -->
   </body>
 </html>

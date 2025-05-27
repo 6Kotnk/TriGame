@@ -99,43 +99,42 @@ class Display {
     this.controls.minDistance = 1.15;
     this.controls.maxDistance = 4;
 
-    this.controls.addEventListener( 'change', this.getControlsZoom );
+    this.animate();
 
+    this.controls.addEventListener( 'change', this.getControlsZoom );
   }
 
-  getControlsZoom()
-  {
+  getControlsZoom = () => {
     const zoom = this.controls.maxDistance / this.controls.getDistance( );
-    zoom = Math.round(zoom*1e4)/1e4;
-
     const opacity = (zoom-1)**3/2.4
     const scale = 1/zoom;
 
     this.camera.children[0].position.set(5,5, 2*zoom);
-    this.clouds.material.opacity = 1 - opacity;
-    this.countryOutlines.material.opacity = Math.min(1,opacity);
+    this.clouds.mesh.material.opacity = 1 - opacity;
+    this.countryOutlines.mesh.material.opacity = Math.min(1,opacity);
 
     this.triangle.setScale(scale)
   }
 
-  animate() {
+  animate = () => {
     requestAnimationFrame(this.animate);
     this.controls.update();
-    //this.clouds.rotation.y += 0.001; // Slowly rotate clouds
-    this.clouds.rotateY(0.001); // Slowly rotate clouds
+    this.clouds.rotateY(0.001);
     this.renderer.render(this.scene, this.camera);
   }
 
-  getTriangleArea(){
-    this.triangle.getArea();
+  update(guess){
+    this.triangle.setCoords(guess.getCoords());
+    this.triangle.setColors(guess.colors);
+    this.triangle.reconfigure();
   }
 
-  setTriangleCoords(){
-    this.triangle.setCoords();
+  setTriangleCoords(coords){
+    this.triangle.setCoords(coords);
   }
 
-  setTriangleColors(){
-    this.triangle.setColors();
+  setTriangleColors(colors){
+    this.triangle.setColors(colors);
   }
 
   reconfigure(){

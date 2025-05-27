@@ -24,21 +24,20 @@ class PlanetLayer {
       bumpMap: bumpMap,
       bumpScale: bumpScale,
     });
-    this.layer = new THREE.Mesh(layerGeometry, layerMaterial);
-    this.layer.renderOrder = renderOrder;
-    scene.add(this.layer);
+    this.mesh = new THREE.Mesh(layerGeometry, layerMaterial);
+    this.mesh.renderOrder = renderOrder;
+    scene.add(this.mesh);
   }
 
   rotateY(rotInRad){
-    this.layer.rotateY(rotInRad);
+    this.mesh.rotateY(rotInRad);
   }
 
   changeMap(newMap, xOffset){
-    this.layer.rotateY(rotInRad);
-    const oldMap = this.layer.material.map; 
+    const oldMap = this.mesh.material.map; 
     newMap.wrapS = THREE.RepeatWrapping;
     newMap.offset.x = xOffset;
-    this.layer.material.map = newMap;
+    this.mesh.material.map = newMap;
     oldMap.dispose();
 
   }

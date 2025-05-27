@@ -3,28 +3,26 @@ body, html {
   padding: 0;
   height: 100%;
   font-family: Arial, sans-serif;
+  background-color: #1a1a1a;
+  color: #e0e0e0;
 }
-
 #container {
   display: flex;
-  height: 100vh; /* Full viewport height */
+  height: 100vh;
 }
-
 #leftPanel {
-  width: 16%; /* Increased from 300px to 25% of viewport width */
-  /*min-width: 250px;*/ /* Ensure it doesn't get too small on narrow screens */
+  width: 15%;
+  min-width: 250px;
   padding: 20px;
-  background-color: #f0f0f0;
+  background-color: #2d2d2d;
   overflow-x: scroll;
 }
-
 #rightPanel {
   position: relative;
-  width: 84%; /* 80% of the width */
-  overflow: hidden; /* Hide overflow */
+  width: 85%;
+  overflow: hidden;
 }
-
-#winPanel {
+.panel {
   display: none;
   position: absolute;
   inset: 0px;
@@ -33,74 +31,132 @@ body, html {
   max-width: 100vw;
   max-height: 100dvh;
   margin: auto;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(45, 45, 45, 0.9);
+  color: #e0e0e0;
   padding: 5px 10px;
   border-radius: 5px;
+  border: 1px solid #444;
 }
-
-#epicWinPanel {
-  display: none;
-  position: absolute;
-  inset: 0px;
-  width: 20rem;
-  height: 8rem;
-  max-width: 100vw;
-  max-height: 100dvh;
-  margin: auto;
-  background-color: rgba(255, 255, 255, 0.7);
-  padding: 5px 10px;
-  border-radius: 5px;
-}
-
 #cityInputs div {
   margin-bottom: 10px;
 }
-
 #dashboard {
   margin-top: 20px;
 }
-
 .resultItem {
   margin-bottom: 15px;
   padding: 10px;
-  background-color: #ffffff;
+  background-color: #333333;
+  color: #e0e0e0;
   border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  border: 1px solid #444;
 }
-
 .resultItem p {
   margin: 0;
   padding: 2px 0;
 }
-
 .resultItem .area {
   font-weight: bold;
-  color: #0066cc;
+  color: #66aaff;
 }
-
 #target {
   position: absolute;
   top: 10px;
   right: 10px;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(45, 45, 45, 0.9);
+  color: #e0e0e0;
   padding: 5px 10px;
   border-radius: 5px;
+  border: 1px solid #444;
   z-index: 1000;
 }
-
 #tourButton {
   position: absolute;
   top: 10px;
   left: 10px;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(45, 45, 45, 0.9);
+  color: #e0e0e0;
   padding: 5px 10px;
   border-radius: 5px;
+  border: 1px solid #444;
   z-index: 1000;
+  cursor: pointer;
 }
-
 #MapCanvas {
   position: absolute;
   left: -9999px;
   top: -9999px;
   visibility: hidden;
+}
+
+/* Input styling for dark mode */
+input[type="text"] {
+  background-color: #444;
+  color: #e0e0e0;
+  border: 1px solid #666;
+  border-radius: 4px;
+  padding: 4px;
+}
+
+input[type="text"]:focus {
+  background-color: #555;
+  border-color: #66aaff;
+  outline: none;
+}
+input[type="text"]::placeholder {
+  color: #999;
+}
+
+input[type="text"].locked {
+  background-color: #222;
+  color: #666;
+  border: 1px solid #333;
+  cursor: not-allowed;
+}
+
+input[type="text"].valid {
+  background-color: #2d4a2d;
+  color: #e0e0e0;
+  border: 1px solid #4a8c4a;
+}
+
+input[type="text"].invalid {
+  background-color: #4a2d2d;
+  color: #e0e0e0;
+  border: 1px solid #8c4a4a;
+}
+
+/* Button styling for dark mode */
+button {
+  background-color: #444;
+  color: #e0e0e0;
+  border: 1px solid #666;
+  border-radius: 4px;
+  padding: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+button:hover {
+  background-color: #555;
+}
+button:active {
+  background-color: #333;
+}
+
+/* Panel specific button styling */
+.panel button {
+  margin: 5px;
+  min-width: 80px;
+}
+
+/* Error text styling */
+#error {
+  color: #ff6b6b;
+}
+
+/* Heading styling */
+h2 {
+  color: #e0e0e0;
+  margin: 0 0 10px 0;
 }

@@ -2,6 +2,10 @@ import { Game } from "./Game";
 
 const game = new Game(10.49);
 
+function startGame(citiesLocked) {
+  game.startGame(citiesLocked);
+}
+
 function resetGame() {
   game.resetGame();
 }
@@ -10,10 +14,11 @@ function continueGame() {
   game.continueGame();
 }
 
-function submitCities() {
-  game.submitCities();
+function submitGuess() {
+  game.submitGuess();
 }
 
+window.startGame = startGame;
 window.resetGame = resetGame;
 window.continueGame = continueGame;
-window.submitCities = submitCities;
+window.submitGuess = submitGuess;
