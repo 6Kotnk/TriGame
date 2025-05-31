@@ -45,6 +45,8 @@ class Display {
     const textureLoader = new THREE.TextureLoader();
 
     const albedoMap = textureLoader.load(albedoMapPath);
+    albedoMap.minFilter = THREE.LinearFilter;
+
     const bumpMap = textureLoader.load(bumpMapPath);
     const cloudsMap = textureLoader.load(cloudsMapPath);
 
@@ -102,6 +104,9 @@ class Display {
     this.animate();
 
     this.controls.addEventListener( 'change', this.getControlsZoom );
+
+    const resizeObserver = new ResizeObserver(this.onWindowResize);
+    resizeObserver.observe(container);
   }
 
   getControlsZoom = () => {
@@ -115,6 +120,19 @@ class Display {
 
     this.triangle.setScale(scale)
   }
+
+  onWindowResize = () => {
+
+    const container = document.getElementById('rightPanel');
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+    
+    this.camera.aspect = width / height;
+    this.camera.updateProjectionMatrix();
+    
+    this.renderer.setSize(width, height);
+  }
+
 
   animate = () => {
     requestAnimationFrame(this.animate);

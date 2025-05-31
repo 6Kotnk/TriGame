@@ -53,15 +53,13 @@ class CityInputs {
     city.readOnly = true;
     city.dispatchEvent(new Event('input', { bubbles: true }));
     city.dispatchEvent(new Event('change', { bubbles: true }));
-    //this.handleChange();
-    //city.style.backgroundColor = '#606060';
     this.setInputState(city, "locked");
     lock.innerHTML = "🔒";
   }
 
   unlockCity(idx){
     const city = this.inputs[idx];
-    const lock = this.lock[idx];
+    const lock = this.locks[idx];
 
     city.value = "";
     city.readOnly = false;
@@ -107,8 +105,11 @@ class CityInputs {
     if (search.length < 2) return; // Avoid searching too early
 
     const matches = cities
-        .filter(city => city.name.toLowerCase().includes(search))
-        .slice(0, 10); // Limit to 10 results
+      .filter(city => city.name.toLowerCase().includes(search))
+      .filter(match => !this.cityNames.includes(match.name))
+      .slice(0, 10);
+
+
 
     matches.forEach(city => {
         const option = document.createElement("option");
@@ -153,6 +154,10 @@ class CityInputs {
 
 
   reset(){
+
+    this.cityCoords.fill(null);
+    this.cityNames.fill(null);
+
     for (let index = 0; index < this.inputs.length; index++) {
       this.unlockCity(index);
     }

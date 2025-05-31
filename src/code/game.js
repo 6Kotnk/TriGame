@@ -41,11 +41,6 @@ class Game  {
   }
 
 
-  startGame() {
-    document.getElementById('difficultyPanel').style.display = 'none';
-    this.currentState = GameState.NOT_CLOSE;
-  }
-
   resetGame() {
 
     this.guessCounter = 5;
@@ -76,41 +71,6 @@ class Game  {
       return; // Exit if the dashboard element doesn't exist
     }
 
-    /*
-    let cityInputCoords;
-    let cityInputNames;
-
-    try {
-
-      cityInputCoords = this.userInterface.getInputCoords();
-      cityInputNames = this.userInterface.getInputNames();
-
-    } catch (error) {
-      this.userInterface.display("Make sure all cities are valid before submitting");
-    }
-*/
-
-/*
-
-    // Move into getCoords, throw exception
-  
-    let CoordsValid = true; // Assume all coordinates are valid initially
-
-    for (let i = 0; i < cityInputCoords.length; i++) {
-      // Check if the current coordinate is "falsy" (null, undefined, etc.)
-      if (!cityInputCoords[i]) {
-        CoordsValid = false; // Found an invalid coordinate
-        break; // Stop checking immediately, no need to check the rest
-      }
-    }
-    if (!CoordsValid) {
-      this.userInterface.display("Make sure all cities are valid before submitting");
-      return;
-    }
-
-*/
-
-
     try {
 
       const guess = this.userInterface.getGuess();
@@ -124,15 +84,23 @@ class Game  {
         this.guessCounter--;
         const currentGuessAreaError = Math.abs(guess.area - this.targetArea);
 
+        // List is empty
         if(this.guessHistory.length == 0){
           this.guessHistory.push(guess);
         }else{
+          // Itterate over list
+          let inserted = false;
           for (let index = 0; index < this.guessHistory.length; index++) {
             const listGuessAreaError = Math.abs(this.guessHistory[index].area - this.targetArea);
             if(currentGuessAreaError < listGuessAreaError){
               this.guessHistory.splice(index, 0, guess);
+              inserted = true;
               break;
             }
+          }
+          // If the element is last insert at the end
+          if (!inserted) {
+            this.guessHistory.push(guess);
           }
         }
 
@@ -141,7 +109,6 @@ class Game  {
         // Put in evaluateGuess
         this.userInterface.update(this.guessHistory, guess, this.guessCounter);
         this.display.update(guess);
-        this.displayIfWin();
 
       }else{
         //IDK maybe tell that its in the list
@@ -160,39 +127,25 @@ class Game  {
 
     if(guessArea == this.targetArea) {
       this.currentState = GameState.EXACT_MATCH;
+      this.epicWinGame();
     }
-    else if( targetTol > Math.abs(guessArea - this.targetArea) ) {
+    else if( (guessArea * targetTol) > Math.abs(guessArea - this.targetArea) ) {
       if(this.currentState == GameState.NOT_CLOSE) {
         this.currentState = GameState.WITHIN_TOL;
+        this.winGame();
       }
     }
-
-    if(this.guessCounter == 0){
+    else if(this.guessCounter == 0){
       this.currentState = GameState.LOSS;
-    }
-
-  }
-
-  displayIfWin() {
-    switch (this.currentState) {
-      case GameState.WITHIN_TOL:
-        this.winGame();
-        break;
-      case GameState.EXACT_MATCH:
-        this.epicWinGame();
-        break;
-      case GameState.LOSS:
-        this.loss();
-        break;
-      default:
-        break;
+      this.loss();
     }
   }
+
 
   startGame(citiesLocked) {
-    //this.citiesLocked = citiesLocked;
     this.userInterface.lockCities(citiesLocked);
     document.getElementById('difficultyPanel').style.display = 'none';
+    this.currentState = GameState.NOT_CLOSE;
   }
 
   winGame() {

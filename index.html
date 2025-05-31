@@ -31,15 +31,54 @@
         <div id="target"></div>
         <button id="tourButton">Tutorial</button>
         <div id="difficultyPanel" class="panel">
-          <span id="difficultyLabel">
-            <h2>Select your difficulty</h2>
-          </span>
-          <br>
-          <br>
-          <button onclick="startGame(0)">Easy</button>
-          <button onclick="startGame(1)">Medium</button>
-          <button onclick="startGame(2)">Hard</button>
-        </div>
+            <span id="difficultyLabel">
+                <h2>Select your difficulty</h2>
+            </span>
+        
+              <div class="difficulty-options">
+                  <div class="difficulty-item easy" onclick="startGame(0)">
+                      <div class="difficulty-info">
+                          <div class="difficulty-name">Easy</div>
+                          <div class="difficulty-description">Choose any of the 3 cities</div>
+                      </div>
+                      <div class="cities-visual">
+                          <div class="city-icon city-unlocked">🏙️</div>
+                          <div class="city-icon city-unlocked">🏙️</div>
+                          <div class="city-icon city-unlocked">🏙️</div>
+                      </div>
+                  </div>
+
+                  <div class="difficulty-item medium" onclick="startGame(1)">
+                      <div class="difficulty-info">
+                          <div class="difficulty-name">Medium</div>
+                          <div class="difficulty-description">1 city locked, 2 available</div>
+                      </div>
+                      <div class="cities-visual">
+                          <div class="city-icon city-unlocked">🏙️</div>
+                          <div class="city-icon city-unlocked">🏙️</div>
+                          <div class="city-icon city-locked">
+                              <span class="lock-icon">🔒</span>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="difficulty-item hard" onclick="startGame(2)">
+                      <div class="difficulty-info">
+                          <div class="difficulty-name">Hard</div>
+                          <div class="difficulty-description">2 cities locked, 1 available</div>
+                      </div>
+                      <div class="cities-visual">
+                          <div class="city-icon city-unlocked">🏙️</div>
+                          <div class="city-icon city-locked">
+                              <span class="lock-icon">🔒</span>
+                          </div>
+                          <div class="city-icon city-locked">
+                              <span class="lock-icon">🔒</span>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
         <div id="losePanel" class="panel">
           <span id="loseLabel">
             <h2>Congratulations, You lost!</h2>
@@ -61,9 +100,7 @@
  
         <div id="epicWinPanel" class="panel">
           <span id="epicWinLabel"></span>
-            <h2>
-              <span style="color:#FF0000">E</span><span style="color:#FF5A00">p</span><span style="color:#FFB400">i</span><span style="color:#F0FF00">c</span> <span style="color:#96FF00">w</span><span style="color:#3CFF00">i</span><span style="color:#00FF1E">n</span> <span style="color:#00FF78">u</span><span style="color:#00FFD2">n</span><span style="color:#00D2FF">c</span><span style="color:#0078FF">l</span><span style="color:#001EFF">e</span> <span style="color:#3C00FF">D</span><span style="color:#9600FF">a</span><span style="color:#F000FF">v</span><span style="color:#FF00B4">e</span><span style="color:#FF005A">!</span>
-            </h2>
+            <h2>Congratulations, You Won Exactly!</h2>
             Attempt counter: <span id="guessCounterValueEpicWinPanel">0</span>
           </span>
           <br>
@@ -77,13 +114,5 @@
  
     </div>
     <script type="module" src="/src/code/main.js"></script>
-    <!--
-    <script type="module" src="/src/main.js"></script>
-    <script type="module" src="/src/tour.js"></script>
-    <script type="module" src="/src/cities.js"></script>
-    <script type="module" src="/src/submit.js"></script>
-    <script type="module" src="/src/dashboard.js"></script>
-    <script type="module" src="/src/gamestate.js"></script>
-    -->
   </body>
 </html>
