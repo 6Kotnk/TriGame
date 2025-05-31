@@ -27,6 +27,21 @@ body, html {
   overflow: hidden;
 }
 
+.panel {
+  display: none;
+  position: absolute;
+  inset: 0px;
+  width: 20rem;
+  height: 8rem;
+  max-width: 100vw;
+  max-height: 100dvh;
+  margin: auto;
+  background-color: rgba(45, 45, 45, 0.9);
+  color: #e0e0e0;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid #444;
+}
 
 
 #cityInputs div {
@@ -124,6 +139,7 @@ input[type="text"].invalid {
 
 /* Button styling for dark mode */
 button {
+  text-align: left;
   background-color: #444;
   color: #e0e0e0;
   border: 1px solid #666;
@@ -155,126 +171,3 @@ h2 {
   color: #e0e0e0;
   margin: 0 0 10px 0;
 }
-/*
-.panel {
-  display: none;
-  position: absolute;
-  inset: 0px;
-  width: 20rem;
-  height: 8rem;
-  max-width: 100vw;
-  max-height: 100dvh;
-  margin: auto;
-  background-color: rgba(45, 45, 45, 0.9);
-  color: #e0e0e0;
-  padding: 5px 10px;
-  border-radius: 5px;
-  border: 1px solid #444;
-}
-*/
-        .panel {
-            display: none;
-            position: absolute;
-            inset: 0px;
-            width: 24rem;
-            height: 18rem;
-            max-width: 100vw;
-            max-height: 100dvh;
-            margin: auto;
-            background-color: rgba(45, 45, 45, 0.9);
-            color: #e0e0e0;
-            padding: 20px;
-            border-radius: 5px;
-            border: 1px solid #444;
-            font-family: Arial, sans-serif;
-        }
-
-        #difficultyLabel h2 {
-            margin: 0 0 20px 0;
-            text-align: center;
-            font-size: 1.4rem;
-        }
-
-        .difficulty-options {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .difficulty-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 16px;
-            background-color: rgba(60, 60, 60, 0.7);
-            border-radius: 8px;
-            border: 2px solid transparent;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .difficulty-item:hover {
-            background-color: rgba(80, 80, 80, 0.8);
-            border-color: #666;
-        }
-
-        .difficulty-info {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .difficulty-name {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: #fff;
-        }
-
-        .difficulty-description {
-            font-size: 0.85rem;
-            color: #bbb;
-        }
-
-        .cities-visual {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .city-icon {
-            width: 24px;
-            height: 24px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .city-unlocked {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .city-locked {
-            background-color: #666;
-            color: #999;
-        }
-
-        .lock-icon {
-            font-size: 14px;
-        }
-
-        /* Difficulty-specific colors */
-        .easy .difficulty-name {
-            color: #4CAF50;
-        }
-
-        .medium .difficulty-name {
-            color: #FF9800;
-        }
-
-        .hard .difficulty-name {
-            color: #F44336;
-        }
