@@ -5,7 +5,7 @@ const R = 6371;  // Earth's radius in kilometers
 class Guess {
   constructor() {
     this.cities = [];
-    for (let i = 0; i < 3; i++) {
+    for (let idx = 0; idx < 3; idx++) {
       this.cities.push({ name: "", coords: [0, 0] });
     }
     this.colors = {
@@ -16,8 +16,39 @@ class Guess {
     this.area = null;
   }
 
+  
   degToRad(degrees) {
     return degrees * (Math.PI / 180);
+  }
+
+  toFixedDynamicRange(number, targetRange = 10000) {
+    if (number === 0) return "0";
+    
+    const absNumber = Math.abs(number);
+    
+    // Calculate rounding factor directly
+    const factor = Math.max(1, targetRange / (10 * absNumber));
+    
+    // Round the number
+    const rounded = Math.round(number * factor) / factor;
+    
+    // For display precision, we still need to calculate how many decimals to show
+    // But we can derive this from the factor instead of recalculating
+    const maxDecimals = Math.max(0, Math.ceil(Math.log10(factor)));
+    
+    let result = rounded.toFixed(maxDecimals);
+    
+    // Remove trailing zeros
+    if (result.includes('.')) {
+      while (result.endsWith('0')) {
+        result = result.slice(0, -1);
+      }
+      if (result.endsWith('.')) {
+        result = result.slice(0, -1);
+      }
+    }
+    
+    return result;
   }
 
   setCoords(coordsArray) {
@@ -25,7 +56,7 @@ class Guess {
       this.cities[index].coords = [...coordsArray[index]];
     }
     const areaInMetersSquared = this.sphericalTriangleArea(coordsArray);
-    this.area = (areaInMetersSquared / 1e6).toFixed(2);
+    this.area = this.toFixedDynamicRange(areaInMetersSquared / 1e6, );
   }
 
   getCoords() {

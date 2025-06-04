@@ -11,8 +11,12 @@ class UserInterface {
     this.guessCounter = new GuessCounter(document.getElementById("guessCounterValueDisplayPanel"), 5);
   }
 
-  lockCities(citiesLocked){
-    this.cityInputs.lockCities(citiesLocked);
+  getRandomGuess(){
+    return this.cityInputs.getRandomGuess();
+  }
+
+  lockCities(citiesLocked, cityList){
+    this.cityInputs.lockCities(citiesLocked, cityList);
   }
 
   getGuess(){

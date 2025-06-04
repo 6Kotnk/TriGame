@@ -36,7 +36,7 @@ class Game  {
     };
 
     document.getElementById('difficultyPanel').style.display = 'block';
-    document.getElementById('target').textContent = `Target: ${initialTargetArea} million km²`;
+    document.getElementById('target').textContent = `Target: ?? million km²`;
 
   }
 
@@ -46,7 +46,8 @@ class Game  {
     this.guessCounter = 5;
     this.guessHistory = [];
     this.currentState = GameState.INIT;
-    this.targetArea = (10 + Math.random() * 90).toFixed(0);
+    //this.targetArea = (10 + Math.random() * 90).toFixed(0);
+    this.targetArea = null;
 
     this.display.reset();
     this.userInterface.reset();
@@ -56,7 +57,7 @@ class Game  {
     document.getElementById('epicWinPanel').style.display = 'none';
     document.getElementById('losePanel').style.display = 'none';
 
-    document.getElementById('target').textContent = `Target: ${this.targetArea} million km²`;
+    document.getElementById('target').textContent = `Target: ?? million km²`;
     
   }
   
@@ -143,7 +144,14 @@ class Game  {
 
 
   startGame(citiesLocked) {
-    this.userInterface.lockCities(citiesLocked);
+    //this.targetArea = (10 + Math.random() * 90).toFixed(0);
+    //document.getElementById('target').textContent = `Target: ${this.targetArea} million km²`;
+
+    const targetGuess = this.userInterface.getRandomGuess();
+    this.targetArea = targetGuess.getArea();
+
+    this.userInterface.lockCities(citiesLocked, targetGuess.getNames());
+    document.getElementById('target').textContent = `Target: ${this.targetArea} million km²`;
     document.getElementById('difficultyPanel').style.display = 'none';
     this.currentState = GameState.NOT_CLOSE;
   }

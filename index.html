@@ -30,16 +30,58 @@
       <div id="rightPanel">
         <div id="target"></div>
         <button id="tourButton">Tutorial</button>
-        <div id="difficultyPanel" class="panel">
-          <span id="difficultyLabel">
-            <h2>Select your difficulty</h2>
-          </span>
-          <br>
-          <br>
-          <button onclick="startGame(0)">Easy</button>
-          <button onclick="startGame(1)">Medium</button>
-          <button onclick="startGame(2)">Hard</button>
+
+    <div id="difficultyPanel" class="panel">
+      <span id="difficultyLabel">
+        <h2>Select your difficulty</h2>
+      </span>
+        
+      <div class="difficulty-options">
+        <div class="difficulty-item easy" onclick="startGame(0)">
+            <div class="difficulty-info">
+              <div class="difficulty-name">Easy</div>
+              <div class="difficulty-description">Choose any of the 3 cities</div>
+            </div>
+            <div class="cities-visual">
+              <div class="city-icon city-unlocked">🏙️</div>
+              <div class="city-icon city-unlocked">🏙️</div>
+              <div class="city-icon city-unlocked">🏙️</div>
+            </div>
+          </div>
+
+          <div class="difficulty-item medium" onclick="startGame(1)">
+            <div class="difficulty-info">
+              <div class="difficulty-name">Medium</div>
+              <div class="difficulty-description">1 city locked, 2 available</div>
+            </div>
+            <div class="cities-visual">
+              <div class="city-icon city-locked">
+              <span class="lock-icon">🔒</span>
+              </div>
+              <div class="city-icon city-unlocked">🏙️</div>
+              <div class="city-icon city-unlocked">🏙️</div>
+            </div>
+          </div>
+
+          <div class="difficulty-item hard" onclick="startGame(2)">
+            <div class="difficulty-info">
+              <div class="difficulty-name">Hard</div>
+              <div class="difficulty-description">2 cities locked, 1 available</div>
+            </div>
+            <div class="cities-visual">
+              <div class="city-icon city-locked">
+                <span class="lock-icon">🔒</span>
+              </div>
+
+              <div class="city-icon city-locked">
+                <span class="lock-icon">🔒</span>
+              </div>
+              <div class="city-icon city-unlocked">🏙️</div>
+            </div>
+          </div>
         </div>
+      </div>
+
         <div id="losePanel" class="panel">
           <span id="loseLabel">
             <h2>Congratulations, You lost!</h2>

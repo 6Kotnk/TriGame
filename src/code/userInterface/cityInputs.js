@@ -35,6 +35,18 @@ class CityInputs {
 
   }
 
+  findFeasibleCities(citiesLocked, targetArea){
+    
+    const cityList = Array(3).fill(null);
+    
+
+
+    // Pick 3 cities, get area, return area
+    
+
+    return {cityList}
+  }
+
   setInputState(input, state) {
     // Remove all state classes
     input.classList.remove('valid', 'invalid', 'locked');
@@ -45,11 +57,12 @@ class CityInputs {
     }
   }
 
-  lockCity(idx){
+  lockCity(idx, feasibleCity){
     const city = this.inputs[idx];
     const lock = this.locks[idx];
 
-    city.value = cities[Math.floor(Math.random() * cities.length)].name;
+    //city.value = cities[Math.floor(Math.random() * cities.length)].name;
+    city.value = feasibleCity;
     city.readOnly = true;
     city.dispatchEvent(new Event('input', { bubbles: true }));
     city.dispatchEvent(new Event('change', { bubbles: true }));
@@ -68,11 +81,29 @@ class CityInputs {
     lock.innerHTML = "";
   }
 
-  lockCities(citiesLocked){
+
+  lockCities(citiesLocked, cityList){
 
     for (let index = 0; index < citiesLocked; index++) {
-      this.lockCity(index);
+      this.lockCity(index, cityList[index]);
     }
+
+  }
+
+  getRandomGuess(){
+    const guess = new Guess();
+    const names = [];
+    const coords = [];
+
+    for (let index = 0; index < 3; index++) {
+      const randCity =  cities[Math.floor(Math.random() * cities.length)];
+      names.push(randCity.name);
+      coords.push(randCity.coords.split(", ").map(Number));
+    }
+    guess.setNames(names)
+    guess.setCoords(coords) 
+
+    return guess;
   }
 
   getGuess(){
