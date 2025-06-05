@@ -2,10 +2,9 @@ export {GuessCounter};
 
 class GuessCounter {
 
-  constructor(element, resetCount) {
+  constructor(element) {
     this.element = element;
-    this.resetCount = resetCount;
-    this.update(this.resetCount);
+    this.update("?");
   }
 
   update(newCount){
@@ -13,7 +12,7 @@ class GuessCounter {
   }
 
   reset(){
-    this.update(this.resetCount);
+    this.update("?");
   }
 
 }

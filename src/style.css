@@ -47,6 +47,49 @@ body, html {
   font-size: 1.4rem;
 }
 
+.guess-selector {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: rgba(60, 60, 60, 0.7);
+  border-radius: 8px;
+  border: 1px solid #666;
+}
+
+.guess-selector h3 {
+  margin: 0 0 15px 0;
+  color: #e0e0e0;
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.slider-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.slider-label {
+  color: #bbb;
+  font-size: 0.9rem;
+  min-width: 50px;
+}
+
+.guess-slider {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: #444;
+  outline: none;
+}
+
+.guess-value {
+  color: #66aaff;
+  font-weight: bold;
+  font-size: 1.1rem;
+  min-width: 30px;
+  text-align: center;
+}
+
 .difficulty-options {
   display: flex;
   flex-direction: column;

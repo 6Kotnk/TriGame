@@ -1,6 +1,7 @@
 import { History } from "./history";
 import { CityInputs } from "./cityInputs";
 import { GuessCounter } from "./guessCounter";
+import { GuessSlider } from "./guessSlider";
 
 export {UserInterface};
 
@@ -9,14 +10,17 @@ class UserInterface {
     this.history = new History();
     this.cityInputs = new CityInputs();
     this.guessCounter = new GuessCounter(document.getElementById("guessCounterValueDisplayPanel"), 5);
+    this.guessSlider = new GuessSlider();
   }
 
   getRandomGuess(){
     return this.cityInputs.getRandomGuess();
   }
 
-  lockCities(citiesLocked, cityList){
+  startGame(citiesLocked, cityList){
     this.cityInputs.lockCities(citiesLocked, cityList);
+    this.guessCounter.update(this.guessSlider.getSliderValue());
+    return this.guessSlider.getSliderValue();
   }
 
   getGuess(){

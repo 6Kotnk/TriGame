@@ -112,11 +112,10 @@ class Game  {
         this.display.update(guess);
 
       }else{
-        //IDK maybe tell that its in the list
+        this.userInterface.display("You already tried this triangle!");
       }
 
     } catch (error) {
-      //this.userInterface.display("Error loading data during triangle movement: " + error.stack);
       this.userInterface.display(error.message);
     }
   }
@@ -150,7 +149,7 @@ class Game  {
     const targetGuess = this.userInterface.getRandomGuess();
     this.targetArea = targetGuess.getArea();
 
-    this.userInterface.lockCities(citiesLocked, targetGuess.getNames());
+    this.guessCounter = this.userInterface.startGame(citiesLocked, targetGuess.getNames());
     document.getElementById('target').textContent = `Target: ${this.targetArea} million km²`;
     document.getElementById('difficultyPanel').style.display = 'none';
     this.currentState = GameState.NOT_CLOSE;
