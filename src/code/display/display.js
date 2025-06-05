@@ -13,6 +13,7 @@ import skyMapPath from      '../../assets/img/starMap8k.jpg'
 
 import { SphericalTriangle } from './sphericalTriangle/sphericalTriangle.js';
 import { PlanetLayer } from './planetLayer.js';
+import { AtmosphereLayer } from './atmosphereLayer.js';
 
 export {Display};
 
@@ -65,13 +66,13 @@ class Display {
 
     this.triangle = new SphericalTriangle(this.scene, canvas);
 
-    this.earth = new PlanetLayer(this.scene, 1, 1, {
+    this.earth = new PlanetLayer(this.scene, 1, 2, {
       map: albedoMap,
       bumpMap: bumpMap,
       bumpScale: 5
     });
 
-    this.countryOutlines = new PlanetLayer(this.scene, 1, 2, {
+    this.countryOutlines = new PlanetLayer(this.scene, 1, 3, {
         map: outlineMap,
         transparent: true,
     });

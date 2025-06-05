@@ -15,7 +15,7 @@ class SphericalTriangleFill {
 
     const map = new THREE.CanvasTexture(canvas);
 
-    this.fillLayer = new PlanetLayer(scene, 1, 3, {
+    this.fillLayer = new PlanetLayer(scene, 1, 1, {
       map: map,
       transparent: true,
       opacity: 0.5,
