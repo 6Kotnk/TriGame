@@ -2,6 +2,8 @@ import { Display } from './display/display.js';
 import { Guess } from './guess.js';
 import { UserInterface } from './userInterface/userInterface.js';
 
+import * as CONFETTI from '@tsparticles/confetti';
+
 export {Game};
 
 const targetTol = 0.1; //10%
@@ -153,6 +155,7 @@ class Game  {
     document.getElementById('target').textContent = `Target: ${this.targetArea} million km²`;
     document.getElementById('difficultyPanel').style.display = 'none';
     this.currentState = GameState.NOT_CLOSE;
+    CONFETTI.confetti();
   }
 
   winGame() {

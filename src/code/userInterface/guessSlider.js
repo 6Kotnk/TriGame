@@ -3,14 +3,13 @@ export {GuessSlider};
 class GuessSlider {
 
   constructor() {
-    this.selectedGuesses = 5;
 
     // Update slider value display
     this.guessSlider = document.getElementById('guessSlider');
     this.guessValue = document.getElementById('guessValue');
 
     // Initialize with default value (5 guesses)
-    this.selectedGuesses = this.sliderToGuesses(5);
+    this.selectedGuesses = this.sliderToGuesses(6);
     this.guessValue.textContent = this.selectedGuesses;
 
     this.guessSlider.addEventListener("input", this.handleInput);
