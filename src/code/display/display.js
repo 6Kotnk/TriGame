@@ -1,15 +1,15 @@
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
 
-import albedoMapPath from   '../../assets/img/albedoMap8k.jpg'
-import bumpMapPath from     '../../assets/img/bumpMap8k.png'
+import albedoMapPath from   '../../assets/img/albedoMap.webp'
+import bumpMapPath from     '../../assets/img/bumpMap.webp'
 
-import cloudsMapPath from   '../../assets/img/cloudsMap8k.png'
-import outlineMapPath from  '../../assets/img/outlineMap8k.png'
-import lightMapPath from    '../../assets/img/lightMap8k.png'
-import oceanMapPath from    '../../assets/img/oceanMap8k.png'
+import cloudsMapPath from   '../../assets/img/cloudsMap.webp'
+import outlineMapPath from  '../../assets/img/outlineMap.webp'
+import lightMapPath from    '../../assets/img/lightMap.webp'
+import oceanMapPath from    '../../assets/img/oceanMap.webp'
 
-import skyMapPath from      '../../assets/img/starMap8k.jpg'
+import skyMapPath from      '../../assets/img/starMap.webp'
 
 import { SphericalTriangle } from './sphericalTriangle/sphericalTriangle.js';
 import { PlanetLayer } from './planetLayer.js';
