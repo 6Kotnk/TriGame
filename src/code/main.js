@@ -1,6 +1,6 @@
-import { Game } from "./Game";
+import { Game } from "./game.js";
 
-const game = new Game(10.49);
+const game = new Game();
 
 function startGame(citiesLocked) {
   game.startGame(citiesLocked);

@@ -26,7 +26,7 @@ class GuessSlider {
   }
 
   sliderToGuesses(sliderValue) {
-    if (sliderValue === 10) {
+    if (sliderValue === 11) {
       return Infinity;
     } else {
       return sliderValue;

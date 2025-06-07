@@ -38,16 +38,6 @@ class Guess {
     
     let result = rounded.toFixed(maxDecimals);
     
-    // Remove trailing zeros
-    if (result.includes('.')) {
-      while (result.endsWith('0')) {
-        result = result.slice(0, -1);
-      }
-      if (result.endsWith('.')) {
-        result = result.slice(0, -1);
-      }
-    }
-    
     return result;
   }
 

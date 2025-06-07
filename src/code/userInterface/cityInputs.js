@@ -9,8 +9,6 @@ class CityInputs {
   constructor() {
     this.cityCoords = Array(3).fill(null);
     this.cityNames = Array(3).fill(null);
-    
-    //this.cityInputs = Array(3).fill(null);
 
     this.inputs = [
         document.getElementById("city1"),
@@ -33,18 +31,6 @@ class CityInputs {
         input.addEventListener("change", this.handleChange);
     });
 
-  }
-
-  findFeasibleCities(citiesLocked, targetArea){
-    
-    const cityList = Array(3).fill(null);
-    
-
-
-    // Pick 3 cities, get area, return area
-    
-
-    return {cityList}
   }
 
   setInputState(input, state) {

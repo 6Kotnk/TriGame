@@ -18,15 +18,15 @@ const GameState = {
 
 class Game  {
 
-  constructor(initialTargetArea) {
+  constructor() {
 
     this.display = new Display();
     this.userInterface = new UserInterface();
 
     this.guessHistory = [];
 
-    this.targetArea = initialTargetArea;
-    this.guessCounter = 5;
+    this.targetArea = null;
+    this.guessCounter = null;
     this.currentState = GameState.INIT;
 
     this.citiesLocked = 0;
@@ -45,10 +45,9 @@ class Game  {
 
   resetGame() {
 
-    this.guessCounter = 5;
+    this.guessCounter = null;
     this.guessHistory = [];
     this.currentState = GameState.INIT;
-    //this.targetArea = (10 + Math.random() * 90).toFixed(0);
     this.targetArea = null;
 
     this.display.reset();
@@ -145,9 +144,6 @@ class Game  {
 
 
   startGame(citiesLocked) {
-    //this.targetArea = (10 + Math.random() * 90).toFixed(0);
-    //document.getElementById('target').textContent = `Target: ${this.targetArea} million km²`;
-
     const targetGuess = this.userInterface.getRandomGuess();
     this.targetArea = targetGuess.getArea();
 
@@ -155,21 +151,42 @@ class Game  {
     document.getElementById('target').textContent = `Target: ${this.targetArea} million km²`;
     document.getElementById('difficultyPanel').style.display = 'none';
     this.currentState = GameState.NOT_CLOSE;
-    CONFETTI.confetti();
   }
 
   winGame() {
     document.getElementById('guessCounterValueWinPanel').textContent = this.guessCounter;
     document.getElementById('winPanel').style.display = 'block';
+    this.celebrate(10);
   }
   
   epicWinGame() {
     document.getElementById('guessCounterValueEpicWinPanel').textContent = this.guessCounter;
     document.getElementById('epicWinPanel').style.display = 'block';
+    this.celebrate(100);
   }
 
   loss() {
     document.getElementById('losePanel').style.display = 'block';
+  }
+
+  celebrate(intensity){
+    var duration = 5 * 1000; // Duration in milliseconds
+    var animationEnd = Date.now() + duration;
+    var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+    var interval = setInterval(function() {
+        var timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+            return clearInterval(interval);
+        }
+
+        var particleCount = intensity * (timeLeft / duration);
+        // Since particles fall down, start a bit higher than random
+        CONFETTI.confetti("confetti_id", Object.assign({}, 
+          defaults, 
+          { particleCount, origin: { x: Math.random(), y: Math.random() - 0.2 } }));
+    }, 10);
   }
 
 }
