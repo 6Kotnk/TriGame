@@ -19,14 +19,6 @@ export {Display};
 
 
 class Display {
-
-  triangle;
-  earth;
-  countryOutlines;
-  clouds;
-
-  originalDistance;
-
   constructor() {
     this.scene = new THREE.Scene();
 
@@ -46,13 +38,13 @@ class Display {
     const textureLoader = new THREE.TextureLoader();
 
     const albedoMap = textureLoader.load(albedoMapPath);
-    albedoMap.minFilter = THREE.LinearFilter;
+    //albedoMap.minFilter = THREE.LinearFilter;
 
     const bumpMap = textureLoader.load(bumpMapPath);
     const cloudsMap = textureLoader.load(cloudsMapPath);
 
     const outlineMap = textureLoader.load(outlineMapPath);
-    const lightMap = textureLoader.load(lightMapPath);
+    //const lightMap = textureLoader.load(lightMapPath); //Unused. Masking the map requires shader modification
     const oceanMap = textureLoader.load(oceanMapPath);
     const skyMap = textureLoader.load(skyMapPath);
 
@@ -69,7 +61,9 @@ class Display {
     this.earth = new PlanetLayer(this.scene, 1, 2, {
       map: albedoMap,
       bumpMap: bumpMap,
-      bumpScale: 5
+      bumpScale: 1,
+      specularMap: oceanMap,
+      shininess: 100,
     });
 
     this.countryOutlines = new PlanetLayer(this.scene, 1, 3, {

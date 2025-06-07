@@ -12,17 +12,24 @@ class PlanetLayer {
       alphaMap = null,
       opacity = 1,
       bumpMap = null,
-      bumpScale = 1
+      bumpScale = 1,
+      specularMap = null,
+      shininess = 30,
+      specular = null,
     } = options;
 
     const layerGeometry = new THREE.SphereGeometry(height, 32, 32);
-    const layerMaterial = new THREE.MeshStandardMaterial({
+    //const layerGeometry = new THREE.IcosahedronGeometry(height, 12);
+    const layerMaterial = new THREE.MeshPhongMaterial({
       map: map,
       transparent: transparent,
       alphaMap: alphaMap,
       opacity: opacity,
       bumpMap: bumpMap,
       bumpScale: bumpScale,
+      specularMap: specularMap,
+      shininess:  shininess,
+      specular:  specular,
     });
     this.mesh = new THREE.Mesh(layerGeometry, layerMaterial);
     this.mesh.renderOrder = renderOrder;
