@@ -65,6 +65,10 @@ class Game  {
     document.getElementById('winPanel').style.display = 'none';
   }
 
+  logDist(a, b = 1){
+    return Math.abs(Math.log10(a) - Math.log10(b));
+  }
+
   submitGuess() {
 
     if (!this.userInterface) {
@@ -83,7 +87,7 @@ class Game  {
 
         //Insert guess at correct index
         this.guessCounter--;
-        const currentGuessAreaError = Math.abs(guess.area - this.targetArea);
+        const currentGuessAreaError = this.logDist(guess.area, this.targetArea);
 
         // List is empty
         if(this.guessHistory.length == 0){
@@ -92,7 +96,7 @@ class Game  {
           // Itterate over list
           let inserted = false;
           for (let index = 0; index < this.guessHistory.length; index++) {
-            const listGuessAreaError = Math.abs(this.guessHistory[index].area - this.targetArea);
+            const listGuessAreaError = this.logDist(this.guessHistory[index].area, this.targetArea);
             if(currentGuessAreaError < listGuessAreaError){
               this.guessHistory.splice(index, 0, guess);
               inserted = true;
@@ -129,7 +133,7 @@ class Game  {
       this.currentState = GameState.EXACT_MATCH;
       this.epicWinGame();
     }
-    else if( (guessArea * targetTol) > Math.abs(guessArea - this.targetArea) ) {
+    else if( this.logDist(1+targetTol) > this.logDist(guessArea, this.targetArea) ) {
       if(this.currentState == GameState.NOT_CLOSE) {
         this.currentState = GameState.WITHIN_TOL;
         this.winGame();

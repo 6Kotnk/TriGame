@@ -116,6 +116,7 @@ class CityInputs {
 
   handleInput = (event) => {
     const search = event.target.value.toLowerCase();
+    const inputIdx = parseInt(event.target.id[event.target.id.length - 1]) - 1;
 
     this.datalist.innerHTML = ""; // Clear old suggestions
 
@@ -123,7 +124,8 @@ class CityInputs {
 
     const matches = cities
       .filter(city => city.name.toLowerCase().includes(search))
-      .filter(match => !this.cityNames.includes(match.name))
+      .filter(match => this.cityNames[(inputIdx + 1)%3] != match.name)
+      .filter(match => this.cityNames[(inputIdx + 2)%3] != match.name)
       .slice(0, 10);
 
 

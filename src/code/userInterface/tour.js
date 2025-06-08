@@ -22,6 +22,7 @@ function createTourSteps() {
       title: "Choose Your Difficulty",
       content: "First, select your difficulty level and number of guesses. In Easy mode, you can choose any 3 cities. Medium locks 1 city, and Hard locks 2 cities, making the challenge progressively harder.",
       target: "#difficultyPanel",
+      propagateEvents: true,
       order: currentOrder++,
     });
   }
@@ -57,8 +58,15 @@ function createTourSteps() {
   });
 
   steps.push({
+    title: "Visualize Your Triangle",
+    content: "Your selected cities will form a triangle on this world map, helping you visualize your guess.",
+    target: "#MapCanvas",
+    order: currentOrder++,
+  });
+
+  steps.push({
     title: "Ready to Play!",
-    content: "That's everything you need to know! Keep submitting guesses until you hit the target area. The map will show your triangles as you create them. Good luck!",
+    content: "That's everything you need to know! Keep submitting guesses until you hit the target area. Good luck!",
     order: currentOrder++,
   });
 
@@ -89,3 +97,18 @@ const tourButton = document.getElementById("tourButton");
 if (tourButton) {
   tourButton.addEventListener("click", startTour);
 }
+
+// Function to remove the tutorial's attention-seeking animation
+function stopTutorialAnimation() {
+  const tourButton = document.getElementById("tourButton");
+  if (tourButton && tourButton.classList.contains("tutorial-pulse")) {
+    tourButton.classList.remove("tutorial-pulse");
+    // Remove the event listeners so this doesn't keep firing
+    document.body.removeEventListener('click', stopTutorialAnimation);
+    document.body.removeEventListener('keydown', stopTutorialAnimation);
+  }
+}
+
+// Add event listeners that stop the animation on the first user interaction
+document.body.addEventListener('click', stopTutorialAnimation, { once: true });
+document.body.addEventListener('keydown', stopTutorialAnimation, { once: true });

@@ -505,3 +505,28 @@ h2 {
 #confetti_id canvas {
   pointer-events: none;
 }
+
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+  }
+}
+
+/* Add this class to your tutorial button in the HTML */
+.tutorial-pulse {
+  animation: pulse 2s infinite;
+  border-radius: 5px; /* Ensure the glow matches the button shape */
+}
+
+/* Your existing button style */
+#tourButton {
+  /* Your other styles like padding, background, etc. */
+  cursor: pointer;
+}

@@ -30,6 +30,11 @@ class SphericalTriangle {
 
     this.fill = new SphericalTriangleFill(scene, canvas);
 
+    this.colors = {
+      verts: "white",
+      edges: "white",
+      fill: "cyan",
+    };
   }
 
   setCoords(coords){
