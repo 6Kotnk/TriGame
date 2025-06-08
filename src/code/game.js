@@ -1,5 +1,4 @@
 import { Display } from './display/display.js';
-import { Guess } from './guess.js';
 import { UserInterface } from './userInterface/userInterface.js';
 
 import * as CONFETTI from '@tsparticles/confetti';
@@ -26,7 +25,7 @@ class Game  {
     this.guessHistory = [];
 
     this.targetArea = null;
-    this.guessCounter = null;
+    this.guessCounter = Infinity;
     this.currentState = GameState.INIT;
 
     this.citiesLocked = 0;
@@ -45,7 +44,7 @@ class Game  {
 
   resetGame() {
 
-    this.guessCounter = null;
+    this.guessCounter = Infinity;
     this.guessHistory = [];
     this.currentState = GameState.INIT;
     this.targetArea = null;
@@ -144,8 +143,12 @@ class Game  {
 
 
   startGame(citiesLocked) {
+    this.guessHistory = [];
     const targetGuess = this.userInterface.getRandomGuess();
     this.targetArea = targetGuess.getArea();
+
+    this.display.reset();
+    this.userInterface.reset();
 
     this.guessCounter = this.userInterface.startGame(citiesLocked, targetGuess.getNames());
     document.getElementById('target').textContent = `Target: ${this.targetArea} million km²`;
