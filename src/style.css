@@ -3,24 +3,42 @@ body, html {
   padding: 0;
   height: 100%;
   font-family: Arial, sans-serif;
-/*
-  background-color: #1a1a1a;
-  color: #e0e0e0;
-*/
-  color-scheme: dark;
+  color-scheme: light dark;
+}
+
+/* Light mode (default) */
+body, html {
+  background-color: #ffffff;
+  color: #333333;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  body, html {
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+  }
 }
 
 #container {
   display: flex;
   height: 100vh;
 }
+
 #leftPanel {
   width: 15%;
   min-width: 260px;
   padding: 20px;
-  background-color: #2d2d2d;
+  background-color: #f5f5f5;
   overflow-y: scroll;
 }
+
+@media (prefers-color-scheme: dark) {
+  #leftPanel {
+    background-color: #2d2d2d;
+  }
+}
+
 #rightPanel {
   position: relative;
   width: 85%;
@@ -30,15 +48,24 @@ body, html {
 .panel {
   display: none;
   position: absolute;
-  background-color: rgba(45, 45, 45, 0.9);
+  background-color: rgba(255, 255, 255, 0.95);
   padding: 20px;
   border-radius: 5px;
-  border: 1px solid #444;
+  border: 1px solid #ddd;
   font-family: Arial, sans-serif;
   top: 50%;
   left: 50%;
   margin-right: -50%;
   transform: translate(-50%, -50%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+@media (prefers-color-scheme: dark) {
+  .panel {
+    background-color: rgba(45, 45, 45, 0.95);
+    border: 1px solid #444;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
 }
 
 #difficultyLabel h2 {
@@ -50,16 +77,29 @@ body, html {
 .guess-selector {
   margin: 20px 0;
   padding: 15px;
-  background-color: rgba(60, 60, 60, 0.7);
+  background-color: rgba(240, 240, 240, 0.8);
   border-radius: 8px;
-  border: 1px solid #666;
+  border: 1px solid #ccc;
+}
+
+@media (prefers-color-scheme: dark) {
+  .guess-selector {
+    background-color: rgba(60, 60, 60, 0.7);
+    border: 1px solid #666;
+  }
 }
 
 .guess-selector h3 {
   margin: 0 0 15px 0;
-  color: #e0e0e0;
+  color: #333;
   font-size: 1.1rem;
   text-align: center;
+}
+
+@media (prefers-color-scheme: dark) {
+  .guess-selector h3 {
+    color: #e0e0e0;
+  }
 }
 
 .slider-container {
@@ -69,25 +109,43 @@ body, html {
 }
 
 .slider-label {
-  color: #bbb;
+  color: #666;
   font-size: 0.9rem;
   min-width: 50px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .slider-label {
+    color: #bbb;
+  }
 }
 
 .guess-slider {
   flex: 1;
   height: 6px;
   border-radius: 3px;
-  background: #444;
+  background: #ddd;
   outline: none;
 }
 
+@media (prefers-color-scheme: dark) {
+  .guess-slider {
+    background: #444;
+  }
+}
+
 .guess-value {
-  color: #66aaff;
+  color: #2563eb;
   font-weight: bold;
   font-size: 1.1rem;
   min-width: 30px;
   text-align: center;
+}
+
+@media (prefers-color-scheme: dark) {
+  .guess-value {
+    color: #66aaff;
+  }
 }
 
 .difficulty-options {
@@ -101,16 +159,29 @@ body, html {
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  background-color: rgba(60, 60, 60, 0.7);
+  background-color: rgba(240, 240, 240, 0.8);
   border-radius: 8px;
   border: 2px solid transparent;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
+@media (prefers-color-scheme: dark) {
+  .difficulty-item {
+    background-color: rgba(60, 60, 60, 0.7);
+  }
+}
+
 .difficulty-item:hover {
-  background-color: rgba(80, 80, 80, 0.8);
-  border-color: #666;
+  background-color: rgba(220, 220, 220, 0.9);
+  border-color: #999;
+}
+
+@media (prefers-color-scheme: dark) {
+  .difficulty-item:hover {
+    background-color: rgba(80, 80, 80, 0.8);
+    border-color: #666;
+  }
 }
 
 .difficulty-info {
@@ -122,13 +193,25 @@ body, html {
 .difficulty-name {
   font-size: 1.1rem;
   font-weight: bold;
-  color: #fff;
+  color: #333;
+}
+
+@media (prefers-color-scheme: dark) {
+  .difficulty-name {
+    color: #fff;
+  }
 }
 
 .difficulty-description {
   min-width: 250px;
   font-size: 0.85rem;
-  color: #bbb;
+  color: #666;
+}
+
+@media (prefers-color-scheme: dark) {
+  .difficulty-description {
+    color: #bbb;
+  }
 }
 
 .cities-visual {
@@ -154,8 +237,15 @@ body, html {
 }
 
 .city-locked {
-  background-color: #666;
-  color: #999;
+  background-color: #ccc;
+  color: #666;
+}
+
+@media (prefers-color-scheme: dark) {
+  .city-locked {
+    background-color: #666;
+    color: #999;
+  }
 }
 
 .lock-icon {
@@ -175,10 +265,10 @@ body, html {
   color: #F44336;
 }
 
-
 #cityInputs div {
   margin-bottom: 10px;
 }
+
 #dashboard {
   margin-top: 20px;
 }
@@ -186,45 +276,79 @@ body, html {
 .resultItem {
   margin-bottom: 15px;
   padding: 10px;
-  background-color: #333333;
-  color: #e0e0e0;
+  background-color: #f8f9fa;
+  color: #333;
   border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-  border: 1px solid #444;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid #ddd;
+}
+
+@media (prefers-color-scheme: dark) {
+  .resultItem {
+    background-color: #333333;
+    color: #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    border: 1px solid #444;
+  }
 }
   
 .resultItem p {
   margin: 0;
   padding: 2px 0;
 }
+
 .resultItem .area {
   font-weight: bold;
-  color: #66aaff;
+  color: #2563eb;
+}
+
+@media (prefers-color-scheme: dark) {
+  .resultItem .area {
+    color: #66aaff;
+  }
 }
   
 #target {
   position: absolute;
   top: 10px;
   right: 10px;
-  background-color: rgba(45, 45, 45, 0.9);
-  color: #e0e0e0;
+  background-color: rgba(255, 255, 255, 0.95);
+  color: #333;
   padding: 5px 10px;
   border-radius: 5px;
-  border: 1px solid #444;
+  border: 1px solid #ddd;
   z-index: 1000;
 }
+
+@media (prefers-color-scheme: dark) {
+  #target {
+    background-color: rgba(45, 45, 45, 0.95);
+    color: #e0e0e0;
+    border: 1px solid #444;
+  }
+}
+
 #tourButton {
   position: absolute;
   top: 10px;
   left: 10px;
-  background-color: rgba(45, 45, 45, 0.9);
-  color: #e0e0e0;
+  background-color: rgba(255, 255, 255, 0.95);
+  color: #333;
   padding: 5px 10px;
   border-radius: 5px;
-  border: 1px solid #444;
+  border: 1px solid #ddd;
   z-index: 1000;
   cursor: pointer;
 }
+
+@media (prefers-color-scheme: dark) {
+  #tourButton {
+    background-color: rgba(45, 45, 45, 0.95);
+    color: #e0e0e0;
+    border: 1px solid #444;
+  }
+}
+
 #MapCanvas {
   position: absolute;
   left: -9999px;
@@ -232,58 +356,120 @@ body, html {
   visibility: hidden;
 }
 
-/* Input styling for dark mode */
+/* Input styling */
 input[type="text"] {
-  background-color: #444;
-  color: #e0e0e0;
-  border: 1px solid #666;
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #ccc;
   border-radius: 4px;
   padding: 4px;
 }
 
+@media (prefers-color-scheme: dark) {
+  input[type="text"] {
+    background-color: #444;
+    color: #e0e0e0;
+    border: 1px solid #666;
+  }
+}
+
 input[type="text"]:focus {
-  background-color: #555;
-  border-color: #66aaff;
+  background-color: #f8f9fa;
+  border-color: #2563eb;
   outline: none;
 }
+
+@media (prefers-color-scheme: dark) {
+  input[type="text"]:focus {
+    background-color: #555;
+    border-color: #66aaff;
+  }
+}
+
 input[type="text"]::placeholder {
   color: #999;
 }
 
 input[type="text"].locked {
-  background-color: #222;
-  color: #666;
-  border: 1px solid #333;
+  background-color: #f5f5f5;
+  color: #999;
+  border: 1px solid #ddd;
   cursor: not-allowed;
 }
 
+@media (prefers-color-scheme: dark) {
+  input[type="text"].locked {
+    background-color: #222;
+    color: #666;
+    border: 1px solid #333;
+  }
+}
+
 input[type="text"].valid {
-  background-color: #2d4a2d;
-  color: #e0e0e0;
+  background-color: #f0f8f0;
+  color: #333;
   border: 1px solid #4a8c4a;
 }
 
+@media (prefers-color-scheme: dark) {
+  input[type="text"].valid {
+    background-color: #2d4a2d;
+    color: #e0e0e0;
+    border: 1px solid #4a8c4a;
+  }
+}
+
 input[type="text"].invalid {
-  background-color: #4a2d2d;
-  color: #e0e0e0;
+  background-color: #f8f0f0;
+  color: #333;
   border: 1px solid #8c4a4a;
 }
 
-/* Button styling for dark mode */
+@media (prefers-color-scheme: dark) {
+  input[type="text"].invalid {
+    background-color: #4a2d2d;
+    color: #e0e0e0;
+    border: 1px solid #8c4a4a;
+  }
+}
+
+/* Button styling */
 button {
-  background-color: #444;
-  color: #e0e0e0;
-  border: 1px solid #666;
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #ccc;
   border-radius: 4px;
   padding: 4px;
   cursor: pointer;
   transition: background-color 0.2s;
 }
-button:hover {
-  background-color: #555;
+
+@media (prefers-color-scheme: dark) {
+  button {
+    background-color: #444;
+    color: #e0e0e0;
+    border: 1px solid #666;
+  }
 }
+
+button:hover {
+  background-color: #f5f5f5;
+}
+
+@media (prefers-color-scheme: dark) {
+  button:hover {
+    background-color: #555;
+  }
+}
+
 button:active {
-  background-color: #333;
+  background-color: #e5e5e5;
+}
+
+@media (prefers-color-scheme: dark) {
+  button:active {
+    background-color: #333;
+  }
 }
 
 /* Panel specific button styling */
@@ -294,16 +480,28 @@ button:active {
 
 /* Error text styling */
 #error {
-  color: #ff6b6b;
+  color: #dc3545;
+}
+
+@media (prefers-color-scheme: dark) {
+  #error {
+    color: #ff6b6b;
+  }
 }
 
 /* Heading styling */
 h2 {
-  color: #e0e0e0;
+  color: #333;
   margin: 0 0 10px 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  h2 {
+    color: #e0e0e0;
+  }
 }
 
 /* Confetti fix, 3.9 should fix this tmrw */
 #confetti_id canvas {
-  pointer-events:none;
+  pointer-events: none;
 }
