@@ -19,11 +19,14 @@ export {Display};
 
 
 class Display {
-  constructor() {
+  constructor(HTMLElements) {
+
+    this.HTMLElements = HTMLElements;
+
     this.scene = new THREE.Scene();
 
-    const canvas = document.getElementById('MapCanvas');
-    const container = document.getElementById('rightPanel');
+    const canvas = this.HTMLElements.mapCanvas;
+    const container = this.HTMLElements.rightPanel;
     // Set up the this.scene, camera, and this.renderer
 
     this.camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
@@ -118,7 +121,7 @@ class Display {
 
   onWindowResize = () => {
 
-    const container = document.getElementById('rightPanel');
+    const container = this.HTMLElements.rightPanel;
     const width = container.clientWidth;
     const height = container.clientHeight;
     

@@ -1,20 +1,29 @@
 import { History } from "./history";
 import { CityInputs } from "./cityInputs";
+import { Tour } from "./tour";
 import { GuessCounter } from "./guessCounter";
 import { GuessSlider } from "./guessSlider";
 
 export {UserInterface};
 
 class UserInterface {
-  constructor() {
-    this.history = new History();
-    this.cityInputs = new CityInputs();
-    this.guessCounter = new GuessCounter(document.getElementById("guessCounterValueDisplayPanel"), 5);
-    this.guessSlider = new GuessSlider();
+  constructor(HTMLElements) {
+
+    this.HTMLElements = HTMLElements;
+
+    this.history = new History(this.HTMLElements.History);
+    this.cityInputs = new CityInputs(this.HTMLElements.CityInputs);
+    this.tour = new Tour(this.HTMLElements.Tour);
+    this.guessCounter = new GuessCounter(this.HTMLElements.GuessCounter);
+    this.guessSlider = new GuessSlider(this.HTMLElements.GuessSlider);
   }
 
   getRandomGuess(){
     return this.cityInputs.getRandomGuess();
+  }
+
+  startTour(isDifficultyVisible) {
+    this.tour.startTour(isDifficultyVisible);
   }
 
   startGame(citiesLocked, cityList){
@@ -42,12 +51,12 @@ class UserInterface {
 
   //debug
   display(text){
-    const outputDiv = document.getElementById("error");
+    const outputDiv = this.HTMLElements.error;
     outputDiv.innerHTML = text;
   }
 
   clearDisplay(){
-    const outputDiv = document.getElementById("error");
+    const outputDiv = this.HTMLElements.error;
     outputDiv.innerHTML = "";
   }
 

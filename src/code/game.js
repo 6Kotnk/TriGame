@@ -17,10 +17,12 @@ const GameState = {
 
 class Game  {
 
-  constructor() {
+  constructor(HTMLElements) {
 
-    this.display = new Display();
-    this.userInterface = new UserInterface();
+    this.HTMLElements = HTMLElements;
+
+    this.display = new Display(this.HTMLElements.Display);
+    this.userInterface = new UserInterface(this.HTMLElements.UserInterface);
 
     this.guessHistory = [];
 
@@ -30,17 +32,16 @@ class Game  {
 
     this.citiesLocked = 0;
 
-    this.triangleColors = {
-      verts: "white",
-      edges: "white",
-      fill: "cyan",
-    };
-
-    document.getElementById('difficultyPanel').style.display = 'block';
-    document.getElementById('target').textContent = `Target: ?? million km²`;
+    this.HTMLElements.difficultyPanel.style.display = 'block';
+    this.HTMLElements.target.textContent = `Target: ?? million km²`;
 
   }
 
+
+  startTour() {
+    const isDifficultyVisible = this.currentState == GameState.INIT;
+    this.userInterface.startTour(isDifficultyVisible);
+  }
 
   resetGame() {
 
@@ -52,17 +53,17 @@ class Game  {
     this.display.reset();
     this.userInterface.reset();
 
-    document.getElementById('difficultyPanel').style.display = 'block';
-    document.getElementById('winPanel').style.display = 'none';
-    document.getElementById('epicWinPanel').style.display = 'none';
-    document.getElementById('losePanel').style.display = 'none';
+    this.HTMLElements.difficultyPanel.style.display = 'block';
+    this.HTMLElements.winPanel.style.display = 'none';
+    this.HTMLElements.epicWinPanel.style.display = 'none';
+    this.HTMLElements.losePanel.style.display = 'none';
 
-    document.getElementById('target').textContent = `Target: ?? million km²`;
+    this.HTMLElements.target.textContent = `Target: ?? million km²`;
     
   }
   
   continueGame() {
-    document.getElementById('winPanel').style.display = 'none';
+    this.HTMLElements.winPanel.style.display = 'none';
   }
 
   logDist(a, b = 1){
@@ -155,25 +156,25 @@ class Game  {
     this.userInterface.reset();
 
     this.guessCounter = this.userInterface.startGame(citiesLocked, targetGuess.getNames());
-    document.getElementById('target').textContent = `Target: ${this.targetArea} million km²`;
-    document.getElementById('difficultyPanel').style.display = 'none';
+    this.HTMLElements.target.textContent = `Target: ${this.targetArea} million km²`;
+    this.HTMLElements.difficultyPanel.style.display = 'none';
     this.currentState = GameState.NOT_CLOSE;
   }
 
   winGame() {
-    document.getElementById('guessCounterValueWinPanel').textContent = this.guessCounter;
-    document.getElementById('winPanel').style.display = 'block';
+    this.HTMLElements.guessCounterValueWinPanel.textContent = this.guessCounter;
+    this.HTMLElements.winPanel.style.display = 'block';
     this.celebrate(10);
   }
   
   epicWinGame() {
-    document.getElementById('guessCounterValueEpicWinPanel').textContent = this.guessCounter;
-    document.getElementById('epicWinPanel').style.display = 'block';
+    this.HTMLElements.guessCounterValueEpicWinPanel.textContent = this.guessCounter;
+    this.HTMLElements.epicWinPanel.style.display = 'block';
     this.celebrate(100);
   }
 
   loss() {
-    document.getElementById('losePanel').style.display = 'block';
+    this.HTMLElements.losePanel.style.display = 'block';
   }
 
   celebrate(intensity){

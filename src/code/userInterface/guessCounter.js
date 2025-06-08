@@ -2,8 +2,10 @@ export {GuessCounter};
 
 class GuessCounter {
 
-  constructor(element) {
-    this.element = element;
+  constructor(HTMLElements) {
+    this.HTMLElements = HTMLElements;
+
+    this.element = this.HTMLElements.guessCounterValueDisplayPanel;
     this.update("?");
   }
 

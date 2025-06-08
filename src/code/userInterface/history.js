@@ -2,19 +2,20 @@ export {History};
 
 class History {
 
-  constructor() {
+  constructor(HTMLElements) {
+    this.HTMLElements = HTMLElements;
     this.historyResults = [];
   }
 
   reset() {
     this.historyResults = [];
-    const outputDiv = document.getElementById("history");
+    const outputDiv = this.HTMLElements.history;
     outputDiv.innerHTML = '';
   }
 
   update(guessList, latestGuess) {
       
-    const outputDiv = document.getElementById("history");
+    const outputDiv = this.HTMLElements.history;
     outputDiv.innerHTML = '';
 
     // Display the latest result

@@ -29,7 +29,7 @@
       </div>
       <div id="rightPanel">
         <div id="target"></div>
-        <button id="tourButton" class="tutorial-pulse">Tutorial</button>
+        <button onclick="startTour()" id="tourButton" class="tutorial-pulse">Tutorial</button>
 
     <div id="difficultyPanel" class="panel">
       <span id="difficultyLabel">
@@ -43,7 +43,7 @@
           <input type="range" id="guessSlider" class="guess-slider" min="1" max="11" value="6">
           <span class="slider-label">∞</span>
         </div>
-        <div class="guess-value" id="guessValue">5</div>
+        <div class="guess-value" id="guessSliderValue">5</div>
       </div>
 
       <div class="difficulty-options">
@@ -125,11 +125,10 @@
       </div>
     </div>
  
-    <canvas id="MapCanvas" width="360" height="180"></canvas>
+    <canvas id="mapCanvas" width="360" height="180"></canvas>
  
     </div>
     <script type="module" src="/src/code/main.js"></script>
-    <script type="module" src="/src/code/userInterface/tour.js"></script>
 
   </body>
 </html>

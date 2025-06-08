@@ -6,24 +6,26 @@ export {CityInputs};
 
 class CityInputs {
 
-  constructor() {
+  constructor(HTMLElements) {
+    this.HTMLElements = HTMLElements;
+    
     this.cityCoords = Array(3).fill(null);
     this.cityNames = Array(3).fill(null);
 
     this.inputs = [
-        document.getElementById("city1"),
-        document.getElementById("city2"),
-        document.getElementById("city3")
+        this.HTMLElements.city1,
+        this.HTMLElements.city2,
+        this.HTMLElements.city3
     ];
 
     this.locks = [
-        document.getElementById("city1Lock"),
-        document.getElementById("city2Lock"),
-        document.getElementById("city3Lock")
+        this.HTMLElements.city1Lock,
+        this.HTMLElements.city2Lock,
+        this.HTMLElements.city3Lock
     ];
 
-    this.datalist = document.getElementById("cities"); // Shared this.datalist
-    //const coordsDisplay = document.getElementById("coordsDisplay");
+    this.datalist = this.HTMLElements.cities; // Shared this.datalist
+    //const coordsDisplay = this.HTMLElements.coordsDisplay");
 
     // Attach event listeners to all inputs
     this.inputs.forEach(input => {

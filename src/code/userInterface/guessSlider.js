@@ -2,15 +2,17 @@ export {GuessSlider};
 
 class GuessSlider {
 
-  constructor() {
+  constructor(HTMLElements) {
+
+    this.HTMLElements = HTMLElements;
 
     // Update slider value display
-    this.guessSlider = document.getElementById('guessSlider');
-    this.guessValue = document.getElementById('guessValue');
+    this.guessSlider = this.HTMLElements.guessSlider;
+    this.guessSliderValue = this.HTMLElements.guessSliderValue;
 
     // Initialize with default value (5 guesses)
     this.selectedGuesses = this.sliderToGuesses(6);
-    this.guessValue.textContent = this.selectedGuesses;
+    this.guessSliderValue.textContent = this.selectedGuesses;
 
     this.guessSlider.addEventListener("input", this.handleInput);
 
@@ -18,7 +20,7 @@ class GuessSlider {
 
   handleInput = (event) => {
     this.selectedGuesses = this.sliderToGuesses(parseInt(event.target.value));
-    this.guessValue.textContent = this.selectedGuesses === Infinity ? '∞' : this.selectedGuesses;
+    this.guessSliderValue.textContent = this.selectedGuesses === Infinity ? '∞' : this.selectedGuesses;
   }
 
   getSliderValue(){
