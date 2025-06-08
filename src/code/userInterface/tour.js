@@ -60,7 +60,7 @@ function createTourSteps() {
   steps.push({
     title: "Visualize Your Triangle",
     content: "Your selected cities will form a triangle on this world map, helping you visualize your guess.",
-    target: "#MapCanvas",
+    target: "#rightPanel",
     order: currentOrder++,
   });
 
@@ -86,7 +86,9 @@ function startTour() {
   
   // Update the tour with new steps
   tg.setOptions({
-    steps: dynamicSteps
+    steps: dynamicSteps,
+    targetPadding: 10,
+    dialogMaxWidth: 260,
   });
   
   tg.start();
