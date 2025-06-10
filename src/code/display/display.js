@@ -6,14 +6,12 @@ import bumpMapPath from     '../../assets/img/bumpMap.webp'
 
 import cloudsMapPath from   '../../assets/img/cloudsMap.webp'
 import outlineMapPath from  '../../assets/img/outlineMap.webp'
-import lightMapPath from    '../../assets/img/lightMap.webp'
 import oceanMapPath from    '../../assets/img/oceanMap.webp'
 
 import skyMapPath from      '../../assets/img/starMap.webp'
 
 import { SphericalTriangle } from './sphericalTriangle/sphericalTriangle.js';
 import { PlanetLayer } from './planetLayer.js';
-import { AtmosphereLayer } from './atmosphereLayer.js';
 
 export {Display};
 
@@ -25,18 +23,18 @@ class Display {
 
     this.scene = new THREE.Scene();
 
-    const canvas = this.HTMLElements.mapCanvas;
-    const container = this.HTMLElements.rightPanel;
+    this.canvas = this.HTMLElements.mapCanvas;
+    this.container = this.HTMLElements.containerDiv;
     // Set up the this.scene, camera, and this.renderer
 
-    this.camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+    this.camera = new THREE.PerspectiveCamera(75, this.container.clientWidth / this.container.clientHeight, 0.1, 1000);
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
 
-    this.renderer.setSize(container.clientWidth, container.clientHeight);
-    container.appendChild(this.renderer.domElement);
+    this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+    this.container.appendChild(this.renderer.domElement);
     this.renderer.setClearColor( 0x000000, 0 ); // the default
-    canvas.width = 3600;
-    canvas.height = 1800;
+    this.canvas.width = 3600;
+    this.canvas.height = 1800;
 
     const textureLoader = new THREE.TextureLoader();
 
@@ -59,7 +57,7 @@ class Display {
 
     // Create a sphere to get a shadow
 
-    this.triangle = new SphericalTriangle(this.scene, canvas);
+    this.triangle = new SphericalTriangle(this.scene, this.canvas);
 
     this.earth = new PlanetLayer(this.scene, 1, 2, {
       map: albedoMap,
@@ -104,7 +102,7 @@ class Display {
     this.controls.addEventListener( 'change', this.getControlsZoom );
 
     const resizeObserver = new ResizeObserver(this.onWindowResize);
-    resizeObserver.observe(container);
+    resizeObserver.observe(this.container);
   }
 
   getControlsZoom = () => {
@@ -120,10 +118,8 @@ class Display {
   }
 
   onWindowResize = () => {
-
-    const container = this.HTMLElements.rightPanel;
-    const width = container.clientWidth;
-    const height = container.clientHeight;
+    const width = this.container.clientWidth;
+    const height = this.container.clientHeight;
     
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();

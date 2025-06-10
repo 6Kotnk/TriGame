@@ -478,14 +478,26 @@ button:active {
   min-width: 80px;
 }
 
-/* Error text styling */
-#error {
-  color: #dc3545;
+.errorItem {
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: #fef2f2;
+  color: #dc2626;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(220, 38, 38, 0.1);
+  border: 1px solid #fecaca;
+}
+
+.errorItem:empty {
+  display: none;
 }
 
 @media (prefers-color-scheme: dark) {
-  #error {
-    color: #ff6b6b;
+  .errorItem {
+    background-color: #450a0a;
+    color: #fca5a5;
+    box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);
+    border: 1px solid #7f1d1d;
   }
 }
 
@@ -501,7 +513,7 @@ h2 {
   }
 }
 
-/* Confetti fix, 3.9 should fix this tmrw */
+/* Confetti fix, 3.9 should fix this */
 #confetti_id canvas {
   pointer-events: none;
 }

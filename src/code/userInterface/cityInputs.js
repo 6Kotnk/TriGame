@@ -25,7 +25,6 @@ class CityInputs {
     ];
 
     this.datalist = this.HTMLElements.cities; // Shared this.datalist
-    //const coordsDisplay = this.HTMLElements.coordsDisplay");
 
     // Attach event listeners to all inputs
     this.inputs.forEach(input => {
@@ -145,18 +144,11 @@ class CityInputs {
   handleChange = (event) => {
     const inputValue = event.target.value;
     const inputIdx = parseInt(event.target.id[event.target.id.length - 1]) - 1;
-
-
-
     let cityCoordStr = "";
     let selectedOption = "";
 
-    try {
-      selectedOption = Array.from(this.datalist.options).find(option => option.value === inputValue);
-    } catch (error) {
-      // Console log instead? Or pass up to game class
-      //document.getElementById('dashboard').innerHTML = "Error loading data from this.datalist: " + error;
-    }
+    selectedOption = Array.from(this.datalist.options).find(option => option.value === inputValue);
+    
     if (selectedOption) {
       cityCoordStr = selectedOption.getAttribute("data-coords");
       //this.inputs[inputIdx].style.backgroundColor = '#90EE90'; // Light green for match

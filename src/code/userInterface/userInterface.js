@@ -11,6 +11,8 @@ class UserInterface {
 
     this.HTMLElements = HTMLElements;
 
+    this.errorDisplay = HTMLElements.errorDisplay;
+
     this.history = new History(this.HTMLElements.History);
     this.cityInputs = new CityInputs(this.HTMLElements.CityInputs);
     this.tour = new Tour(this.HTMLElements.Tour);
@@ -51,12 +53,12 @@ class UserInterface {
 
   //debug
   display(text){
-    const outputDiv = this.HTMLElements.error;
+    const outputDiv = this.errorDisplay;
     outputDiv.innerHTML = text;
   }
 
   clearDisplay(){
-    const outputDiv = this.HTMLElements.error;
+    const outputDiv = this.errorDisplay;
     outputDiv.innerHTML = "";
   }
 

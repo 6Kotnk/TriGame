@@ -5,7 +5,7 @@ class GuessCounter {
   constructor(HTMLElements) {
     this.HTMLElements = HTMLElements;
 
-    this.element = this.HTMLElements.guessCounterValueDisplayPanel;
+    this.element = this.HTMLElements.element;
     this.update("?");
   }
 

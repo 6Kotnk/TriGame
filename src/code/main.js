@@ -7,17 +7,17 @@ const HTMLElements = {
     winPanel:                               document.getElementById('winPanel'),
     epicWinPanel:                           document.getElementById('epicWinPanel'),
     losePanel:                              document.getElementById('losePanel'),
-    guessCounterValueWinPanel:              document.getElementById('guessCounterValueWinPanel'),
-    guessCounterValueEpicWinPanel:          document.getElementById('guessCounterValueEpicWinPanel'),
+    winPanelGuessesLeft:                    document.getElementById('winPanelGuessesLeft'),
+    epicWinPanelGuessesLeft:                document.getElementById('epicWinPanelGuessesLeft'),
     target:                                 document.getElementById('target'),
 
     Display: {
       mapCanvas:                            document.getElementById('mapCanvas'),
-      rightPanel:                           document.getElementById('rightPanel'),
+      containerDiv:                         document.getElementById('rightPanel'),
     },
 
     UserInterface: {
-      error:                                document.getElementById('error'),
+      errorDisplay:                         document.getElementById('errorDisplay'),
 
       CityInputs: {
         city1:                              document.getElementById('city1'),
@@ -27,7 +27,6 @@ const HTMLElements = {
         city2Lock:                          document.getElementById('city2Lock'),
         city3Lock:                          document.getElementById('city3Lock'),
         cities:                             document.getElementById('cities'),
-        coordsDisplay:                      document.getElementById('coordsDisplay'),
         dashboard:                          document.getElementById('dashboard'),
       },
 
@@ -36,12 +35,12 @@ const HTMLElements = {
       },
 
       GuessCounter: {
-        guessCounterValueDisplayPanel:      document.getElementById('guessCounterValueDisplayPanel'),
+        element:                            document.getElementById('guessCounterValueDisplayPanel'),
       },
 
       GuessSlider: {
-        guessSlider:                        document.getElementById('guessSlider'),
-        guessSliderValue:                   document.getElementById('guessSliderValue'),
+        element:                            document.getElementById('guessSlider'),
+        elementValue:                       document.getElementById('guessSliderValue'),
       },
 
       Tour: {

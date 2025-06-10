@@ -94,7 +94,7 @@ class Game  {
         if(this.guessHistory.length == 0){
           this.guessHistory.push(guess);
         }else{
-          // Itterate over list
+          // Iterate over list
           let inserted = false;
           for (let index = 0; index < this.guessHistory.length; index++) {
             const listGuessAreaError = this.logDist(this.guessHistory[index].area, this.targetArea);
@@ -134,11 +134,10 @@ class Game  {
       this.currentState = GameState.EXACT_MATCH;
       this.epicWinGame();
     }
-    else if( this.logDist(1+targetTol) > this.logDist(guessArea, this.targetArea) ) {
-      if(this.currentState == GameState.NOT_CLOSE) {
-        this.currentState = GameState.WITHIN_TOL;
-        this.winGame();
-      }
+    else if( (this.logDist(1+targetTol) > this.logDist(guessArea, this.targetArea)) && 
+    (this.currentState == GameState.NOT_CLOSE)) {
+      this.currentState = GameState.WITHIN_TOL;
+      this.winGame();
     }
     else if(this.guessCounter == 0){
       this.currentState = GameState.LOSS;
@@ -162,13 +161,13 @@ class Game  {
   }
 
   winGame() {
-    this.HTMLElements.guessCounterValueWinPanel.textContent = this.guessCounter;
+    this.HTMLElements.winPanelGuessesLeft.textContent = this.guessCounter;
     this.HTMLElements.winPanel.style.display = 'block';
     this.celebrate(10);
   }
   
   epicWinGame() {
-    this.HTMLElements.guessCounterValueEpicWinPanel.textContent = this.guessCounter;
+    this.HTMLElements.epicWinPanelGuessesLeft.textContent = this.guessCounter;
     this.HTMLElements.epicWinPanel.style.display = 'block';
     this.celebrate(100);
   }
