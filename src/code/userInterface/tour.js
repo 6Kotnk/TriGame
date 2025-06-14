@@ -60,9 +60,17 @@ class Tour {
     // Add difficulty step only if panel is visible
     if (isDifficultyVisible) {
       steps.push({
-        title: "Choose Your Difficulty",
-        content: "First, select your difficulty level and number of guesses. In Easy mode, you can choose any 3 cities. Medium locks 1 city, and Hard locks 2 cities, making the challenge progressively harder.",
-        target: "#difficultyPanel",
+        title: "Custom Game Modes",
+        content: "In the 'Custom Game' modes, you can set your own challenge. Choose a difficulty (Easy, Medium, or Hard) to determine how many cities are pre-selected for you, and use the slider to set your number of guesses.",
+        target: "#standardModes",
+        propagateEvents: true,
+        order: currentOrder++,
+      });
+
+      steps.push({
+        title: "Challenge Modes",
+        content: "For a different experience, try the 'Challenge Modes'. The 'Daily Challenge' is a unique puzzle that's the same for everyone each day. Or, hit the 'Random' button for a complete surprise with a randomly selected difficulty!",
+        target: "#challengeModes",
         propagateEvents: true,
         order: currentOrder++,
       });

@@ -89,11 +89,68 @@ body, html {
   font-size: 1.4rem;
 }
 
+/* New grouped sections styling */
+.challenge-modes-group {
+  border: 2px solid #009688; /* Teal */
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 20px;
+  background-color: rgba(0, 150, 136, 0.05);
+}
+
+@media (prefers-color-scheme: dark) {
+  .challenge-modes-group {
+    border-color: #4DB6AC; /* Lighter Teal for dark mode */
+    background-color: rgba(0, 150, 136, 0.1);
+  }
+}
+
+.challenge-modes-group h3 {
+  margin: 0 0 12px 0;
+  text-align: center;
+  color: #009688; /* Teal */
+  font-size: 1.1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .challenge-modes-group h3 {
+    color: #4DB6AC; /* Lighter Teal for dark mode */
+  }
+}
+
+.standard-modes-group {
+  border: 2px solid #FF5722; /* Deep Orange */
+  border-radius: 12px;
+  padding: 15px;
+  background-color: rgba(255, 87, 34, 0.05);
+}
+
+@media (prefers-color-scheme: dark) {
+  .standard-modes-group {
+    border-color: #FF8A65; /* Lighter Deep Orange for dark mode */
+    background-color: rgba(255, 87, 34, 0.1);
+  }
+}
+
+.standard-modes-group h3 {
+  margin: 0 0 12px 0;
+  text-align: center;
+  color: #FF5722; /* Deep Orange */
+  font-size: 1.1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .standard-modes-group h3 {
+    color: #FF8A65; /* Lighter Deep Orange for dark mode */
+  }
+}
+
 .guess-selector {
   padding: 15px;
   background-color: rgba(240, 240, 240, 0.8);
   border-radius: 8px;
   border: 1px solid #ccc;
+  margin-bottom: 15px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -165,6 +222,12 @@ body, html {
   display: flex;
   flex-direction: column;
   gap: 15px;
+}
+
+.grouped-difficulty-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .difficulty-item {

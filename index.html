@@ -37,77 +37,88 @@
           </span>
         
           <div class="difficulty-options">
-            <div class="difficulty-item daily-challenge" onclick="startGame('Daily')">
-              <div class="difficulty-info">
-                <div class="difficulty-name">Daily Challenge</div>
-                <div class="difficulty-description">Same puzzle for everyone today</div>
-              </div>
-              <div class="cities-visual">
-                <div class="challenge-icon">📅</div>
-              </div>
-            </div>
-
-            <div class="difficulty-item random" onclick="startGame('Random')">
-              <div class="difficulty-info">
-                <div class="difficulty-name">Random</div>
-                <div class="difficulty-description">Surprise me with any difficulty</div>
-              </div>
-              <div class="cities-visual">
-                <div class="challenge-icon">🎲</div>
-              </div>
-            </div>
-
-          <br>
-
-          <div class="guess-selector">
-            <h3>Number of guesses</h3>
-            <div class="slider-container">
-              <span class="slider-label">1</span>
-              <input type="range" id="guessSlider" class="guess-slider" min="1" max="11" value="6">
-              <span class="slider-label">∞</span>
-            </div>
-            <div class="guess-value" id="guessSliderValue">5</div>
-          </div>
-
-            <div class="difficulty-item easy" onclick="startGame('Easy')">
-              <div class="difficulty-info">
-                <div class="difficulty-name">Easy</div>
-                <div class="difficulty-description">Choose any of the 3 cities</div>
-              </div>
-              <div class="cities-visual">
-                <div class="city-icon city-unlocked">🏙️</div>
-                <div class="city-icon city-unlocked">🏙️</div>
-                <div class="city-icon city-unlocked">🏙️</div>
-              </div>
-            </div>
-
-            <div class="difficulty-item medium" onclick="startGame('Medium')">
-              <div class="difficulty-info">
-                <div class="difficulty-name">Medium</div>
-                <div class="difficulty-description">1 city locked, 2 available</div>
-              </div>
-              <div class="cities-visual">
-                <div class="city-icon city-locked">
-                  <span class="lock-icon">🔒</span>
+            <!-- Challenge Modes Group -->
+            <div class="challenge-modes-group" id="challengeModes">
+              <h3>Challenge Modes</h3>
+              <div class="grouped-difficulty-options">
+                <div class="difficulty-item daily-challenge" onclick="startGame('Daily')">
+                  <div class="difficulty-info">
+                    <div class="difficulty-name">Daily Challenge</div>
+                    <div class="difficulty-description">Same puzzle for everyone today</div>
+                  </div>
+                  <div class="cities-visual">
+                    <div class="challenge-icon">📅</div>
+                  </div>
                 </div>
-                <div class="city-icon city-unlocked">🏙️</div>
-                <div class="city-icon city-unlocked">🏙️</div>
+
+                <div class="difficulty-item random" onclick="startGame('Random')">
+                  <div class="difficulty-info">
+                    <div class="difficulty-name">Random</div>
+                    <div class="difficulty-description">Surprise me with any difficulty</div>
+                  </div>
+                  <div class="cities-visual">
+                    <div class="challenge-icon">🎲</div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div class="difficulty-item hard" onclick="startGame('Hard')">
-              <div class="difficulty-info">
-                <div class="difficulty-name">Hard</div>
-                <div class="difficulty-description">2 cities locked, 1 available</div>
+            <!-- Standard Modes Group -->
+            <div class="standard-modes-group" id="standardModes">
+              <h3>Custom Game</h3>
+              
+              <div class="guess-selector">
+                <h3>Number of guesses</h3>
+                <div class="slider-container">
+                  <span class="slider-label">1</span>
+                  <input type="range" id="guessSlider" class="guess-slider" min="1" max="11" value="6">
+                  <span class="slider-label">∞</span>
+                </div>
+                <div class="guess-value" id="guessSliderValue">5</div>
               </div>
-              <div class="cities-visual">
-                <div class="city-icon city-locked">
-                  <span class="lock-icon">🔒</span>
+
+              <div class="grouped-difficulty-options">
+                <div class="difficulty-item easy" onclick="startGame('Easy')">
+                  <div class="difficulty-info">
+                    <div class="difficulty-name">Easy</div>
+                    <div class="difficulty-description">Choose any of the 3 cities</div>
+                  </div>
+                  <div class="cities-visual">
+                    <div class="city-icon city-unlocked">🏙️</div>
+                    <div class="city-icon city-unlocked">🏙️</div>
+                    <div class="city-icon city-unlocked">🏙️</div>
+                  </div>
                 </div>
-                <div class="city-icon city-locked">
-                  <span class="lock-icon">🔒</span>
+
+                <div class="difficulty-item medium" onclick="startGame('Medium')">
+                  <div class="difficulty-info">
+                    <div class="difficulty-name">Medium</div>
+                    <div class="difficulty-description">1 city locked, 2 available</div>
+                  </div>
+                  <div class="cities-visual">
+                    <div class="city-icon city-locked">
+                      <span class="lock-icon">🔒</span>
+                    </div>
+                    <div class="city-icon city-unlocked">🏙️</div>
+                    <div class="city-icon city-unlocked">🏙️</div>
+                  </div>
                 </div>
-                <div class="city-icon city-unlocked">🏙️</div>
+
+                <div class="difficulty-item hard" onclick="startGame('Hard')">
+                  <div class="difficulty-info">
+                    <div class="difficulty-name">Hard</div>
+                    <div class="difficulty-description">2 cities locked, 1 available</div>
+                  </div>
+                  <div class="cities-visual">
+                    <div class="city-icon city-locked">
+                      <span class="lock-icon">🔒</span>
+                    </div>
+                    <div class="city-icon city-locked">
+                      <span class="lock-icon">🔒</span>
+                    </div>
+                    <div class="city-icon city-unlocked">🏙️</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
