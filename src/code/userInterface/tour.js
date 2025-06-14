@@ -31,6 +31,7 @@ class Tour {
       steps: dynamicSteps,
       targetPadding: 10,
       dialogMaxWidth: 300,
+      dialogClass: "custom"
     });
     
     this.tg.start();
@@ -71,7 +72,7 @@ class Tour {
     steps.push({
       title: "Your Target Area",
       content: "This shows your target area in square kilometers. Your triangle's area must be within 10% of this target to win!",
-      target: "#target",
+      target: "#targetDisplay",
       order: currentOrder++,
     });
 
