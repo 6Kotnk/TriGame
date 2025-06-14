@@ -1,6 +1,6 @@
-export {GuessSlider};
+export {Slider};
 
-class GuessSlider {
+class Slider {
 
   constructor(HTMLElements) {
 

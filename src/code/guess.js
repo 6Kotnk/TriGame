@@ -16,7 +16,10 @@ class Guess {
     this.area = null;
   }
 
-  
+  randomFromSeed(seed, min, max){
+    return min + (seed % (max - min + 1));
+  }
+
   degToRad(degrees) {
     return degrees * (Math.PI / 180);
   }

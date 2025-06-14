@@ -1,10 +1,11 @@
-import { Display } from './display/display.js';
+import { GFXDisplay } from './gfxDisplay/gfxDisplay.js';
 import { UserInterface } from './userInterface/userInterface.js';
 
 import * as CONFETTI from '@tsparticles/confetti';
 
 export {Game};
 
+// Tolerance for winning a game
 const targetTol = 0.1; //10%
 
 const GameState = {
@@ -18,56 +19,156 @@ const GameState = {
 class Game  {
 
   constructor(HTMLElements) {
-
     this.HTMLElements = HTMLElements;
-
-    this.display = new Display(this.HTMLElements.Display);
+    
+    this.display = new GFXDisplay(this.HTMLElements.GFXDisplay);
     this.userInterface = new UserInterface(this.HTMLElements.UserInterface);
 
-    this.guessHistory = [];
-
-    this.targetArea = null;
+    // Gamestate
     this.guessCounter = Infinity;
+    this.guessHistory = [];
     this.currentState = GameState.INIT;
-
+    this.targetArea = null;
     this.citiesLocked = 0;
 
-    this.HTMLElements.difficultyPanel.style.display = 'block';
-    this.HTMLElements.target.textContent = `Target: ?? million km²`;
-
+    // Initalize gamestate, will be changed upon calling startGame()
+    this.resetGame();
   }
 
+  // Called on init and when a new game is requested
+  resetGame() {
+    this.guessCounter = Infinity;
+    this.guessHistory = [];
+    this.currentState = GameState.INIT;
+    this.targetArea = null;
+    this.citiesLocked = 0;
 
+    // Reset the triangle
+    this.display.reset();
+    // Reset the cities, guess counter, history display
+    this.userInterface.reset();
+
+    // Hide all panels, except the difficulty selection
+    this.HTMLElements.difficultyPanel.style.display = 'block';
+    this.HTMLElements.winPanel.style.display = 'none';
+    this.HTMLElements.epicWinPanel.style.display = 'none';
+    this.HTMLElements.losePanel.style.display = 'none';
+    // The target is unknown until a difficulty is selected
+    //this.HTMLElements.target.textContent = `Target: ?? million km²`;
+    
+  }
+  
+  // Starts the tour, show how the difficulty selector works,
+  // if it is still on screen.
   startTour() {
     const isDifficultyVisible = this.currentState == GameState.INIT;
     this.userInterface.startTour(isDifficultyVisible);
   }
 
-  resetGame() {
-
-    this.guessCounter = Infinity;
-    this.guessHistory = [];
-    this.currentState = GameState.INIT;
-    this.targetArea = null;
-
-    this.display.reset();
-    this.userInterface.reset();
-
-    this.HTMLElements.difficultyPanel.style.display = 'block';
-    this.HTMLElements.winPanel.style.display = 'none';
-    this.HTMLElements.epicWinPanel.style.display = 'none';
-    this.HTMLElements.losePanel.style.display = 'none';
-
-    this.HTMLElements.target.textContent = `Target: ?? million km²`;
+  dateToHash(date){
+    const dateString = date.getFullYear() + '-' + 
+                  String(date.getMonth() + 1).padStart(2, '0') + '-' + 
+                  String(date.getDate()).padStart(2, '0');
     
+    // Simple rolling hash function to convert date to number
+    let hash = 0;
+    for (let i = 0; i < dateString.length; i++) {
+      const char = dateString.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+    }
+
+    return hash;
+  }
+
+  randomFromSeed(seed, min, max){
+    return min + (seed % (max - min + 1));
+  }
+
+  // Starts the game, with the desired number of locked cities
+  startGame(gameType) {
+    this.guessHistory = [];
+    this.display.reset();
+    this.userInterface.reset(); 
+
+    let seed = 0;
+    let numGuesses = 0;
+    let numCitiesLocked = 0;
+
+    // Generate a consistent seed based on today's date
+    const today = new Date();
+    const todaySeed = this.dateToHash(today);
+    const randomSeed = Math.floor(Math.random() * 0xFFFFFFFF);
+
+    switch (gameType) {
+      case "Daily":
+        seed = todaySeed;
+        numCitiesLocked = this.randomFromSeed(seed,0,2);
+        numGuesses = this.randomFromSeed(seed,1,10);
+        break;
+
+      case "Random":
+        seed = randomSeed;
+        numCitiesLocked = this.randomFromSeed(seed,0,2);
+        numGuesses = this.randomFromSeed(seed,1,10);
+        break;
+
+      case "Easy":
+        seed = randomSeed;
+        numCitiesLocked = 0;
+        numGuesses = this.userInterface.getNumGuesses();
+        break;
+
+      case "Medium":
+        seed = randomSeed;
+        numCitiesLocked = 1;
+        numGuesses = this.userInterface.getNumGuesses();
+        break;
+
+      case "Hard":
+        seed = randomSeed;
+        numCitiesLocked = 2;
+        numGuesses = this.userInterface.getNumGuesses();
+        break;
+
+      default:
+        break;
+    }
+
+    const targetGuess = this.userInterface.getRandomGuess(seed);
+    this.targetArea = targetGuess.getArea();
+
+    const cityList = targetGuess.getNames();
+    const targetVal = this.targetArea;
+
+
+    this.guessCounter = numGuesses;
+
+    this.userInterface.startGame(numCitiesLocked, cityList, targetVal, numGuesses);
+    this.HTMLElements.difficultyPanel.style.display = 'none';
+    this.currentState = GameState.NOT_CLOSE;
+  }
+
+  // Called when within targetTol. Displays the winGame panel.
+  winGame() {
+    this.HTMLElements.winPanelGuessesLeft.textContent = this.guessCounter;
+    this.HTMLElements.winPanel.style.display = 'block';
+    this.celebrate(10);
   }
   
+  // Called when the guess is an EXACT match. Displays the epicWinGame panel.
+  // Guesses are rounded depending on their magnitude.
+  epicWinGame() {
+    this.HTMLElements.epicWinPanelGuessesLeft.textContent = this.guessCounter;
+    this.HTMLElements.epicWinPanel.style.display = 'block';
+    this.celebrate(100);
+  }
+
   continueGame() {
     this.HTMLElements.winPanel.style.display = 'none';
   }
 
-  logDist(a, b = 1){
-    return Math.abs(Math.log10(a) - Math.log10(b));
+  loss() {
+    this.HTMLElements.losePanel.style.display = 'block';
   }
 
   submitGuess() {
@@ -125,6 +226,9 @@ class Game  {
     }
   }
 
+  logDist(a, b = 1){
+    return Math.abs(Math.log10(a) - Math.log10(b));
+  }
 
   evaluateGuess(guess) {
     //Change color as well?
@@ -145,36 +249,6 @@ class Game  {
     }
   }
 
-
-  startGame(citiesLocked) {
-    this.guessHistory = [];
-    const targetGuess = this.userInterface.getRandomGuess();
-    this.targetArea = targetGuess.getArea();
-
-    this.display.reset();
-    this.userInterface.reset();
-
-    this.guessCounter = this.userInterface.startGame(citiesLocked, targetGuess.getNames());
-    this.HTMLElements.target.textContent = `Target: ${this.targetArea} million km²`;
-    this.HTMLElements.difficultyPanel.style.display = 'none';
-    this.currentState = GameState.NOT_CLOSE;
-  }
-
-  winGame() {
-    this.HTMLElements.winPanelGuessesLeft.textContent = this.guessCounter;
-    this.HTMLElements.winPanel.style.display = 'block';
-    this.celebrate(10);
-  }
-  
-  epicWinGame() {
-    this.HTMLElements.epicWinPanelGuessesLeft.textContent = this.guessCounter;
-    this.HTMLElements.epicWinPanel.style.display = 'block';
-    this.celebrate(100);
-  }
-
-  loss() {
-    this.HTMLElements.losePanel.style.display = 'block';
-  }
 
   celebrate(intensity){
     var duration = 5 * 1000; // Duration in milliseconds

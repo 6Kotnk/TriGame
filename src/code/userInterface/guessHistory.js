@@ -1,6 +1,6 @@
-export {History};
+export {GuessHistory};
 
-class History {
+class GuessHistory {
 
   constructor(HTMLElements) {
     this.HTMLElements = HTMLElements;

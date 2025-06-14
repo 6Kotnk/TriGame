@@ -48,7 +48,6 @@ class CityInputs {
     const city = this.inputs[idx];
     const lock = this.locks[idx];
 
-    //city.value = cities[Math.floor(Math.random() * cities.length)].name;
     city.value = feasibleCity;
     city.readOnly = true;
     city.dispatchEvent(new Event('input', { bubbles: true }));
@@ -69,21 +68,21 @@ class CityInputs {
   }
 
 
-  lockCities(citiesLocked, cityList){
+  lockCities(numCitiesLocked, cityList){
 
-    for (let index = 0; index < citiesLocked; index++) {
+    for (let index = 0; index < numCitiesLocked; index++) {
       this.lockCity(index, cityList[index]);
     }
 
   }
 
-  getRandomGuess(){
+  getRandomGuess(seed){
     const guess = new Guess();
     const names = [];
     const coords = [];
 
     for (let index = 0; index < 3; index++) {
-      const randCity =  cities[Math.floor(Math.random() * cities.length)];
+      const randCity =  cities[guess.randomFromSeed(seed * 31 * (index + 1), 0, cities.length)];
       names.push(randCity.name);
       coords.push(randCity.coords.split(", ").map(Number));
     }

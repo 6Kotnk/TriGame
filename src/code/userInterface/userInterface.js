@@ -1,8 +1,8 @@
-import { History } from "./history";
+import { GuessHistory } from "./guessHistory";
 import { CityInputs } from "./cityInputs";
 import { Tour } from "./tour";
-import { GuessCounter } from "./guessCounter";
-import { GuessSlider } from "./guessSlider";
+import { StateDisplay } from "./stateDisplay";
+import { Slider } from "./slider";
 
 export {UserInterface};
 
@@ -13,25 +13,30 @@ class UserInterface {
 
     this.errorDisplay = HTMLElements.errorDisplay;
 
-    this.history = new History(this.HTMLElements.History);
+    this.history = new GuessHistory(this.HTMLElements.History);
     this.cityInputs = new CityInputs(this.HTMLElements.CityInputs);
     this.tour = new Tour(this.HTMLElements.Tour);
-    this.guessCounter = new GuessCounter(this.HTMLElements.GuessCounter);
-    this.guessSlider = new GuessSlider(this.HTMLElements.GuessSlider);
+    this.guessDisplay = new StateDisplay(this.HTMLElements.GuessDisplay);
+    this.targetDisplay = new StateDisplay(this.HTMLElements.TargetDisplay);
+    this.guessSlider = new Slider(this.HTMLElements.GuessSlider);
   }
 
-  getRandomGuess(){
-    return this.cityInputs.getRandomGuess();
+  getRandomGuess(seed){
+    return this.cityInputs.getRandomGuess(seed);
+  }
+
+  getNumGuesses(){
+    return this.guessSlider.getSliderValue();
   }
 
   startTour(isDifficultyVisible) {
     this.tour.startTour(isDifficultyVisible);
   }
 
-  startGame(citiesLocked, cityList){
-    this.cityInputs.lockCities(citiesLocked, cityList);
-    this.guessCounter.update(this.guessSlider.getSliderValue());
-    return this.guessSlider.getSliderValue();
+  startGame(numCitiesLocked, cityList, targetVal, guessNum){
+    this.cityInputs.lockCities(numCitiesLocked, cityList);
+    this.guessDisplay.update(guessNum);
+    this.targetDisplay.update(targetVal);// #TODO
   }
 
   getGuess(){
@@ -40,14 +45,16 @@ class UserInterface {
 
   update(guessHistory, latestGuess, newCount){
     this.history.update(guessHistory, latestGuess);
-    this.guessCounter.update(newCount);
+    this.guessDisplay.update(newCount);
+    this.targetDisplay.update(newCount);// #TODO
     this.clearDisplay();
   }
 
   reset(){
     this.cityInputs.reset();
     this.history.reset();
-    this.guessCounter.reset();
+    this.guessDisplay.reset();
+    this.targetDisplay.reset();
     this.clearDisplay();
   }
 

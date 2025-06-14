@@ -1,6 +1,6 @@
-export {GuessCounter};
+export {StateDisplay};
 
-class GuessCounter {
+class StateDisplay {
 
   constructor(HTMLElements) {
     this.HTMLElements = HTMLElements;

@@ -13,10 +13,10 @@ import skyMapPath from      '../../assets/img/starMap.webp'
 import { SphericalTriangle } from './sphericalTriangle/sphericalTriangle.js';
 import { PlanetLayer } from './planetLayer.js';
 
-export {Display};
+export {GFXDisplay};
 
 
-class Display {
+class GFXDisplay {
   constructor(HTMLElements) {
 
     this.HTMLElements = HTMLElements;

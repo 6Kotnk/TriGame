@@ -11,7 +11,7 @@ const HTMLElements = {
     epicWinPanelGuessesLeft:                document.getElementById('epicWinPanelGuessesLeft'),
     target:                                 document.getElementById('target'),
 
-    Display: {
+    GFXDisplay: {
       mapCanvas:                            document.getElementById('mapCanvas'),
       containerDiv:                         document.getElementById('rightPanel'),
     },
@@ -34,8 +34,12 @@ const HTMLElements = {
         history:                            document.getElementById('history'),
       },
 
-      GuessCounter: {
-        element:                            document.getElementById('guessCounterValueDisplayPanel'),
+      GuessDisplay: {
+        element:                            document.getElementById('guessDisplayValue'),
+      },
+
+      TargetDisplay: {
+        element:                            document.getElementById('targetDisplayValue'),
       },
 
       GuessSlider: {
@@ -51,11 +55,10 @@ const HTMLElements = {
   },
 };
 
-
 const game = new Game(HTMLElements.Game);
 
-function startGame(citiesLocked) {
-  game.startGame(citiesLocked);
+function startGame(gameType) {
+  game.startGame(gameType);
 }
 
 function resetGame() {
