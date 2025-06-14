@@ -1,3 +1,4 @@
+import * as UTILS from './utils.js';
 export {Guess};
 
 const R = 6371;  // Earth's radius in kilometers
@@ -16,13 +17,6 @@ class Guess {
     this.area = null;
   }
 
-  randomFromSeed(seed, min, max){
-    return min + (seed % (max - min + 1));
-  }
-
-  degToRad(degrees) {
-    return degrees * (Math.PI / 180);
-  }
 
   toFixedDynamicRange(number, targetRange = 10000) {
     if (number === 0) return "0";
@@ -49,7 +43,7 @@ class Guess {
       this.cities[index].coords = [...coordsArray[index]];
     }
     const areaInMetersSquared = this.sphericalTriangleArea(coordsArray);
-    this.area = this.toFixedDynamicRange(areaInMetersSquared / 1e6, );
+    this.area = this.toFixedDynamicRange(areaInMetersSquared / 1e6);
   }
 
   getCoords() {
@@ -77,9 +71,9 @@ class Guess {
   haversine(coord1, coord2) {
     const [lat1, lon1] = coord1;
     const [lat2, lon2] = coord2;
-    const dLat = this.degToRad(lat2 - lat1);
-    const dLon = this.degToRad(lon2 - lon1);
-    const a = Math.sin(dLat / 2) ** 2 + Math.cos(this.degToRad(lat1)) * Math.cos(this.degToRad(lat2)) * Math.sin(dLon / 2) ** 2;
+    const dLat = UTILS.degToRad(lat2 - lat1);
+    const dLon = UTILS.degToRad(lon2 - lon1);
+    const a = Math.sin(dLat / 2) ** 2 + Math.cos(UTILS.degToRad(lat1)) * Math.cos(UTILS.degToRad(lat2)) * Math.sin(dLon / 2) ** 2;
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
     return distance;

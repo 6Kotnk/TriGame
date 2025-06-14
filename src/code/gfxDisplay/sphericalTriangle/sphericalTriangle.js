@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import * as UTILS from './utils.js';
 
 import { SphericalTriangleVertex } from './sphericalTriangleVertex.js';
 import { SphericalTriangleEdge } from './sphericalTriangleEdge.js';
@@ -70,11 +71,6 @@ class SphericalTriangle {
     this.fill.draw(this.vecs, this.colors.fill)
   }
 
-
-  degToRad(deg) {
-    return deg * Math.PI / 180;
-  }
-
   coordsToVecs(coords) {
 
     const vecs = Array(coords.length).fill(null);
@@ -84,8 +80,8 @@ class SphericalTriangle {
 
       vecs[idx].setFromSphericalCoords(
         1,
-        this.degToRad(-coords[idx][0] + 90),
-        this.degToRad( coords[idx][1] + 90),
+        UTILS.degToRad(-coords[idx][0] + 90),
+        UTILS.degToRad( coords[idx][1] + 90),
       );
       const hasNaN = [vecs[idx].x, vecs[idx].y, vecs[idx].z].some(Number.isNaN);
       if (hasNaN) {

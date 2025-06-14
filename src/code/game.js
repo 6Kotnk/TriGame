@@ -2,6 +2,7 @@ import { GFXDisplay } from './gfxDisplay/gfxDisplay.js';
 import { UserInterface } from './userInterface/userInterface.js';
 
 import * as CONFETTI from '@tsparticles/confetti';
+import * as UTILS from './utils.js';
 
 export {Game};
 
@@ -80,9 +81,6 @@ class Game  {
     return hash;
   }
 
-  randomFromSeed(seed, min, max){
-    return min + (seed % (max - min + 1));
-  }
 
   // Starts the game, with the desired number of locked cities
   startGame(gameType) {
@@ -102,14 +100,14 @@ class Game  {
     switch (gameType) {
       case "Daily":
         seed = todaySeed;
-        numCitiesLocked = this.randomFromSeed(seed,0,2);
-        numGuesses = this.randomFromSeed(seed,1,10);
+        numCitiesLocked = UTILS.randomFromSeed(seed,0,2);
+        numGuesses = UTILS.randomFromSeed(seed,1,10);
         break;
 
       case "Random":
         seed = randomSeed;
-        numCitiesLocked = this.randomFromSeed(seed,0,2);
-        numGuesses = this.randomFromSeed(seed,1,10);
+        numCitiesLocked = UTILS.randomFromSeed(seed,0,2);
+        numGuesses = UTILS.randomFromSeed(seed,1,10);
         break;
 
       case "Easy":
