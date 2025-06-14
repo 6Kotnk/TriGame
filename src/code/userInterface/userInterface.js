@@ -36,7 +36,7 @@ class UserInterface {
   startGame(numCitiesLocked, cityList, targetVal, guessNum){
     this.cityInputs.lockCities(numCitiesLocked, cityList);
     this.guessDisplay.update(guessNum);
-    this.targetDisplay.update(targetVal);// #TODO
+    this.targetDisplay.update(targetVal);
   }
 
   getGuess(){
@@ -46,7 +46,6 @@ class UserInterface {
   update(guessHistory, latestGuess, newCount){
     this.history.update(guessHistory, latestGuess);
     this.guessDisplay.update(newCount);
-    this.targetDisplay.update(newCount);// #TODO
     this.clearDisplay();
   }
 
