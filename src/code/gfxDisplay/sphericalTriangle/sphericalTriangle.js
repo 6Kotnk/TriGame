@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import * as UTILS from './utils.js';
+import * as UTILS from '../../utils.js';
 
 import { SphericalTriangleVertex } from './sphericalTriangleVertex.js';
 import { SphericalTriangleEdge } from './sphericalTriangleEdge.js';

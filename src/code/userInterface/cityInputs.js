@@ -1,6 +1,7 @@
 import cities from "../../assets/data/cities.json";
 import { Guess } from "../guess";
 
+import * as UTILS from '../utils.js';
 
 export {CityInputs};
 
@@ -82,7 +83,7 @@ class CityInputs {
     const coords = [];
 
     for (let index = 0; index < 3; index++) {
-      const randCity =  cities[guess.randomFromSeed(seed * 31 * (index + 1), 0, cities.length)];
+      const randCity =  cities[UTILS.randomFromSeed(seed * 31 * (index + 1), 0, cities.length)];
       names.push(randCity.name);
       coords.push(randCity.coords.split(", ").map(Number));
     }
