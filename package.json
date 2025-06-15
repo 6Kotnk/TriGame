@@ -14,6 +14,7 @@
   "dependencies": {
     "@sjmc11/tourguidejs": "^0.0.20",
     "@tsparticles/confetti": "^3.8.1",
+    "terser": "^5.42.0",
     "three": "^0.174.0"
   }
 }
