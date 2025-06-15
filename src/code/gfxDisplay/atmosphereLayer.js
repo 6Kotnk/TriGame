@@ -2,28 +2,38 @@ import * as THREE from 'three';
 
 export { AtmosphereLayer };
 
+// Shaders from:
+// https://github.com/franky-adl/threejs-earth/blob/main/src/index.js (atmosphere)
+// https://github.com/bobbyroe/threejs-earth/blob/main/src/getFresnelMat.js (surface)
+
 class AtmosphereLayer {
-  constructor(scene, radius, renderOrder, options = {}) {
+  constructor(scene, radius, renderOrder, atmOptions = {}, fresnelOptions = {}) {
+
     const {
       atmOpacity = 0.7,
       atmPowFactor = 4.1,
       atmMultiplier = 9.5,
-    } = options;
+    } = atmOptions;
 
-    // Create atmosphere geometry (slightly larger than the planet)
-    const atmosphereGeometry = new THREE.SphereGeometry(radius, 64, 64);
-    const atmosphereSurfaceGeometry = new THREE.SphereGeometry(1, 64, 64);
+    const {
+      fresnelBias = 0.1,
+      fresnelScale = 1.0,
+      fresnelPower = 4.0,
+    } = fresnelOptions;
+
+    // Create atmosphere is made of two layers, one on the surface, the other above
+    const atmosphereGeometry = new THREE.SphereGeometry(radius, 32, 32);
+    const fresnelGeometry = new THREE.SphereGeometry(1, 32, 32);
 
 
-    // Atmospheric shader material based on the reference
-    const atmosphereSurfaceMaterial = new THREE.ShaderMaterial({
+    const fresnelMaterial = new THREE.ShaderMaterial({
 
       uniforms: {
         color1: { value: new THREE.Color(0x0088ff) },
         color2: { value: new THREE.Color(0x000000) },
-        fresnelBias: { value: 0.1 },
-        fresnelScale: { value: 1.0 },
-        fresnelPower: { value: 4.0 },
+        fresnelBias:  { value: fresnelBias },
+        fresnelScale: { value: fresnelScale },
+        fresnelPower: { value: fresnelPower },
       },
 
       vertexShader: `
@@ -65,9 +75,9 @@ class AtmosphereLayer {
 
     const atmosphereMaterial = new THREE.ShaderMaterial({
     uniforms: {
-      atmOpacity: { value: atmOpacity },
-      atmPowFactor: { value: atmPowFactor },
-      atmMultiplier: { value: atmMultiplier }
+      atmOpacity:     { value: atmOpacity },
+      atmPowFactor:   { value: atmPowFactor },
+      atmMultiplier:  { value: atmMultiplier }
     },
     vertexShader: `
       varying vec3 vNormal;
@@ -109,14 +119,14 @@ class AtmosphereLayer {
 
 
     // Create the atmosphere mesh
-    this.mesh = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
-    this.surfaceMesh = new THREE.Mesh(atmosphereSurfaceGeometry, atmosphereSurfaceMaterial);
-    this.mesh.renderOrder = renderOrder;
-    this.surfaceMesh.renderOrder = renderOrder;
+    this.atmosphereMesh = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
+    this.fresnelMesh = new THREE.Mesh(fresnelGeometry, fresnelMaterial);
+    this.atmosphereMesh.renderOrder = renderOrder;
+    this.fresnelMesh.renderOrder = renderOrder;
     
     // Add to scene
-    scene.add(this.mesh);
-    scene.add(this.surfaceMesh);
+    scene.add(this.atmosphereMesh);
+    scene.add(this.fresnelMesh);
   }
 
 }

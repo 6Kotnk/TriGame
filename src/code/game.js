@@ -25,78 +25,63 @@ class Game  {
     this.display = new GFXDisplay(this.HTMLElements.GFXDisplay);
     this.userInterface = new UserInterface(this.HTMLElements.UserInterface);
 
-    // Gamestate
+    // Declare gamestate
     this.guessCounter = Infinity;
     this.guessHistory = [];
     this.currentState = GameState.INIT;
     this.targetArea = null;
     this.citiesLocked = 0;
 
-    // Initalize gamestate, will be changed upon calling startGame()
+    // Game does not preserve state, since it has no cookies.
+    // Every new game should be the same as a page reload
     this.resetGame();
   }
-
-  // Called on init and when a new game is requested
-  resetGame() {
-    this.guessCounter = Infinity;
-    this.guessHistory = [];
-    this.currentState = GameState.INIT;
-    this.targetArea = null;
-    this.citiesLocked = 0;
-
-    // Reset the triangle
-    this.display.reset();
-    // Reset the cities, guess counter, history display
-    this.userInterface.reset();
-
-    // Hide all panels, except the difficulty selection
-    this.HTMLElements.difficultyPanel.style.display = 'block';
-    this.HTMLElements.winPanel.style.display = 'none';
-    this.HTMLElements.epicWinPanel.style.display = 'none';
-    this.HTMLElements.losePanel.style.display = 'none';
-    // The target is unknown until a difficulty is selected
-    //this.HTMLElements.target.textContent = `Target: ?? million km²`;
-    
-  }
   
-  // Starts the tour, show how the difficulty selector works,
+  // Starts the tour, shows how the difficulty selector works,
   // if it is still on screen.
   startTour() {
     const isDifficultyVisible = this.currentState == GameState.INIT;
     this.userInterface.startTour(isDifficultyVisible);
   }
 
-  dateToHash(date){
-    const dateString = date.getFullYear() + '-' + 
-                  String(date.getMonth() + 1).padStart(2, '0') + '-' + 
-                  String(date.getDate()).padStart(2, '0');
-    
-    // Simple rolling hash function to convert date to number
+  // Simple rolling hash function to convert string to number
+  hash(inputStr){
     let hash = 0;
-    for (let i = 0; i < dateString.length; i++) {
-      const char = dateString.charCodeAt(i);
+    for (let i = 0; i < inputStr.length; i++) {
+      const char = inputStr.charCodeAt(i);
+      // hash = hash * 31 + char
       hash = ((hash << 5) - hash) + char;
     }
 
     return hash;
   }
 
+  // Logarithmic distance
+  logDist(a, b = 1){
+    return Math.abs(Math.log10(a) - Math.log10(b));
+  }
 
   // Starts the game, with the desired number of locked cities
   startGame(gameType) {
-    this.guessHistory = [];
-    this.display.reset();
-    this.userInterface.reset(); 
 
     let seed = 0;
     let numGuesses = 0;
     let numCitiesLocked = 0;
 
+    // Get current date + time
+    const now = new Date();
+
+    // Strip off time, only want date
+    const today = now.getFullYear() + '-' + 
+                  String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+                  String(now.getDate()).padStart(2, '0');
+                
     // Generate a consistent seed based on today's date
-    const today = new Date();
-    const todaySeed = this.dateToHash(today);
+    const todaySeed = this.hash(today);
+    // Generate random seed
     const randomSeed = Math.floor(Math.random() * 0xFFFFFFFF);
 
+    // Choose whether we want random or daily seed + other options
     switch (gameType) {
       case "Daily":
         seed = todaySeed;
@@ -129,16 +114,18 @@ class Game  {
         break;
 
       default:
-        break;
+        this.userInterface.display("Unknown game type");
+        return;
     }
 
+    // Get a random guess using our seed. This makes sure it is possible to win
     const targetGuess = this.userInterface.getRandomGuess(seed);
-    this.targetArea = targetGuess.getArea();
 
+    // Get parameters of our guess
+    this.targetArea = targetGuess.getArea();
     const cityList = targetGuess.getNames();
     const targetVal = this.targetArea;
-
-
+    // Set initial number of guesses
     this.guessCounter = numGuesses;
 
     this.userInterface.startGame(numCitiesLocked, cityList, targetVal, numGuesses);
@@ -154,21 +141,24 @@ class Game  {
   }
   
   // Called when the guess is an EXACT match. Displays the epicWinGame panel.
-  // Guesses are rounded depending on their magnitude.
+  // Guesses are rounded depending on their magnitude, so smaller areas need more precision for an exact match.
   epicWinGame() {
     this.HTMLElements.epicWinPanelGuessesLeft.textContent = this.guessCounter;
     this.HTMLElements.epicWinPanel.style.display = 'block';
     this.celebrate(100);
   }
 
+  // When you win within tolerance you can keep going, if you so choose
   continueGame() {
     this.HTMLElements.winPanel.style.display = 'none';
   }
 
+  // No guesses left
   loss() {
     this.HTMLElements.losePanel.style.display = 'block';
   }
 
+  // Click submit button
   submitGuess() {
 
     if (!this.userInterface) {
@@ -177,27 +167,28 @@ class Game  {
     }
 
     try {
-
+      // Get guess
       const guess = this.userInterface.getGuess();
 
-      //guess.colors = this.triangleColors;
-
+      // If you haven't tried it yet...
       if(!guess.isInList(this.guessHistory))
       {
 
-        //Insert guess at correct index
         this.guessCounter--;
-        const currentGuessAreaError = this.logDist(guess.area, this.targetArea);
+        // The error (how wrong the guess was) is calculated using logarithmic distance
+        const currentGuessAreaError = this.logDist(guess.getArea(), this.targetArea);
 
-        // List is empty
+        // if no guesses in guess history
         if(this.guessHistory.length == 0){
           this.guessHistory.push(guess);
         }else{
           // Iterate over list
           let inserted = false;
           for (let index = 0; index < this.guessHistory.length; index++) {
-            const listGuessAreaError = this.logDist(this.guessHistory[index].area, this.targetArea);
+            const listGuessAreaError = this.logDist(this.guessHistory[index].getArea(), this.targetArea);
             if(currentGuessAreaError < listGuessAreaError){
+              // Insert at the right spot, so list is always sorted.
+              // This makes sure guess history is displayed with closest guesses at the top
               this.guessHistory.splice(index, 0, guess);
               inserted = true;
               break;
@@ -209,9 +200,10 @@ class Game  {
           }
         }
 
+        // See if we have won/lost
         this.evaluateGuess(guess);
 
-        // Put in evaluateGuess
+        // Show how good the new guess was
         this.userInterface.update(this.guessHistory, guess, this.guessCounter);
         this.display.update(guess);
 
@@ -224,30 +216,32 @@ class Game  {
     }
   }
 
-  logDist(a, b = 1){
-    return Math.abs(Math.log10(a) - Math.log10(b));
-  }
 
   evaluateGuess(guess) {
-    //Change color as well?
     const guessArea = guess.getArea();
 
+    // Exact match
     if(guessArea == this.targetArea) {
       this.currentState = GameState.EXACT_MATCH;
       this.epicWinGame();
     }
+
+    // Within targetTol of target
+    // This only triggers once per game, so you are not constantly winning if you continue
     else if( (this.logDist(1+targetTol) > this.logDist(guessArea, this.targetArea)) && 
     (this.currentState == GameState.NOT_CLOSE)) {
       this.currentState = GameState.WITHIN_TOL;
       this.winGame();
     }
+
+    // Out of guesses AND you didn't win
     else if(this.guessCounter == 0){
       this.currentState = GameState.LOSS;
       this.loss();
     }
   }
 
-
+  // Displays a little fireworks display
   celebrate(intensity){
     var duration = 5 * 1000; // Duration in milliseconds
     var animationEnd = Date.now() + duration;
@@ -266,6 +260,28 @@ class Game  {
           defaults, 
           { particleCount, origin: { x: Math.random(), y: Math.random() - 0.2 } }));
     }, 10);
+  }
+
+  // Resets the state of the game to the initial condition, as if page was reloaded
+  resetGame() {
+    this.guessCounter = Infinity;
+    this.guessHistory = [];
+    this.currentState = GameState.INIT;
+    this.targetArea = null;
+    this.citiesLocked = 0;
+
+    // Reset the triangle
+    this.display.reset();
+    // Reset the cities, guess counter, history display
+    this.userInterface.reset();
+
+    // Hide all panels
+    this.HTMLElements.winPanel.style.display = 'none';
+    this.HTMLElements.epicWinPanel.style.display = 'none';
+    this.HTMLElements.losePanel.style.display = 'none';
+    //Show the difficulty selection
+    this.HTMLElements.difficultyPanel.style.display = 'block';
+  
   }
 
 }

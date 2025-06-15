@@ -6,7 +6,7 @@ class StateDisplay {
     this.HTMLElements = HTMLElements;
 
     this.element = this.HTMLElements.element;
-    this.update("?");
+    this.reset();
   }
 
   update(newCount){

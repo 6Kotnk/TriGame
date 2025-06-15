@@ -4,53 +4,52 @@ class GuessHistory {
 
   constructor(HTMLElements) {
     this.HTMLElements = HTMLElements;
+    this.outputDiv = this.HTMLElements.history;
     this.historyResults = [];
-  }
-
-  reset() {
-    this.historyResults = [];
-    const outputDiv = this.HTMLElements.history;
-    outputDiv.innerHTML = '';
   }
 
   update(guessList, latestGuess) {
       
-    const outputDiv = this.HTMLElements.history;
-    outputDiv.innerHTML = '';
+    // Clear the div
+    this.outputDiv.innerHTML = '';
 
-    // Display the latest result
+    // Create the latest result
     const latestDiv = document.createElement("div");
     latestDiv.className = "resultItem";
-
     latestDiv.innerHTML = this.guessToHTML(latestGuess);
+    // Create a separator    
+    const separator = document.createElement("hr");
+
+    // Start creating the history
 
     // Add a separator
-    const separator1 = document.createElement("hr");
-    const separator2 = document.createElement("hr");
+    this.outputDiv.appendChild(separator);
 
-    outputDiv.appendChild(separator1);
-
+    // Newest header + result 
     const latestHeader = document.createElement("h3");
     latestHeader.textContent = "Newest Result:";
-    outputDiv.appendChild(latestHeader);
+    this.outputDiv.appendChild(latestHeader);
+    this.outputDiv.appendChild(latestDiv);
 
-    outputDiv.appendChild(latestDiv);
-
-    outputDiv.appendChild(separator2);
+    // Another separator
+    this.outputDiv.appendChild(separator);
 
     // Display the history
+    // Header
     const historyHeader = document.createElement("h3");
     historyHeader.textContent = "History:";
-    outputDiv.appendChild(historyHeader);
+    this.outputDiv.appendChild(historyHeader);
 
+    // Loop over the list, add a entry for each guess
     for (let index = 0; index < guessList.length; index++) {
       const resultDiv = document.createElement("div");
       resultDiv.className = "resultItem";
       resultDiv.innerHTML = this.guessToHTML(guessList[index]);
-      outputDiv.appendChild(resultDiv);
+      this.outputDiv.appendChild(resultDiv);
     }
   }
 
+  // Make the HTML for a guess
   guessToHTML(guess){
     const HTML = `
       <p>${guess.cities[0].name},</p>
@@ -59,6 +58,13 @@ class GuessHistory {
       <p class="area">Area: ${guess.area} million km<sup>2</sup></p>
     `;
     return HTML;
+  }
+
+  // Clear the dashboard
+  reset() {
+    this.historyResults = [];
+    this.outputDiv = this.HTMLElements.history;
+    this.outputDiv.innerHTML = '';
   }
 
 }

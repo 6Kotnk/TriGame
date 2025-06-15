@@ -21,44 +21,37 @@ class GFXDisplay {
 
     this.HTMLElements = HTMLElements;
 
+    // Setup
     this.scene = new THREE.Scene();
-
     this.canvas = this.HTMLElements.mapCanvas;
     this.container = this.HTMLElements.containerDiv;
-    // Set up the this.scene, camera, and this.renderer
-
     this.camera = new THREE.PerspectiveCamera(75, this.container.clientWidth / this.container.clientHeight, 0.1, 1000);
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
 
     this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
     this.container.appendChild(this.renderer.domElement);
-    this.renderer.setClearColor( 0x000000, 0 ); // the default
-    this.canvas.width = 3600;
-    this.canvas.height = 1800;
+    this.renderer.setClearColor( 0x000000, 0 ); // Default color, only visible before textures load
 
+    // Get all the textures
     const textureLoader = new THREE.TextureLoader();
-
     const albedoMap = textureLoader.load(albedoMapPath);
-    //albedoMap.minFilter = THREE.LinearFilter;
-
     const bumpMap = textureLoader.load(bumpMapPath);
     const cloudsMap = textureLoader.load(cloudsMapPath);
-
     const outlineMap = textureLoader.load(outlineMapPath);
-    //const lightMap = textureLoader.load(lightMapPath); //Unused. Masking the map requires shader modification
     const oceanMap = textureLoader.load(oceanMapPath);
     const skyMap = textureLoader.load(skyMapPath);
 
+    // Set skymap as skymap
     skyMap.colorSpace = THREE.SRGBColorSpace;
-
     skyMap.mapping = THREE.EquirectangularReflectionMapping;
     this.scene.background = skyMap;
-    //this.scene.background = new THREE.Color("gray");
 
-    // Create a sphere to get a shadow
-
+    // Spherical triangle that will be made between our cities
     this.triangle = new SphericalTriangle(this.scene, this.canvas);
 
+    // Earth layers:
+
+    // Base layer (regular earth)
     this.earth = new PlanetLayer(this.scene, 1, 2, {
       map: albedoMap,
       bumpMap: bumpMap,
@@ -67,11 +60,13 @@ class GFXDisplay {
       shininess: 100,
     });
 
+    // City outlines appear when zoomed in
     this.countryOutlines = new PlanetLayer(this.scene, 1, 3, {
         map: outlineMap,
         transparent: true,
     });
 
+    // Clouds appear when zoomed out
     this.clouds = new PlanetLayer(this.scene, 1.01, 4, {
       map: cloudsMap,
       alphaMap: cloudsMap,
@@ -82,10 +77,11 @@ class GFXDisplay {
     const light = new THREE.DirectionalLight(0xffffff, 1);
     light.position.set(5, 5, 2);
 
+    // Attach it to camera, so we always see the bright side
     this.camera.add( light );
     this.scene.add( this.camera );
 
-    // Set the camera position
+    // Set the  initial camera position
     this.camera.position.set(0, 0, 5);
     this.camera.lookAt(0, 0, 0);
 
@@ -97,23 +93,33 @@ class GFXDisplay {
     this.controls.minDistance = 1.15;
     this.controls.maxDistance = 4;
 
+    // Start drawing frames
     this.animate();
 
-    this.controls.addEventListener( 'change', this.getControlsZoom );
+    // Event listener for zooming
+    this.controls.addEventListener('change', this.onZoom );
 
+    // If container is resized, resize this as well
     const resizeObserver = new ResizeObserver(this.onWindowResize);
     resizeObserver.observe(this.container);
   }
 
-  getControlsZoom = () => {
+  onZoom = () => {
+    // Get zoom amount
     const zoom = this.controls.maxDistance / this.controls.getDistance( );
+    // Constants made up, could probably be better, but works good enough
     const opacity = (zoom-1)**3/2.4
     const scale = 1/zoom;
 
+    // When zooming in the light is brought more inline with our view
     this.camera.children[0].position.set(5,5, 2*zoom);
+
+    // Clouds fade out when zooming in
     this.clouds.mesh.material.opacity = 1 - opacity;
+    // Country outlines fade in when zooming in
     this.countryOutlines.mesh.material.opacity = Math.min(1,opacity);
 
+    // Rescale the triangle, so the outline is always a constant width on our display
     this.triangle.setScale(scale)
   }
 
@@ -121,42 +127,35 @@ class GFXDisplay {
     const width = this.container.clientWidth;
     const height = this.container.clientHeight;
     
+    // Recalculate aspect ratio
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
     
+    // Set new size
     this.renderer.setSize(width, height);
   }
 
-
+  // Called every frame
   animate = () => {
-    requestAnimationFrame(this.animate);
     this.controls.update();
+    // Slowly rotate cloud layer
     this.clouds.rotateY(0.001);
     this.renderer.render(this.scene, this.camera);
+
+    // We want another frame
+    requestAnimationFrame(this.animate);
   }
 
+  // Update the triangle
   update(guess){
     this.triangle.setCoords(guess.getCoords());
     this.triangle.setColors(guess.colors);
     this.triangle.reconfigure();
   }
 
-  setTriangleCoords(coords){
-    this.triangle.setCoords(coords);
-  }
-
-  setTriangleColors(colors){
-    this.triangle.setColors(colors);
-  }
-
-  reconfigure(){
-    this.triangle.reconfigure();
-  }
-
   reset(){
     this.triangle.reset();
   }
-
 
 }
 

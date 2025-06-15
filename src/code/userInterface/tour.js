@@ -14,10 +14,7 @@ class Tour {
       showStepProgress: true,
     });
 
-    // Attach the tourguide start event to the button press
-    this.tourButton = this.HTMLElements.tourButton;
-
-    // Add event listeners that stop the animation on the first user interaction
+    // Add event listeners that stop the tour button animation on the first user interaction
     document.body.addEventListener('click', this.stopTutorialAnimation, { once: true });
     document.body.addEventListener('keydown', this.stopTutorialAnimation, { once: true });
   }
@@ -37,7 +34,7 @@ class Tour {
     this.tg.start();
   }
 
-  // Function to remove the tutorial's attention-seeking animation
+  // Function to remove the tour button animation
   stopTutorialAnimation = () => {
     if (this.tourButton && this.tourButton.classList.contains("tutorial-pulse")) {
       this.tourButton.classList.remove("tutorial-pulse");

@@ -9,13 +9,6 @@ export {SphericalTriangle};
 
 class SphericalTriangle {
 
-  verts;
-  edges;
-  fill;
-  coords;
-  vecs;
-  colors;
-
   constructor(scene, canvas) {
 
     this.verts = Array(3).fill(null);
@@ -31,6 +24,7 @@ class SphericalTriangle {
 
     this.fill = new SphericalTriangleFill(scene, canvas);
 
+    // Color of the triangle components
     this.colors = {
       verts: "white",
       edges: "white",
@@ -40,6 +34,7 @@ class SphericalTriangle {
 
   setCoords(coords){
     this.coords = coords;
+    // Convert to vec3
     this.vecs = this.coordsToVecs(coords);
   }
 
@@ -47,6 +42,7 @@ class SphericalTriangle {
     this.colors = colors;
   }
 
+  // Scale the outline
   setScale(scale){
     for (let vert = 0; vert < this.verts.length; vert++) {
       this.verts[vert].setScale(scale);
@@ -57,6 +53,7 @@ class SphericalTriangle {
     }
   }
 
+  // Apply the latest coords and colors
   reconfigure(){
     for (let vert = 0; vert < this.verts.length; vert++) {
       this.verts[vert].moveToVec(this.vecs[vert]);
@@ -71,18 +68,21 @@ class SphericalTriangle {
     this.fill.draw(this.vecs, this.colors.fill)
   }
 
+  // Convert coordinate pair list to a  list of unit Three.js vec3
   coordsToVecs(coords) {
-
     const vecs = Array(coords.length).fill(null);
 
     for (let idx = 0; idx < vecs.length; idx++) {
       vecs[idx] = new THREE.Vector3();
 
       vecs[idx].setFromSphericalCoords(
-        1,
+        1,// Unit vec3
+        // convert from latlon to spherical coords
         UTILS.degToRad(-coords[idx][0] + 90),
         UTILS.degToRad( coords[idx][1] + 90),
       );
+
+      // Error checking
       const hasNaN = [vecs[idx].x, vecs[idx].y, vecs[idx].z].some(Number.isNaN);
       if (hasNaN) {
           throw new Error("NaN Error when translating coordinates to vector");
@@ -92,6 +92,7 @@ class SphericalTriangle {
     return vecs;
   }
 
+  // Hide the triangle back into the Earth
   reset(){
     this.coords = Array(3).fill(null);
     this.vecs = Array(3).fill(new THREE.Vector3(0, 0, 0));

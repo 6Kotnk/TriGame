@@ -57,7 +57,6 @@ class UserInterface {
     this.clearDisplay();
   }
 
-  //debug
   display(text){
     const outputDiv = this.errorDisplay;
     outputDiv.innerHTML = text;

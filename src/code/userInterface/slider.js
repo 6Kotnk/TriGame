@@ -5,13 +5,11 @@ class Slider {
   constructor(HTMLElements) {
 
     this.HTMLElements = HTMLElements;
-
-    // Update slider value display
     this.element = this.HTMLElements.element;
     this.elementValue = this.HTMLElements.elementValue;
 
-    // Initialize with default value (5 guesses)
-    this.selectedGuesses = this.sliderToGuesses(6);
+    // Initialize with default value (6 guesses)
+    this.selectedGuesses = this.sliderToGuesses(parseInt(this.element.value));
     this.elementValue.textContent = this.selectedGuesses;
 
     this.element.addEventListener("input", this.handleInput);
@@ -28,7 +26,7 @@ class Slider {
   }
 
   sliderToGuesses(sliderValue) {
-    if (sliderValue === 11) {
+    if (sliderValue === parseInt(this.element.max)) {
       return Infinity;
     } else {
       return sliderValue;

@@ -1,6 +1,7 @@
 import { Game } from "./game.js";
 
-
+// Get all the HTML elements and then pass them down the class hierarchy
+// Would be useful, if everything wasn't a singleton... maybe.
 const HTMLElements = {
   Game: {
     difficultyPanel:                        document.getElementById('difficultyPanel'),

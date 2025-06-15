@@ -2,13 +2,15 @@ import * as THREE from 'three';
 
 export {SphericalTriangleVertex};
 
+const VERTEX_RADIUS = 0.02;
+const VERTEX_DETAIL = 32;
+
 class SphericalTriangleVertex {
 
   constructor(scene) {
-    const geometry = new THREE.SphereGeometry(0.02, 32, 32);
+    const geometry = new THREE.SphereGeometry(VERTEX_RADIUS, VERTEX_DETAIL, VERTEX_DETAIL);
     const material = new THREE.MeshBasicMaterial();
     this.vertex = new THREE.Mesh(geometry, material);
-    this.vertex.material.color.set('red');
     scene.add(this.vertex);
   }
 

@@ -13,19 +13,22 @@ class CityInputs {
     this.cityCoords = Array(3).fill(null);
     this.cityNames = Array(3).fill(null);
 
+    // Input fields
     this.inputs = [
         this.HTMLElements.city1,
         this.HTMLElements.city2,
         this.HTMLElements.city3
     ];
 
+    // Lock icons for locked cities
     this.locks = [
         this.HTMLElements.city1Lock,
         this.HTMLElements.city2Lock,
         this.HTMLElements.city3Lock
     ];
 
-    this.datalist = this.HTMLElements.cities; // Shared this.datalist
+    // Shared datalist, populated with all the cities
+    this.datalist = this.HTMLElements.cities; 
 
     // Attach event listeners to all inputs
     this.inputs.forEach(input => {
@@ -35,6 +38,7 @@ class CityInputs {
 
   }
 
+  // Colors the inputs if they are valid
   setInputState(input, state) {
     // Remove all state classes
     input.classList.remove('valid', 'invalid', 'locked');
@@ -45,11 +49,12 @@ class CityInputs {
     }
   }
 
-  lockCity(idx, feasibleCity){
+  // Make it so a city can't be changed
+  lockCity(idx, cityValue){
     const city = this.inputs[idx];
     const lock = this.locks[idx];
 
-    city.value = feasibleCity;
+    city.value = cityValue;
     city.readOnly = true;
     city.dispatchEvent(new Event('input', { bubbles: true }));
     city.dispatchEvent(new Event('change', { bubbles: true }));
@@ -57,32 +62,33 @@ class CityInputs {
     lock.innerHTML = "🔒";
   }
 
+  // Reset city so it can be changed again
   unlockCity(idx){
     const city = this.inputs[idx];
     const lock = this.locks[idx];
 
     city.value = "";
     city.readOnly = false;
-    //city.style.backgroundColor = '#FFFFFF';
     this.setInputState(city, null);
     lock.innerHTML = "";
   }
 
-
   lockCities(numCitiesLocked, cityList){
-
     for (let index = 0; index < numCitiesLocked; index++) {
       this.lockCity(index, cityList[index]);
     }
 
   }
 
+  // Get a random guess with all cities valid
   getRandomGuess(seed){
     const guess = new Guess();
     const names = [];
     const coords = [];
 
+    // Select 3 cities at random using the seed
     for (let index = 0; index < 3; index++) {
+      // Mix the seed and the index, make sure index 0 does not multiply the seed by zero
       const randCity =  cities[UTILS.randomFromSeed(seed * 31 * (index + 1), 0, cities.length)];
       names.push(randCity.name);
       coords.push(randCity.coords.split(", ").map(Number));
@@ -93,18 +99,21 @@ class CityInputs {
     return guess;
   }
 
+  // Get the currently input guess
   getGuess(){
     const guess = new Guess();
 
     let CoordsValid = true; // Assume all coordinates are valid initially
 
     for (let i = 0; i < this.cityCoords.length; i++) {
-      // Check if the current coordinate is "falsy" (null, undefined, etc.)
+      // Check if the current coordinate is valid
       if (!this.cityCoords[i]) {
         CoordsValid = false; // Found an invalid coordinate
         break; // Stop checking immediately, no need to check the rest
       }
     }
+
+    // This is caught in the game class and displayed on the dashboard
     if (!CoordsValid) {
       throw new Error("Make sure all cities are valid before submitting");
     }
@@ -115,59 +124,67 @@ class CityInputs {
     return guess;
   }
 
+  // Triggers when the value in the input is being changed (char added/removed )
+  // This handles the datalist (city suggestions)
   handleInput = (event) => {
-    const search = event.target.value.toLowerCase();
+    // Get field value and index
+    const inputVal = event.target.value.toLowerCase();
     const inputIdx = parseInt(event.target.id[event.target.id.length - 1]) - 1;
 
     this.datalist.innerHTML = ""; // Clear old suggestions
 
-    if (search.length < 2) return; // Avoid searching too early
+    if (inputVal.length < 2) return; // Avoid searching too early
 
+    // Make sure the value is a substring in the suggested city,
+    // and that the suggested city is not already used elsewhere
     const matches = cities
-      .filter(city => city.name.toLowerCase().includes(search))
+      .filter(city => city.name.toLowerCase().includes(inputVal))
       .filter(match => this.cityNames[(inputIdx + 1)%3] != match.name)
       .filter(match => this.cityNames[(inputIdx + 2)%3] != match.name)
       .slice(0, 10);
 
 
-
+    // Make datalist entries for all matches
     matches.forEach(city => {
-        const option = document.createElement("option");
-        option.value = city.name;
-        option.setAttribute("data-coords", city.coords);
-        this.datalist.appendChild(option);
+      const option = document.createElement("option");
+      option.value = city.name;
+      option.setAttribute("data-coords", city.coords);
+      this.datalist.appendChild(option);
     });
   }
 
 
-
+  // Triggers when the value in the input actually changed (click of field/press enter)
+  // This extracts the coords from the input city name, and colors the fields
   handleChange = (event) => {
-    const inputValue = event.target.value;
+    const inputVal = event.target.value;
     const inputIdx = parseInt(event.target.id[event.target.id.length - 1]) - 1;
     let cityCoordStr = "";
     let selectedOption = "";
 
-    selectedOption = Array.from(this.datalist.options).find(option => option.value === inputValue);
+    // Find the city in the datalist
+    selectedOption = Array.from(this.datalist.options).find(option => option.value === inputVal);
     
+    // If found
     if (selectedOption) {
+      // Set the color
       cityCoordStr = selectedOption.getAttribute("data-coords");
-      //this.inputs[inputIdx].style.backgroundColor = '#90EE90'; // Light green for match
       this.setInputState(this.inputs[inputIdx], "valid");
+      // Extract name and coords
       this.cityCoords[inputIdx] = cityCoordStr.split(", ").map(Number);
-      this.cityNames[inputIdx] = inputValue;
+      this.cityNames[inputIdx] = inputVal;
     } else {
-      //this.inputs[inputIdx].style.backgroundColor = '#FFB6C1'; // Light pink for no match
+      // Set the color
       this.setInputState(this.inputs[inputIdx], "invalid");
+      // Make the name and coords invalid
       this.cityCoords[inputIdx] = null;
       this.cityNames[inputIdx] = null;
     }
-    
-    this.datalist.innerHTML = ""; // Clear old suggestions
+    // Clear old suggestions
+    this.datalist.innerHTML = ""; 
   }
 
-
   reset(){
-
     this.cityCoords.fill(null);
     this.cityNames.fill(null);
 
