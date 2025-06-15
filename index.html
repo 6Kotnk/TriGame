@@ -6,57 +6,83 @@
     <link rel="stylesheet" href="/src/style.css">
   </head>
   <body>
+    <!-- Container for entire screen -->
     <div id="container">
+      <!-- City inputs and dashboard -->
       <div id="leftPanel">
+
+        <!-- City input fields + locks for locked cities -->
         <div id="cityInputs">
           <div>City1: <input type="text" list="cities" id="city1" placeholder="Select a city" autocomplete="off"><span id="city1Lock"></span></div>
           <div>City2: <input type="text" list="cities" id="city2" placeholder="Select a city" autocomplete="off"><span id="city2Lock"></span></div>
           <div>City3: <input type="text" list="cities" id="city3" placeholder="Select a city" autocomplete="off"><span id="city3Lock"></span></div>
-          <datalist id="cities">
-          </datalist>
+          
+          <!-- Cities datalist filled by cityInputs.js -->
+          <datalist id="cities"></datalist>
+
+          <!-- Submit guess button -->
           <button onclick="submitGuess()" id="submitButton">Submit</button>
         </div>
+
+        <!-- Dashboard for guess counter and history of guesses -->
         <div id="dashboard">
+
+          <!-- Error display if you select invalid cities -->
           <div id="errorDisplay" class="errorItem"></div>
+
+          <!-- Shows number of guesses left -->
           <div id="guessDisplay" class="resultItem">
             Guesses left: <span id="guessDisplayValue">?</span>
           </div>
-          <div id="history">
-          </div>
+
+          <!-- Guess history -->
+          <div id="history"></div>
+          
         </div>
       </div>
+      
+      <!-- Three.js container -->
       <div id="rightPanel">
-          <div id="targetDisplay">
-            Target: <span id="targetDisplayValue">?</span> million km²
-          </div>
+
+        <!-- Target area -->
+        <div id="targetDisplay">
+          Target: <span id="targetDisplayValue">?</span> million km²
+        </div>
+
+        <!-- Tour button -->
         <button onclick="startTour()" id="tourButton" class="tutorial-pulse">Tutorial</button>
 
+        <!-- Difficulty selector at start of game -->
         <div id="difficultyPanel" class="panel">
           <span id="difficultyLabel">
             <h2>Select your difficulty</h2>
           </span>
         
           <div class="difficulty-options">
+
             <!-- Challenge Modes Group -->
             <div class="challenge-modes-group" id="challengeModes">
               <h3>Challenge Modes</h3>
               <div class="grouped-difficulty-options">
+
+                <!-- Daily challenge -->
                 <div class="difficulty-item daily-challenge" onclick="startGame('Daily')">
                   <div class="difficulty-info">
                     <div class="difficulty-name">Daily Challenge</div>
                     <div class="difficulty-description">Same puzzle for everyone today</div>
                   </div>
-                  <div class="cities-visual">
+                  <div class="mode-visual">
                     <div class="challenge-icon">📅</div>
                   </div>
                 </div>
 
+                <!-- Random game -->
                 <div class="difficulty-item random" onclick="startGame('Random')">
                   <div class="difficulty-info">
                     <div class="difficulty-name">Random</div>
                     <div class="difficulty-description">Surprise me with any difficulty</div>
                   </div>
-                  <div class="cities-visual">
+                  <div class="mode-visual">
                     <div class="challenge-icon">🎲</div>
                   </div>
                 </div>
@@ -67,6 +93,7 @@
             <div class="standard-modes-group" id="standardModes">
               <h3>Custom Game</h3>
               
+              <!-- Guess slider -->
               <div class="guess-selector">
                 <h3>Number of guesses</h3>
                 <div class="slider-container">
@@ -78,24 +105,27 @@
               </div>
 
               <div class="grouped-difficulty-options">
+
+                <!-- Easy -->
                 <div class="difficulty-item easy" onclick="startGame('Easy')">
                   <div class="difficulty-info">
                     <div class="difficulty-name">Easy</div>
                     <div class="difficulty-description">Choose any of the 3 cities</div>
                   </div>
-                  <div class="cities-visual">
+                  <div class="mode-visual">
                     <div class="city-icon city-unlocked">🏙️</div>
                     <div class="city-icon city-unlocked">🏙️</div>
                     <div class="city-icon city-unlocked">🏙️</div>
                   </div>
                 </div>
 
+                <!-- Medium -->
                 <div class="difficulty-item medium" onclick="startGame('Medium')">
                   <div class="difficulty-info">
                     <div class="difficulty-name">Medium</div>
                     <div class="difficulty-description">1 city locked, 2 available</div>
                   </div>
-                  <div class="cities-visual">
+                  <div class="mode-visual">
                     <div class="city-icon city-locked">
                       <span class="lock-icon">🔒</span>
                     </div>
@@ -104,12 +134,13 @@
                   </div>
                 </div>
 
+                <!-- Hard -->
                 <div class="difficulty-item hard" onclick="startGame('Hard')">
                   <div class="difficulty-info">
                     <div class="difficulty-name">Hard</div>
                     <div class="difficulty-description">2 cities locked, 1 available</div>
                   </div>
-                  <div class="cities-visual">
+                  <div class="mode-visual">
                     <div class="city-icon city-locked">
                       <span class="lock-icon">🔒</span>
                     </div>
@@ -119,11 +150,13 @@
                     <div class="city-icon city-unlocked">🏙️</div>
                   </div>
                 </div>
+
               </div>
             </div>
           </div>
         </div>
 
+        <!-- Shows on loss -->
         <div id="losePanel" class="panel">
           <span id="loseLabel">
             <h2>Too bad, You lost!</h2>
@@ -132,6 +165,8 @@
           <br>
           <button onclick="resetGame()">New game</button>
         </div>
+
+        <!-- Shows on victory within tolerance -->
         <div id="winPanel" class="panel">
           <span id="winLabel">
             <h2>Congratulations, You Won!</h2>
@@ -143,9 +178,11 @@
           <button onclick="continueGame()">Continue</button>
         </div>
  
+        <!-- Shows on exact area match -->
         <div id="epicWinPanel" class="panel">
           <span id="epicWinLabel"></span>
             <h2>
+              <!-- Rainbow text form https://charlesstover.github.io/rainbow-text/ -->
               <span style="color:#FF0000">F</span><span style="color:#FF6000">l</span><span style="color:#FFBF00">a</span><span style="color:#DFFF00">w</span><span style="color:#80FF00">l</span><span style="color:#20FF00">e</span><span style="color:#00FF40">s</span><span style="color:#00FF9F">s</span> <span style="color:#00FFFF">v</span><span style="color:#009FFF">i</span><span style="color:#0040FF">c</span><span style="color:#2000FF">t</span><span style="color:#7F00FF">o</span><span style="color:#DF00FF">r</span><span style="color:#FF00BF">y</span><span style="color:#FF0060">!</span>
               <span style="color:#FF0000">H</span><span style="color:#FF6D00">e</span><span style="color:#FFDB00">r</span><span style="color:#B6FF00">e</span> <span style="color:#49FF00">i</span><span style="color:#00FF24">s</span> <span style="color:#00FF92">a</span> <span style="color:#00FFFF">t</span><span style="color:#0092FF">r</span><span style="color:#0024FF">e</span><span style="color:#4900FF">a</span><span style="color:#B600FF">t</span> <a href="/victory.jpeg">⚡</a></span>
             </h2>
@@ -155,12 +192,14 @@
           <br>
           <button onclick="resetGame()">Restart</button>
         </div>
+
       </div>
     </div>
  
+    <!-- Canvas for sphericalTriangleFill -->
     <canvas id="mapCanvas" width="360" height="180"></canvas>
  
-    </div>
+    <!-- JS import -->
     <script type="module" src="/src/code/main.js"></script>
 
   </body>

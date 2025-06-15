@@ -1,3 +1,4 @@
+/* =================== GLOBAL DEFAULTS =================== */
 body, html {
   margin: 0;
   padding: 0;
@@ -6,12 +7,11 @@ body, html {
   color-scheme: light dark;
 }
 
-/* Light mode (default) */
+/* Light mode */
 body, html {
   background-color: #ffffff;
   color: #333333;
 }
-
 /* Dark mode */
 @media (prefers-color-scheme: dark) {
   body, html {
@@ -20,6 +20,296 @@ body, html {
   }
 }
 
+/* Heading styling */
+h2 {
+  color: #333;
+  margin: 0 0 10px 0;
+}
+@media (prefers-color-scheme: dark) {
+  h2 {
+    color: #e0e0e0;
+  }
+}
+
+/* =================== GENERAL =================== */
+
+/* Make left and right panels fit side by side */
+#container {
+  display: flex;
+  height: 100vh;
+}
+
+
+/* Make sure left panel has minimum width and guess history has scroll */
+#leftPanel {
+  width: 15%;
+  min-width: 260px;
+  padding: 20px;
+  background-color: #f5f5f5;
+  overflow-y: scroll;
+}
+@media (prefers-color-scheme: dark) {
+  #leftPanel {
+    background-color: #2d2d2d;
+  }
+}
+
+/* Right panel fills the rest of the screen */
+#rightPanel {
+  position: relative;
+  width: 85%;
+  overflow: hidden;
+}
+
+#dashboard {
+  margin-top: 20px;
+}
+
+/* =================== ERROR DISPLAY =================== */
+.errorItem {
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: #fef2f2;
+  color: #dc2626;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(220, 38, 38, 0.1);
+  border: 1px solid #fecaca;
+}
+@media (prefers-color-scheme: dark) {
+  .errorItem {
+    background-color: #450a0a;
+    color: #fca5a5;
+    box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);
+    border: 1px solid #7f1d1d;
+  }
+}
+
+.errorItem:empty {
+  display: none;
+}
+
+/* =================== PANEL =================== */
+/* General panel for popups. */
+.panel {
+  display: none;
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 20px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  /* Center the div */
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
+@media (prefers-color-scheme: dark) {
+  .panel {
+    background-color: rgba(45, 45, 45, 0.95);
+    border: 1px solid #444;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* Panel specific button styling */
+.panel button {
+  margin: 5px;
+  min-width: 80px;
+}
+
+#cityInputs div {
+  margin-bottom: 10px;
+}
+
+/* =================== CITY INPUTS =================== */
+/* Input styling */
+input[type="text"] {
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 4px;
+}
+@media (prefers-color-scheme: dark) {
+  input[type="text"] {
+    background-color: #444;
+    color: #e0e0e0;
+    border: 1px solid #666;
+  }
+}
+
+input[type="text"]:focus {
+  background-color: #f8f9fa;
+  border-color: #2563eb;
+  outline: none;
+}
+@media (prefers-color-scheme: dark) {
+  input[type="text"]:focus {
+    background-color: #555;
+    border-color: #66aaff;
+  }
+}
+
+input[type="text"]::placeholder {
+  color: #999;
+}
+
+input[type="text"].locked {
+  background-color: #f5f5f5;
+  color: #999;
+  border: 1px solid #ddd;
+  cursor: not-allowed;
+}
+@media (prefers-color-scheme: dark) {
+  input[type="text"].locked {
+    background-color: #222;
+    color: #666;
+    border: 1px solid #333;
+  }
+}
+
+input[type="text"].valid {
+  background-color: #f0f8f0;
+  color: #333;
+  border: 1px solid #4a8c4a;
+}
+@media (prefers-color-scheme: dark) {
+  input[type="text"].valid {
+    background-color: #2d4a2d;
+    color: #e0e0e0;
+    border: 1px solid #4a8c4a;
+  }
+}
+
+input[type="text"].invalid {
+  background-color: #f8f0f0;
+  color: #333;
+  border: 1px solid #8c4a4a;
+}
+@media (prefers-color-scheme: dark) {
+  input[type="text"].invalid {
+    background-color: #4a2d2d;
+    color: #e0e0e0;
+    border: 1px solid #8c4a4a;
+  }
+}
+
+/* =================== SUBMIT BUTTON =================== */
+/* Button styling */
+button {
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+@media (prefers-color-scheme: dark) {
+  button {
+    background-color: #444;
+    color: #e0e0e0;
+    border: 1px solid #666;
+  }
+}
+
+button:hover {
+  background-color: #f5f5f5;
+}
+@media (prefers-color-scheme: dark) {
+  button:hover {
+    background-color: #555;
+  }
+}
+
+button:active {
+  background-color: #e5e5e5;
+}
+@media (prefers-color-scheme: dark) {
+  button:active {
+    background-color: #333;
+  }
+}
+
+/* =================== RESULT ITEMS =================== */
+.resultItem {
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  color: #333;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid #ddd;
+}
+@media (prefers-color-scheme: dark) {
+  .resultItem {
+    background-color: #333333;
+    color: #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    border: 1px solid #444;
+  }
+}
+
+.resultItem p {
+  margin: 0;
+  padding: 2px 0;
+}
+
+.resultItem .area {
+  font-weight: bold;
+  color: #2563eb;
+}
+@media (prefers-color-scheme: dark) {
+  .resultItem .area {
+    color: #66aaff;
+  }
+}
+  
+/* =================== TARGET DISPLAY =================== */
+#targetDisplay {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(255, 255, 255, 0.95);
+  color: #333;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  z-index: 1000;
+}
+@media (prefers-color-scheme: dark) {
+  #targetDisplay {
+    background-color: rgba(45, 45, 45, 0.95);
+    color: #e0e0e0;
+    border: 1px solid #444;
+  }
+}
+
+/* =================== TOUR =================== */
+
+#tourButton {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: rgba(255, 255, 255, 0.95);
+  color: #333;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+@media (prefers-color-scheme: dark) {
+  #tourButton {
+    background-color: rgba(45, 45, 45, 0.95);
+    color: #e0e0e0;
+    border: 1px solid #444;
+  }
+}
+
+/* tour color scheme */
 .tg-dialog.custom{
   background-color: rgba(255, 255, 255, 0.95);
   border: 1px solid #ddd;
@@ -35,61 +325,57 @@ body, html {
   }
 }
 
-#container {
-  display: flex;
-  height: 100vh;
-}
-
-#leftPanel {
-  width: 15%;
-  min-width: 260px;
-  padding: 20px;
-  background-color: #f5f5f5;
-  overflow-y: scroll;
-}
-
-@media (prefers-color-scheme: dark) {
-  #leftPanel {
-    background-color: #2d2d2d;
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
   }
 }
 
-#rightPanel {
-  position: relative;
-  width: 85%;
-  overflow: hidden;
+/* Add this class to your tutorial button in the HTML */
+.tutorial-pulse {
+  animation: pulse 2s infinite;
+  border-radius: 5px; /* Ensure the glow matches the button shape */
 }
 
-.panel {
-  display: none;
-  position: absolute;
-  background-color: rgba(255, 255, 255, 0.95);
-  padding: 20px;
-  border-radius: 5px;
-  border: 1px solid #ddd;
-  font-family: Arial, sans-serif;
-  top: 50%;
-  left: 50%;
-  margin-right: -50%;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+/* Your existing button style */
+#tourButton {
+  /* Your other styles like padding, background, etc. */
+  cursor: pointer;
 }
 
-@media (prefers-color-scheme: dark) {
-  .panel {
-    background-color: rgba(45, 45, 45, 0.95);
-    border: 1px solid #444;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  }
-}
 
+/* =================== DIFFICULTY SELECTOR =================== */
+
+/* Top heading */
 #difficultyLabel h2 {
   margin: 0 0 20px 0;
   text-align: center;
   font-size: 1.4rem;
 }
 
-/* New grouped sections styling */
+/* Challenge group */
+
+/* Group heading */
+.challenge-modes-group h3 {
+  margin: 0 0 12px 0;
+  text-align: center;
+  color: #009688; /* Teal */
+  font-size: 1.1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .challenge-modes-group h3 {
+    color: #4DB6AC; /* Lighter Teal for dark mode */
+  }
+}
+
+/* Group outline */
 .challenge-modes-group {
   border: 2px solid #009688; /* Teal */
   border-radius: 12px;
@@ -105,19 +391,23 @@ body, html {
   }
 }
 
-.challenge-modes-group h3 {
+/* Standard group */
+
+/* Group heading */
+.standard-modes-group h3 {
   margin: 0 0 12px 0;
   text-align: center;
-  color: #009688; /* Teal */
+  color: #FF5722; /* Deep Orange */
   font-size: 1.1rem;
 }
 
 @media (prefers-color-scheme: dark) {
-  .challenge-modes-group h3 {
-    color: #4DB6AC; /* Lighter Teal for dark mode */
+  .standard-modes-group h3 {
+    color: #FF8A65; /* Lighter Deep Orange for dark mode */
   }
 }
 
+/* Group outline */
 .standard-modes-group {
   border: 2px solid #FF5722; /* Deep Orange */
   border-radius: 12px;
@@ -132,16 +422,40 @@ body, html {
   }
 }
 
-.standard-modes-group h3 {
-  margin: 0 0 12px 0;
-  text-align: center;
-  color: #FF5722; /* Deep Orange */
+/* Guess slider */
+
+/* Slider heading */
+.guess-selector h3 {
+  margin: 0 0 15px 0;
+  color: #333;
   font-size: 1.1rem;
+  text-align: center;
 }
 
 @media (prefers-color-scheme: dark) {
-  .standard-modes-group h3 {
-    color: #FF8A65; /* Lighter Deep Orange for dark mode */
+  .guess-selector h3 {
+    color: #e0e0e0;
+  }
+}
+
+/* Slider */
+.slider-container {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.guess-slider {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: #ddd;
+  outline: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .guess-slider {
+    background: #444;
   }
 }
 
@@ -160,25 +474,6 @@ body, html {
   }
 }
 
-.guess-selector h3 {
-  margin: 0 0 15px 0;
-  color: #333;
-  font-size: 1.1rem;
-  text-align: center;
-}
-
-@media (prefers-color-scheme: dark) {
-  .guess-selector h3 {
-    color: #e0e0e0;
-  }
-}
-
-.slider-container {
-  display: flex;
-  align-items: center;
-  gap: 30px;
-}
-
 .slider-label {
   color: #666;
   font-size: 0.9rem;
@@ -190,20 +485,7 @@ body, html {
   }
 }
 
-.guess-slider {
-  flex: 1;
-  height: 6px;
-  border-radius: 3px;
-  background: #ddd;
-  outline: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  .guess-slider {
-    background: #444;
-  }
-}
-
+/* Number selected by slider */
 .guess-value {
   color: #2563eb;
   font-weight: bold;
@@ -218,18 +500,22 @@ body, html {
   }
 }
 
+
+/* Difficulty panel spacing  */
 .difficulty-options {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
+/* Difficulty button spacing  */
 .grouped-difficulty-options {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
+/* Difficulty buttons */
 .difficulty-item {
   display: flex;
   align-items: center;
@@ -290,12 +576,125 @@ body, html {
   }
 }
 
-.cities-visual {
+/* Challenge icon stylings */
+.challenge-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+@media (prefers-color-scheme: dark) {
+  .challenge-icon {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* Daily */
+.daily-challenge .challenge-icon {
+  background-color: rgba(156, 39, 176, 0.2);
+  border: 2px solid rgba(156, 39, 176, 0.6);
+}
+@media (prefers-color-scheme: dark) {
+  .daily-challenge .challenge-icon {
+    background-color: rgba(156, 39, 176, 0.3);
+    border: 2px solid rgba(156, 39, 176, 0.7);
+  }
+}
+.daily-challenge .difficulty-name {
+  color: #9C27B0;
+}
+.daily-challenge:hover {
+  border-color: #9C27B0;
+  background-color: rgba(156, 39, 176, 0.1);
+}
+@media (prefers-color-scheme: dark) {
+  .daily-challenge:hover {
+    background-color: rgba(156, 39, 176, 0.2);
+  }
+}
+
+
+/* Random */
+.random .challenge-icon {
+  background-color: rgba(33, 150, 243, 0.2);
+  border: 2px solid rgba(33, 150, 243, 0.6);
+}
+@media (prefers-color-scheme: dark) {
+  .random .challenge-icon {
+    background-color: rgba(33, 150, 243, 0.3);
+    border: 2px solid rgba(33, 150, 243, 0.7);
+  }
+}
+.random .difficulty-name {
+  color: #2196F3;
+}
+.random:hover {
+  border-color: #2196F3;
+  background-color: rgba(33, 150, 243, 0.1);
+}
+@media (prefers-color-scheme: dark) {
+  .random:hover {
+    background-color: rgba(33, 150, 243, 0.2);
+  }
+}
+
+/* Easy */
+.easy .difficulty-name {
+  color: #4CAF50;
+}
+.easy:hover {
+  border-color: #4CAF50;
+  background-color: rgba(76, 175, 80, 0.1);
+}
+@media (prefers-color-scheme: dark) {
+  .easy:hover {
+    background-color: rgba(76, 175, 80, 0.2);
+  }
+}
+
+/* Medium */
+.medium .difficulty-name {
+  color: #FF9800;
+}
+.medium:hover {
+  border-color: #FF9800;
+  background-color: rgba(255, 152, 0, 0.1);
+}
+@media (prefers-color-scheme: dark) {
+  .medium:hover {
+    background-color: rgba(255, 152, 0, 0.2);
+  }
+}
+
+/* Hard */
+.hard .difficulty-name {
+  color: #F44336;
+}
+.hard:hover {
+  border-color: #F44336;
+  background-color: rgba(244, 67, 54, 0.1);
+}
+@media (prefers-color-scheme: dark) {
+  .hard:hover {
+    background-color: rgba(244, 67, 54, 0.2);
+  }
+}
+
+/* Mode icons */
+.mode-visual {
   display: flex;
   gap: 8px;
   align-items: center;
 }
 
+/* Custom game icons */
 .city-icon {
   width: 24px;
   height: 24px;
@@ -335,198 +734,10 @@ body, html {
   font-size: 14px;
 }
 
-/* Challenge icon styling for daily challenge and random */
-.challenge-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  background-color: rgba(255, 255, 255, 0.3);
-  border: 2px solid rgba(255, 255, 255, 0.5);
-}
 
-@media (prefers-color-scheme: dark) {
-  .challenge-icon {
-    background-color: rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-  }
-}
+/* =================== MISC =================== */
 
-/* Specific styling for daily challenge icon */
-.daily-challenge .challenge-icon {
-  background-color: rgba(156, 39, 176, 0.2);
-  border: 2px solid rgba(156, 39, 176, 0.6);
-}
-
-@media (prefers-color-scheme: dark) {
-  .daily-challenge .challenge-icon {
-    background-color: rgba(156, 39, 176, 0.3);
-    border: 2px solid rgba(156, 39, 176, 0.7);
-  }
-}
-
-/* Specific styling for random icon */
-.random .challenge-icon {
-  background-color: rgba(33, 150, 243, 0.2);
-  border: 2px solid rgba(33, 150, 243, 0.6);
-}
-
-@media (prefers-color-scheme: dark) {
-  .random .challenge-icon {
-    background-color: rgba(33, 150, 243, 0.3);
-    border: 2px solid rgba(33, 150, 243, 0.7);
-  }
-}
-
-.daily-challenge .difficulty-name {
-  color: #9C27B0;
-}
-.random .difficulty-name {
-  color: #2196F3;
-}
-/* Difficulty-specific colors */
-.easy .difficulty-name {
-  color: #4CAF50;
-}
-.medium .difficulty-name {
-  color: #FF9800;
-}
-.hard .difficulty-name {
-  color: #F44336;
-}
-.daily-challenge:hover {
-  border-color: #9C27B0;
-  background-color: rgba(156, 39, 176, 0.1);
-}
-@media (prefers-color-scheme: dark) {
-  .daily-challenge:hover {
-    background-color: rgba(156, 39, 176, 0.2);
-  }
-}
-.random:hover {
-  border-color: #2196F3;
-  background-color: rgba(33, 150, 243, 0.1);
-}
-@media (prefers-color-scheme: dark) {
-  .random:hover {
-    background-color: rgba(33, 150, 243, 0.2);
-  }
-}
-.easy:hover {
-  border-color: #4CAF50;
-  background-color: rgba(76, 175, 80, 0.1);
-}
-@media (prefers-color-scheme: dark) {
-  .easy:hover {
-    background-color: rgba(76, 175, 80, 0.2);
-  }
-}
-.medium:hover {
-  border-color: #FF9800;
-  background-color: rgba(255, 152, 0, 0.1);
-}
-@media (prefers-color-scheme: dark) {
-  .medium:hover {
-    background-color: rgba(255, 152, 0, 0.2);
-  }
-}
-.hard:hover {
-  border-color: #F44336;
-  background-color: rgba(244, 67, 54, 0.1);
-}
-@media (prefers-color-scheme: dark) {
-  .hard:hover {
-    background-color: rgba(244, 67, 54, 0.2);
-  }
-}
-
-#cityInputs div {
-  margin-bottom: 10px;
-}
-
-#dashboard {
-  margin-top: 20px;
-}
-
-.resultItem {
-  margin-bottom: 15px;
-  padding: 10px;
-  background-color: #f8f9fa;
-  color: #333;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  border: 1px solid #ddd;
-}
-
-@media (prefers-color-scheme: dark) {
-  .resultItem {
-    background-color: #333333;
-    color: #e0e0e0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    border: 1px solid #444;
-  }
-}
-  
-.resultItem p {
-  margin: 0;
-  padding: 2px 0;
-}
-
-.resultItem .area {
-  font-weight: bold;
-  color: #2563eb;
-}
-
-@media (prefers-color-scheme: dark) {
-  .resultItem .area {
-    color: #66aaff;
-  }
-}
-  
-#targetDisplay {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: rgba(255, 255, 255, 0.95);
-  color: #333;
-  padding: 5px 10px;
-  border-radius: 5px;
-  border: 1px solid #ddd;
-  z-index: 1000;
-}
-
-@media (prefers-color-scheme: dark) {
-  #targetDisplay {
-    background-color: rgba(45, 45, 45, 0.95);
-    color: #e0e0e0;
-    border: 1px solid #444;
-  }
-}
-
-#tourButton {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background-color: rgba(255, 255, 255, 0.95);
-  color: #333;
-  padding: 5px 10px;
-  border-radius: 5px;
-  border: 1px solid #ddd;
-  z-index: 1000;
-  cursor: pointer;
-}
-
-@media (prefers-color-scheme: dark) {
-  #tourButton {
-    background-color: rgba(45, 45, 45, 0.95);
-    color: #e0e0e0;
-    border: 1px solid #444;
-  }
-}
-
+/* Canvas for the fill of the triangle */
 #mapCanvas {
   position: absolute;
   left: -9999px;
@@ -534,188 +745,7 @@ body, html {
   visibility: hidden;
 }
 
-/* Input styling */
-input[type="text"] {
-  background-color: #fff;
-  color: #333;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 4px;
-}
-
-@media (prefers-color-scheme: dark) {
-  input[type="text"] {
-    background-color: #444;
-    color: #e0e0e0;
-    border: 1px solid #666;
-  }
-}
-
-input[type="text"]:focus {
-  background-color: #f8f9fa;
-  border-color: #2563eb;
-  outline: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  input[type="text"]:focus {
-    background-color: #555;
-    border-color: #66aaff;
-  }
-}
-
-input[type="text"]::placeholder {
-  color: #999;
-}
-
-input[type="text"].locked {
-  background-color: #f5f5f5;
-  color: #999;
-  border: 1px solid #ddd;
-  cursor: not-allowed;
-}
-
-@media (prefers-color-scheme: dark) {
-  input[type="text"].locked {
-    background-color: #222;
-    color: #666;
-    border: 1px solid #333;
-  }
-}
-
-input[type="text"].valid {
-  background-color: #f0f8f0;
-  color: #333;
-  border: 1px solid #4a8c4a;
-}
-
-@media (prefers-color-scheme: dark) {
-  input[type="text"].valid {
-    background-color: #2d4a2d;
-    color: #e0e0e0;
-    border: 1px solid #4a8c4a;
-  }
-}
-
-input[type="text"].invalid {
-  background-color: #f8f0f0;
-  color: #333;
-  border: 1px solid #8c4a4a;
-}
-
-@media (prefers-color-scheme: dark) {
-  input[type="text"].invalid {
-    background-color: #4a2d2d;
-    color: #e0e0e0;
-    border: 1px solid #8c4a4a;
-  }
-}
-
-/* Button styling */
-button {
-  background-color: #fff;
-  color: #333;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-@media (prefers-color-scheme: dark) {
-  button {
-    background-color: #444;
-    color: #e0e0e0;
-    border: 1px solid #666;
-  }
-}
-
-button:hover {
-  background-color: #f5f5f5;
-}
-
-@media (prefers-color-scheme: dark) {
-  button:hover {
-    background-color: #555;
-  }
-}
-
-button:active {
-  background-color: #e5e5e5;
-}
-
-@media (prefers-color-scheme: dark) {
-  button:active {
-    background-color: #333;
-  }
-}
-
-/* Panel specific button styling */
-.panel button {
-  margin: 5px;
-  min-width: 80px;
-}
-
-.errorItem {
-  margin-bottom: 15px;
-  padding: 10px;
-  background-color: #fef2f2;
-  color: #dc2626;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(220, 38, 38, 0.1);
-  border: 1px solid #fecaca;
-}
-
-.errorItem:empty {
-  display: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  .errorItem {
-    background-color: #450a0a;
-    color: #fca5a5;
-    box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);
-    border: 1px solid #7f1d1d;
-  }
-}
-
-/* Heading styling */
-h2 {
-  color: #333;
-  margin: 0 0 10px 0;
-}
-
-@media (prefers-color-scheme: dark) {
-  h2 {
-    color: #e0e0e0;
-  }
-}
-
 /* Confetti fix, 3.9 should fix this */
 #confetti_id canvas {
   pointer-events: none;
-}
-
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
-  }
-}
-
-/* Add this class to your tutorial button in the HTML */
-.tutorial-pulse {
-  animation: pulse 2s infinite;
-  border-radius: 5px; /* Ensure the glow matches the button shape */
-}
-
-/* Your existing button style */
-#tourButton {
-  /* Your other styles like padding, background, etc. */
-  cursor: pointer;
 }

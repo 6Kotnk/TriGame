@@ -69,7 +69,7 @@ class Tour {
 
       steps.push({
         title: "Challenge Modes",
-        content: "For a different experience, try the 'Challenge Modes'. The 'Daily Challenge' is a unique puzzle that's the same for everyone each day. Or, hit the 'Random' button for a complete surprise with a randomly selected difficulty!",
+        content: "For a different experience, try the 'Challenge Modes'. The 'Daily Challenge' is a unique puzzle that's the same for everyone each day. Or, hit the 'Random' button for a complete surprise with a randomly selected difficulty.",
         target: "#challengeModes",
         propagateEvents: true,
         order: currentOrder++,
