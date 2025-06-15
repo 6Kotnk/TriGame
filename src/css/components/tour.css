@@ -1,0 +1,51 @@
+#tourButton {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: rgba(255, 255, 255, 0.95);
+  color: #333;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  z-index: 1000;
+  cursor: pointer;
+}
+@media (prefers-color-scheme: dark) {
+  #tourButton {
+    background-color: rgba(45, 45, 45, 0.95);
+    color: #e0e0e0;
+    border: 1px solid #444;
+  }
+}
+
+/* tour color scheme */
+.tg-dialog.custom{
+  background-color: rgba(255, 255, 255, 0.95);
+  border: 1px solid #ddd;
+  color: #333333;
+}
+@media (prefers-color-scheme: dark) {
+  .tg-dialog.custom {
+    background-color: rgba(45, 45, 45, 0.95);
+    border: 1px solid #444;
+    color: #e0e0e0;
+    
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+  }
+}
+
+.tutorial-pulse {
+  animation: pulse 2s infinite;
+  border-radius: 5px; /* Ensure the glow matches the button shape */
+}

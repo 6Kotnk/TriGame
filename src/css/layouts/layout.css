@@ -1,0 +1,30 @@
+/* Make left and right panels fit side by side */
+#container {
+  display: flex;
+  height: 100vh;
+}
+
+/* Make sure left panel has minimum width and guess history has scroll */
+#leftPanel {
+  width: 15%;
+  min-width: 260px;
+  padding: 20px;
+  background-color: #f5f5f5;
+  overflow-y: scroll;
+}
+@media (prefers-color-scheme: dark) {
+  #leftPanel {
+    background-color: #2d2d2d;
+  }
+}
+
+/* Right panel fills the rest of the screen */
+#rightPanel {
+  position: relative;
+  width: 85%;
+  overflow: hidden;
+}
+
+#dashboard {
+  margin-top: 20px;
+}

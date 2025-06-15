@@ -1,0 +1,55 @@
+@import 'layouts/layout.css';
+
+@import 'components/cityInputs.css';
+@import 'components/difficultyPanel.css';
+@import 'components/errorDisplay.css';
+@import 'components/panel.css';
+@import 'components/resultItem.css';
+@import 'components/submitButton.css';
+@import 'components/targetDisplay.css';
+@import 'components/tour.css';
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  color-scheme: light dark;
+}
+
+/* Light mode */
+body, html {
+  background-color: #ffffff;
+  color: #333333;
+}
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  body, html {
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+  }
+}
+
+/* Heading styling */
+h2 {
+  color: #333;
+  margin: 0 0 10px 0;
+}
+@media (prefers-color-scheme: dark) {
+  h2 {
+    color: #e0e0e0;
+  }
+}
+
+/* Canvas for the fill of the triangle */
+#mapCanvas {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  visibility: hidden;
+}
+
+/* Confetti fix, 3.9 should fix this */
+#confetti_id canvas {
+  pointer-events: none;
+}

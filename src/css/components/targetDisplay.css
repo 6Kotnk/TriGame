@@ -1,0 +1,18 @@
+#targetDisplay {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(255, 255, 255, 0.95);
+  color: #333;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  z-index: 1000;
+}
+@media (prefers-color-scheme: dark) {
+  #targetDisplay {
+    background-color: rgba(45, 45, 45, 0.95);
+    color: #e0e0e0;
+    border: 1px solid #444;
+  }
+}

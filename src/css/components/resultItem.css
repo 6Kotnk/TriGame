@@ -1,0 +1,33 @@
+.resultItem {
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  color: #333;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid #ddd;
+}
+@media (prefers-color-scheme: dark) {
+  .resultItem {
+    background-color: #333333;
+    color: #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    border: 1px solid #444;
+  }
+}
+
+.resultItem p {
+  margin: 0;
+  padding: 2px 0;
+}
+
+.resultItem .area {
+  font-weight: bold;
+  color: #2563eb;
+}
+@media (prefers-color-scheme: dark) {
+  .resultItem .area {
+    color: #66aaff;
+  }
+}
+  

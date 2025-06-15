@@ -1,0 +1,71 @@
+/* Input styling */
+input[type="text"] {
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 4px;
+}
+@media (prefers-color-scheme: dark) {
+  input[type="text"] {
+    background-color: #444;
+    color: #e0e0e0;
+    border: 1px solid #666;
+  }
+}
+
+input[type="text"]:focus {
+  background-color: #f8f9fa;
+  border-color: #2563eb;
+  outline: none;
+}
+@media (prefers-color-scheme: dark) {
+  input[type="text"]:focus {
+    background-color: #555;
+    border-color: #66aaff;
+  }
+}
+
+input[type="text"]::placeholder {
+  color: #999;
+}
+
+input[type="text"].locked {
+  background-color: #f5f5f5;
+  color: #999;
+  border: 1px solid #ddd;
+  cursor: not-allowed;
+}
+@media (prefers-color-scheme: dark) {
+  input[type="text"].locked {
+    background-color: #222;
+    color: #666;
+    border: 1px solid #333;
+  }
+}
+
+input[type="text"].valid {
+  background-color: #f0f8f0;
+  color: #333;
+  border: 1px solid #4a8c4a;
+}
+@media (prefers-color-scheme: dark) {
+  input[type="text"].valid {
+    background-color: #2d4a2d;
+    color: #e0e0e0;
+    border: 1px solid #4a8c4a;
+  }
+}
+
+input[type="text"].invalid {
+  background-color: #f8f0f0;
+  color: #333;
+  border: 1px solid #8c4a4a;
+}
+@media (prefers-color-scheme: dark) {
+  input[type="text"].invalid {
+    background-color: #4a2d2d;
+    color: #e0e0e0;
+    border: 1px solid #8c4a4a;
+  }
+}
