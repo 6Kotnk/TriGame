@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
+
+import { SphericalTriangle } from './sphericalTriangle/sphericalTriangle.js';
 import { PlanetLayer } from './planetLayer.js';
 
 import albedoMapLoPath from   '../../assets/img/low_res/albedoMap.webp'
@@ -16,18 +18,16 @@ import outlineMapHiPath from  '../../assets/img/high_res/outlineMap.webp'
 import oceanMapHiPath from    '../../assets/img/high_res/oceanMap.webp'
 import skyMapHiPath from      '../../assets/img/high_res/starMap.webp'
 
-import { SphericalTriangle } from './sphericalTriangle/sphericalTriangle.js';
 
 export {GFXDisplay};
 
+
 class GFXDisplay {
   constructor(HTMLElements) {
-    this.HTMLElements = HTMLElements;
-    this.textureLoader = new THREE.TextureLoader();
-    this.isHighResLoaded = false;
-    this.loadingProgress = 0;
 
-    // Setup scene
+    this.HTMLElements = HTMLElements;
+
+    // Setup
     this.scene = new THREE.Scene();
     this.canvas = this.HTMLElements.mapCanvas;
     this.container = this.HTMLElements.containerDiv;
@@ -36,289 +36,41 @@ class GFXDisplay {
 
     this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
     this.container.appendChild(this.renderer.domElement);
-    this.renderer.setClearColor(0x000000, 0);
+    this.renderer.setClearColor( 0x000000, 0 ); // Default color, only visible before textures load
 
-    // Initialize triangle here
+    // Load textures using createImageBitmap
+    this.loadTexturesWithImageBitmap();
+
+    // Spherical triangle that will be made between our cities
     this.triangle = new SphericalTriangle(this.scene, this.canvas);
 
-    // Initialize with low-res textures first
-    this.initializeLowRes();
-  }
+    // Earth layers:
 
-  async initializeLowRes() {
-    try {
-      // Load low-res textures first for quick initial render (still use regular loader for small files)
-      const [albedoMapLo, bumpMapLo, cloudsMapLo, outlineMapLo, oceanMapLo, skyMapLo] = await Promise.all([
-        this.loadTextureRegular(albedoMapLoPath),
-        this.loadTextureRegular(bumpMapLoPath),
-        this.loadTextureRegular(cloudsMapLoPath),
-        this.loadTextureRegular(outlineMapLoPath),
-        this.loadTextureRegular(oceanMapLoPath),
-        this.loadTextureRegular(skyMapLoPath)
-      ]);
-
-      // Set up skymap
-      skyMapLo.colorSpace = THREE.SRGBColorSpace;
-      skyMapLo.mapping = THREE.EquirectangularReflectionMapping;
-      this.scene.background = skyMapLo;
-
-      // Create planet layers with low-res textures
-      this.createPlanetLayers(albedoMapLo, bumpMapLo, cloudsMapLo, outlineMapLo, oceanMapLo);
-      
-      // Set up lighting and controls
-      this.setupLightingAndControls();
-
-      // Start animation loop
-      this.animate();
-
-      // Wait a bit for initial render, then start loading high-res
-      setTimeout(() => {
-        this.loadHighResTextures();
-      }, 100);
-
-    } catch (error) {
-      console.error('Error loading low-res textures:', error);
-    }
-  }
-
-  // Regular texture loader for low-res textures
-  loadTextureRegular(path) {
-    return new Promise((resolve, reject) => {
-      this.textureLoader.load(path, resolve, undefined, reject);
-    });
-  }
-
-  async loadHighResTextures() {
-    try {
-      // Show loading indicator if you want
-      this.showLoadingProgress();
-
-      // Load textures one by one using Web Workers
-      const textureConfigs = [
-        { path: albedoMapHiPath, name: 'albedo', priority: 1 },
-        { path: bumpMapHiPath, name: 'bump', priority: 2 },
-        { path: skyMapHiPath, name: 'sky', priority: 3 },
-        { path: cloudsMapHiPath, name: 'clouds', priority: 4 },
-        { path: outlineMapHiPath, name: 'outline', priority: 5 },
-        { path: oceanMapHiPath, name: 'ocean', priority: 6 }
-      ];
-
-      // Sort by priority
-      textureConfigs.sort((a, b) => a.priority - b.priority);
-
-      // Load each texture individually with Web Workers
-      for (const config of textureConfigs) {
-        try {
-          const texture = await this.loadTextureWithWorker(config.path, config.name);
-          this.upgradeIndividualTexture(config.name, texture);
-          this.loadingProgress = ((config.priority / textureConfigs.length) * 100);
-          this.updateLoadingProgress();
-          
-          // Small delay to ensure smooth animation
-          await this.nextFrame();
-        } catch (error) {
-          console.warn(`Failed to load ${config.name} high-res texture:`, error);
-        }
-      }
-
-      this.isHighResLoaded = true;
-      console.log('High-res textures loaded successfully');
-      
-      // Clean up worker
-      if (this.textureWorker) {
-        this.textureWorker.terminate();
-        this.textureWorker = null;
-      }
-      
-    } catch (error) {
-      console.error('Error loading high-res textures:', error);
-      // Low-res textures will continue to work
-    }
-  }
-
-  async loadTexturesWithProgress(textureConfigs) {
-    const textures = {};
-    let loaded = 0;
-    const total = textureConfigs.length;
-
-    const loadPromises = textureConfigs.map(async (config) => {
-      const texture = await this.loadTexture(config.path);
-      loaded++;
-      this.loadingProgress = (loaded / total) * 100;
-      this.updateLoadingProgress();
-      textures[config.name] = texture;
-      return texture;
-    });
-
-    await Promise.all(loadPromises);
-    return textures;
-  }
-
-  // Create inline Web Worker for texture decoding
-  createTextureWorker() {
-    const workerCode = `
-      self.onmessage = async function(e) {
-        const { imageUrl, id } = e.data;
-        
-        try {
-          // Fetch the image
-          const response = await fetch(imageUrl);
-          const blob = await response.blob();
-          
-          // Create ImageBitmap with flipY option
-          const imageBitmap = await createImageBitmap(blob, {
-            imageOrientation: 'flipY'
-          });
-          
-          // Transfer the ImageBitmap back to main thread
-          self.postMessage({
-            success: true,
-            imageBitmap: imageBitmap,
-            id: id
-          }, [imageBitmap]);
-          
-        } catch (error) {
-          self.postMessage({
-            success: false,
-            error: error.message,
-            id: id
-          });
-        }
-      };
-    `;
-    
-    const blob = new Blob([workerCode], { type: 'application/javascript' });
-    return new Worker(URL.createObjectURL(blob));
-  }
-
-  // Load texture using Web Worker
-  async loadTextureWithWorker(path, id) {
-    return new Promise((resolve, reject) => {
-      if (!this.textureWorker) {
-        this.textureWorker = this.createTextureWorker();
-        this.pendingTextures = new Map();
-        
-        this.textureWorker.onmessage = (e) => {
-          const { success, imageBitmap, error, id } = e.data;
-          const { resolve: res, reject: rej } = this.pendingTextures.get(id);
-          
-          if (success) {
-            const texture = new THREE.Texture();
-            texture.image = imageBitmap;
-            texture.needsUpdate = true;
-            res(texture);
-          } else {
-            rej(new Error(error));
-          }
-          
-          this.pendingTextures.delete(id);
-        };
-      }
-      
-      // Store resolve/reject for this texture
-      this.pendingTextures.set(id, { resolve, reject });
-      
-      // Convert relative path to absolute URL
-      const absoluteUrl = new URL(path, window.location.origin).href;
-      
-      // Send work to worker
-      this.textureWorker.postMessage({ imageUrl: absoluteUrl, id: id });
-    });
-  }
-
-  // Helper to yield control back to browser
-  nextFrame() {
-    return new Promise(resolve => {
-      requestAnimationFrame(resolve);
-    });
-  }
-
-  // Upgrade individual texture instead of all at once
-  upgradeIndividualTexture(name, texture) {
-    switch(name) {
-      case 'albedo':
-        this.earth.mesh.material.map = texture;
-        this.earth.mesh.material.needsUpdate = true;
-        break;
-      case 'bump':
-        this.earth.mesh.material.bumpMap = texture;
-        this.earth.mesh.material.needsUpdate = true;
-        break;
-      case 'ocean':
-        this.earth.mesh.material.specularMap = texture;
-        this.earth.mesh.material.needsUpdate = true;
-        break;
-      case 'outline':
-        this.countryOutlines.mesh.material.map = texture;
-        this.countryOutlines.mesh.material.needsUpdate = true;
-        break;
-      case 'clouds':
-        this.clouds.mesh.material.map = texture;
-        this.clouds.mesh.material.alphaMap = texture;
-        this.clouds.mesh.material.needsUpdate = true;
-        break;
-      case 'sky':
-        texture.colorSpace = THREE.SRGBColorSpace;
-        texture.mapping = THREE.EquirectangularReflectionMapping;
-        this.scene.background = texture;
-        break;
-    }
-  }
-
-  createPlanetLayers(albedoMap, bumpMap, cloudsMap, outlineMap, oceanMap) {
-    // Base earth layer
+    // Base layer (regular earth)
     this.earth = new PlanetLayer(this.scene, 1, 2, {
-      map: albedoMap,
-      bumpMap: bumpMap,
       bumpScale: 1,
-      specularMap: oceanMap,
       shininess: 100,
     });
 
-    // Country outlines
+    // City outlines appear when zoomed in
     this.countryOutlines = new PlanetLayer(this.scene, 1, 3, {
-      map: outlineMap,
-      transparent: true,
+        transparent: true,
     });
 
-    // Clouds
+    // Clouds appear when zoomed out
     this.clouds = new PlanetLayer(this.scene, 1.01, 4, {
-      map: cloudsMap,
-      alphaMap: cloudsMap,
       transparent: true,
     });
-  }
 
-  upgradeToHighRes(textures) {
-    // Set up high-res skymap
-    textures.sky.colorSpace = THREE.SRGBColorSpace;
-    textures.sky.mapping = THREE.EquirectangularReflectionMapping;
-    this.scene.background = textures.sky;
-
-    // Update earth materials with high-res textures
-    this.earth.mesh.material.map = textures.albedo;
-    this.earth.mesh.material.bumpMap = textures.bump;
-    this.earth.mesh.material.specularMap = textures.ocean;
-    this.earth.mesh.material.needsUpdate = true;
-
-    // Update outline material
-    this.countryOutlines.mesh.material.map = textures.outline;
-    this.countryOutlines.mesh.material.needsUpdate = true;
-
-    // Update clouds material
-    this.clouds.mesh.material.map = textures.clouds;
-    this.clouds.mesh.material.alphaMap = textures.clouds;
-    this.clouds.mesh.material.needsUpdate = true;
-  }
-
-  setupLightingAndControls() {
-    // Add light source
+    // Add a light source
     const light = new THREE.DirectionalLight(0xffffff, 1);
     light.position.set(5, 5, 2);
-    this.camera.add(light);
-    this.scene.add(this.camera);
 
-    // Set initial camera position
+    // Attach it to camera, so we always see the bright side
+    this.camera.add( light );
+    this.scene.add( this.camera );
+
+    // Set the  initial camera position
     this.camera.position.set(0, 0, 5);
     this.camera.lookAt(0, 0, 0);
 
@@ -330,62 +82,177 @@ class GFXDisplay {
     this.controls.minDistance = 1.15;
     this.controls.maxDistance = 4;
 
-    // Event listeners
-    this.controls.addEventListener('change', this.onZoom);
+    // Start drawing frames
+    this.animate();
+
+    // Event listener for zooming
+    this.controls.addEventListener('change', this.onZoom );
+
+    // If container is resized, resize this as well
     const resizeObserver = new ResizeObserver(this.onWindowResize);
     resizeObserver.observe(this.container);
   }
 
-  showLoadingProgress() {
-    // Optional: Create a loading indicator
-    // You could update a progress bar in your UI here
-    console.log('Loading high-resolution textures...');
+  // Helper function to load a single texture using createImageBitmap
+  async loadTextureFromImageBitmap(url) {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const imageBitmap = await createImageBitmap(blob);
+      
+      const texture = new THREE.Texture(imageBitmap);
+      // Set texture parameters before upload to optimize GPU transfer
+      texture.generateMipmaps = false; // Disable mipmaps initially to speed up upload
+      texture.flipY = true;
+      texture.needsUpdate = true;
+      
+      return texture;
+    } catch (error) {
+      console.error(`Failed to load texture from ${url}:`, error);
+      return null;
+    }
   }
 
-  updateLoadingProgress() {
-    // Optional: Update loading progress
-    console.log(`Loading progress: ${this.loadingProgress.toFixed(1)}%`);
+  // Load all textures using createImageBitmap
+  async loadTexturesWithImageBitmap() {
+    try {
+      // Load low-resolution textures
+      const texturesLoPromises = {
+        albedoMap:  this.loadTextureFromImageBitmap(albedoMapLoPath),
+        bumpMap:    this.loadTextureFromImageBitmap(bumpMapLoPath),
+        cloudsMap:  this.loadTextureFromImageBitmap(cloudsMapLoPath),
+        outlineMap: this.loadTextureFromImageBitmap(outlineMapLoPath),
+        oceanMap:   this.loadTextureFromImageBitmap(oceanMapLoPath),
+        skyMap:     this.loadTextureFromImageBitmap(skyMapLoPath),
+      };
+
+      // Load high-resolution textures
+      const texturesHiPromises = {
+        albedoMap:  this.loadTextureFromImageBitmap(albedoMapHiPath),
+        bumpMap:    this.loadTextureFromImageBitmap(bumpMapHiPath),
+        cloudsMap:  this.loadTextureFromImageBitmap(cloudsMapHiPath),
+        outlineMap: this.loadTextureFromImageBitmap(outlineMapHiPath),
+        oceanMap:   this.loadTextureFromImageBitmap(oceanMapHiPath),
+        skyMap:     this.loadTextureFromImageBitmap(skyMapHiPath),
+      };
+
+      // Wait for low-resolution textures to load first
+      const texturesLo = {};
+      for (const [key, promise] of Object.entries(texturesLoPromises)) {
+        texturesLo[key] = await promise;
+      }
+
+      // Apply low-resolution textures immediately
+      await this.applyTextures(texturesLo);
+
+      // Wait for high-resolution textures to load
+      const texturesHi = {};
+      for (const [key, promise] of Object.entries(texturesHiPromises)) {
+        texturesHi[key] = await promise;
+      }
+
+      // Apply high-resolution textures (will replace low-res ones)
+      await this.applyTextures(texturesHi);
+
+    } catch (error) {
+      console.error('Error loading textures:', error);
+    }
+  }
+
+  // Apply textures individually with yielding to prevent blocking
+  async applyTextures(textures){
+    // Skip if textures aren't loaded yet
+    if (!textures) return;
+
+    // Helper function to yield control back to the browser
+    const yieldToMain = () => new Promise(resolve => requestAnimationFrame(resolve));
+
+    this.scene.background = textures.skyMap;
+    textures.skyMap.colorSpace = THREE.SRGBColorSpace;
+    textures.skyMap.mapping = THREE.EquirectangularReflectionMapping;
+    await yieldToMain();
+
+    // Apply earth albedo map
+    this.earth.mesh.material.map = textures.albedoMap;
+    this.earth.mesh.material.needsUpdate = true;
+    await yieldToMain();
+
+    // Apply earth bump map
+    this.earth.mesh.material.bumpMap = textures.bumpMap;
+    this.earth.mesh.material.needsUpdate = true;
+    await yieldToMain();
+
+    // Apply earth specular map (ocean)
+    this.earth.mesh.material.specularMap = textures.oceanMap;
+    this.earth.mesh.material.needsUpdate = true;
+    await yieldToMain();
+
+    // Apply country outlines
+    this.countryOutlines.mesh.material.map = textures.outlineMap;
+    this.countryOutlines.mesh.material.needsUpdate = true;
+    await yieldToMain();
+
+    // Apply clouds map
+    this.clouds.mesh.material.map = textures.cloudsMap;
+    this.clouds.mesh.material.needsUpdate = true;
+    await yieldToMain();
+
+    this.clouds.mesh.material.alphaMap = textures.cloudsMap;
+    this.clouds.mesh.material.needsUpdate = true;
+    await yieldToMain();
   }
 
   onZoom = () => {
-    const zoom = this.controls.maxDistance / this.controls.getDistance();
-    const opacity = (zoom-1)**3/2.4;
+    // Get zoom amount
+    const zoom = this.controls.maxDistance / this.controls.getDistance( );
+    // Constants made up, could probably be better, but works good enough
+    const opacity = (zoom-1)**3/2.4
     const scale = 1/zoom;
 
-    this.camera.children[0].position.set(5, 5, 2*zoom);
+    // When zooming in the light is brought more inline with our view
+    this.camera.children[0].position.set(5,5, 2*zoom);
+
+    // Clouds fade out when zooming in
     this.clouds.mesh.material.opacity = 1 - opacity;
-    this.countryOutlines.mesh.material.opacity = Math.min(1, opacity);
-    this.triangle.setScale(scale);
+    // Country outlines fade in when zooming in
+    this.countryOutlines.mesh.material.opacity = Math.min(1,opacity);
+
+    // Rescale the triangle, so the outline is always a constant width on our display
+    this.triangle.setScale(scale)
   }
 
   onWindowResize = () => {
     const width = this.container.clientWidth;
     const height = this.container.clientHeight;
     
+    // Recalculate aspect ratio
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
+    
+    // Set new size
     this.renderer.setSize(width, height);
   }
 
+  // Called every frame
   animate = () => {
     this.controls.update();
+    // Slowly rotate cloud layer
     this.clouds.rotateY(0.001);
     this.renderer.render(this.scene, this.camera);
+
+    // We want another frame
     requestAnimationFrame(this.animate);
   }
 
-  update(guess) {
+  // Update the triangle
+  update(guess){
     this.triangle.setCoords(guess.getCoords());
     this.triangle.setColors(guess.colors);
     this.triangle.reconfigure();
   }
 
-  reset() {
+  reset(){
     this.triangle.reset();
   }
 
-  // Utility method to check if high-res is loaded
-  isHighResReady() {
-    return this.isHighResLoaded;
-  }
 }
