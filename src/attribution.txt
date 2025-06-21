@@ -1,0 +1,36 @@
+assets/data/cities.json: 
+-License: CC BY 4.0
+-Link: https://public.opendatasoft.com/explore/dataset/geonames-all-cities-with-a-population-1000/export/?disjunctive.cou_name_en&sort=name
+
+assets/img/originals/albedoMap8k.png
+-Link: https://visibleearth.nasa.gov/images/57730/the-blue-marble-land-surface-ocean-color-and-sea-ice/82679l
+
+assets/img/originals/bumpMap8k.png
+-Link: https://visibleearth.nasa.gov/images/73934/topography/84331l
+
+assets/img/originals/cloudsMap2k.jpg
+-Link: https://visibleearth.nasa.gov/images/57747/blue-marble-clouds/57749l
+
+assets/img/originals/oceanMap8k.png
+-Link: https://svs.gsfc.nasa.gov/3487
+
+assets/img/originals/outlineMap.png
+-Link: https://www.naturalearthdata.com/downloads/ version: 5.1.1
+vector data converted to png using QGIS:
+-Link: https://qgis.org/
+
+
+assets/img/originals/starMap.png
+-Link: https://svs.gsfc.nasa.gov/3895
+
+code/three.js
+-License: MIT
+-Link: https://threejs.org/
+
+code/tsparticles
+-License: MIT
+-Link: https://particles.js.org/
+
+code/tourguide.js
+-License: MIT
+-Link: https://tourguidejs.com/
