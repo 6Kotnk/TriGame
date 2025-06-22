@@ -33,13 +33,11 @@ class GFXDisplay {
     this.container = this.HTMLElements.containerDiv;
     this.camera = new THREE.PerspectiveCamera(75, this.container.clientWidth / this.container.clientHeight, 0.1, 1000);
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
+    this.loader = new THREE.ImageBitmapLoader();
 
     this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
     this.container.appendChild(this.renderer.domElement);
     this.renderer.setClearColor( 0x000000, 0 ); // Default color, only visible before textures load
-
-    // Load textures using createImageBitmap
-    this.loadTexturesWithImageBitmap();
 
     // Spherical triangle that will be made between our cities
     this.triangle = new SphericalTriangle(this.scene, this.canvas);
@@ -61,6 +59,9 @@ class GFXDisplay {
     this.clouds = new PlanetLayer(this.scene, 1.01, 4, {
       transparent: true,
     });
+
+    // Load textures
+    this.loadTextures();
 
     // Add a light source
     const light = new THREE.DirectionalLight(0xffffff, 1);
@@ -93,47 +94,27 @@ class GFXDisplay {
     resizeObserver.observe(this.container);
   }
 
-  // Helper function to load a single texture using createImageBitmap
-async loadTextureFromImageBitmap(url) {
-  try {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    // Use flipY option to match Three.js expectations
-    const imageBitmap = await createImageBitmap(blob, { imageOrientation: 'flipY' });
-    
-    const texture = new THREE.Texture(imageBitmap);
-    // Set texture parameters before upload to optimize GPU transfer
-    texture.generateMipmaps = false; // Disable mipmaps initially to speed up upload
-    texture.needsUpdate = true;
-    
-    return texture;
-  } catch (error) {
-    console.error(`Failed to load texture from ${url}:`, error);
-    return null;
-  }
-}
-
-  // Load all textures using createImageBitmap
-  async loadTexturesWithImageBitmap() {
+  // Since textures are loaded using thread pool, it needs to be async
+  async loadTextures() {
     try {
-      // Load low-resolution textures
+      // Low-resolution textures
       const texturesLoPromises = {
-        albedoMap:  this.loadTextureFromImageBitmap(albedoMapLoPath),
-        bumpMap:    this.loadTextureFromImageBitmap(bumpMapLoPath),
-        cloudsMap:  this.loadTextureFromImageBitmap(cloudsMapLoPath),
-        outlineMap: this.loadTextureFromImageBitmap(outlineMapLoPath),
-        oceanMap:   this.loadTextureFromImageBitmap(oceanMapLoPath),
-        skyMap:     this.loadTextureFromImageBitmap(skyMapLoPath),
+        albedoMap:  this.loadTexture(albedoMapLoPath),
+        bumpMap:    this.loadTexture(bumpMapLoPath),
+        cloudsMap:  this.loadTexture(cloudsMapLoPath),
+        outlineMap: this.loadTexture(outlineMapLoPath),
+        oceanMap:   this.loadTexture(oceanMapLoPath),
+        skyMap:     this.loadTexture(skyMapLoPath),
       };
 
-      // Load high-resolution textures
+      // High-resolution textures
       const texturesHiPromises = {
-        albedoMap:  this.loadTextureFromImageBitmap(albedoMapHiPath),
-        bumpMap:    this.loadTextureFromImageBitmap(bumpMapHiPath),
-        cloudsMap:  this.loadTextureFromImageBitmap(cloudsMapHiPath),
-        outlineMap: this.loadTextureFromImageBitmap(outlineMapHiPath),
-        oceanMap:   this.loadTextureFromImageBitmap(oceanMapHiPath),
-        skyMap:     this.loadTextureFromImageBitmap(skyMapHiPath),
+        albedoMap:  this.loadTexture(albedoMapHiPath),
+        bumpMap:    this.loadTexture(bumpMapHiPath),
+        cloudsMap:  this.loadTexture(cloudsMapHiPath),
+        outlineMap: this.loadTexture(outlineMapHiPath),
+        oceanMap:   this.loadTexture(oceanMapHiPath),
+        skyMap:     this.loadTexture(skyMapHiPath),
       };
 
       // Wait for low-resolution textures to load first
@@ -159,47 +140,67 @@ async loadTextureFromImageBitmap(url) {
     }
   }
 
+  // Load a texture using ImageBitmapLoader
+  async loadTexture(url) {
+
+    this.loader.setOptions({ imageOrientation: 'flipY' });
+    
+    return new Promise((resolve, reject) => {
+      this.loader.load(
+        url,
+        function(imageBitmap) {
+          const texture = new THREE.CanvasTexture(imageBitmap);
+          resolve(texture);
+        },
+        undefined,
+        function(err) {
+          console.log('An error happened');
+          reject(err);
+        }
+      );
+    });
+  }
+
   // Apply textures individually with yielding to prevent blocking
   async applyTextures(textures){
-    // Skip if textures aren't loaded yet
-    if (!textures) return;
 
-    // Helper function to yield control back to the browser
-    const yieldToMain = () => new Promise(resolve => requestAnimationFrame(resolve));
+    const waitUntilNextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
 
+    // Apply background texture
     this.scene.background = textures.skyMap;
     textures.skyMap.colorSpace = THREE.SRGBColorSpace;
     textures.skyMap.mapping = THREE.EquirectangularReflectionMapping;
-    await yieldToMain();
+    await waitUntilNextFrame();
 
     // Apply earth albedo map
     this.earth.mesh.material.map = textures.albedoMap;
     this.earth.mesh.material.needsUpdate = true;
-    await yieldToMain();
+    await waitUntilNextFrame();
 
     // Apply earth bump map
     this.earth.mesh.material.bumpMap = textures.bumpMap;
     this.earth.mesh.material.needsUpdate = true;
-    await yieldToMain();
+    await waitUntilNextFrame();
 
     // Apply earth specular map (ocean)
     this.earth.mesh.material.specularMap = textures.oceanMap;
     this.earth.mesh.material.needsUpdate = true;
-    await yieldToMain();
+    await waitUntilNextFrame();
 
     // Apply country outlines
     this.countryOutlines.mesh.material.map = textures.outlineMap;
     this.countryOutlines.mesh.material.needsUpdate = true;
-    await yieldToMain();
+    await waitUntilNextFrame();
 
     // Apply clouds map
     this.clouds.mesh.material.map = textures.cloudsMap;
     this.clouds.mesh.material.needsUpdate = true;
-    await yieldToMain();
+    await waitUntilNextFrame();
 
+    // Apply clouds trasnparency
     this.clouds.mesh.material.alphaMap = textures.cloudsMap;
     this.clouds.mesh.material.needsUpdate = true;
-    await yieldToMain();
+    await waitUntilNextFrame();
   }
 
   onZoom = () => {
