@@ -94,24 +94,24 @@ class GFXDisplay {
   }
 
   // Helper function to load a single texture using createImageBitmap
-  async loadTextureFromImageBitmap(url) {
-    try {
-      const response = await fetch(url);
-      const blob = await response.blob();
-      const imageBitmap = await createImageBitmap(blob);
-      
-      const texture = new THREE.Texture(imageBitmap);
-      // Set texture parameters before upload to optimize GPU transfer
-      texture.generateMipmaps = false; // Disable mipmaps initially to speed up upload
-      texture.flipY = true;
-      texture.needsUpdate = true;
-      
-      return texture;
-    } catch (error) {
-      console.error(`Failed to load texture from ${url}:`, error);
-      return null;
-    }
+async loadTextureFromImageBitmap(url) {
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    // Use flipY option to match Three.js expectations
+    const imageBitmap = await createImageBitmap(blob, { imageOrientation: 'flipY' });
+    
+    const texture = new THREE.Texture(imageBitmap);
+    // Set texture parameters before upload to optimize GPU transfer
+    texture.generateMipmaps = false; // Disable mipmaps initially to speed up upload
+    texture.needsUpdate = true;
+    
+    return texture;
+  } catch (error) {
+    console.error(`Failed to load texture from ${url}:`, error);
+    return null;
   }
+}
 
   // Load all textures using createImageBitmap
   async loadTexturesWithImageBitmap() {
