@@ -27,6 +27,7 @@ class Game  {
 
     // Declare gamestate
     this.guessCounter = Infinity;
+    this.initialGuessCount = Infinity;
     this.guessHistory = [];
     this.currentState = GameState.INIT;
     this.targetArea = null;
@@ -56,10 +57,6 @@ class Game  {
     return hash;
   }
 
-  // Logarithmic distance
-  logDist(a, b = 1){
-    return Math.abs(Math.log10(a) - Math.log10(b));
-  }
 
   // Starts the game, with the desired number of locked cities
   startGame(gameType) {
@@ -127,6 +124,7 @@ class Game  {
     const targetVal = this.targetArea;
     // Set initial number of guesses
     this.guessCounter = numGuesses;
+    this.initialGuessCount = numGuesses;
 
     this.userInterface.startGame(numCitiesLocked, cityList, targetVal, numGuesses);
     this.HTMLElements.difficultyPanel.style.display = 'none';
@@ -176,7 +174,7 @@ class Game  {
 
         this.guessCounter--;
         // The error (how wrong the guess was) is calculated using logarithmic distance
-        const currentGuessAreaError = this.logDist(guess.getArea(), this.targetArea);
+        const currentGuessAreaError = UTILS.logDist(guess.getArea(), this.targetArea);
 
         // if no guesses in guess history
         if(this.guessHistory.length == 0){
@@ -185,7 +183,7 @@ class Game  {
           // Iterate over list
           let inserted = false;
           for (let index = 0; index < this.guessHistory.length; index++) {
-            const listGuessAreaError = this.logDist(this.guessHistory[index].getArea(), this.targetArea);
+            const listGuessAreaError = UTILS.logDist(this.guessHistory[index].getArea(), this.targetArea);
             if(currentGuessAreaError < listGuessAreaError){
               // Insert at the right spot, so list is always sorted.
               // This makes sure guess history is displayed with closest guesses at the top
@@ -203,8 +201,16 @@ class Game  {
         // See if we have won/lost
         this.evaluateGuess(guess);
 
+        // Set accuracy-based color for the triangle
+        const accuracyColor = UTILS.getAccuracyColor(guess.getArea(), this.targetArea);
+        guess.colors = {
+          verts: accuracyColor,
+          edges: accuracyColor,
+          fill: accuracyColor,
+        };
+
         // Show how good the new guess was
-        this.userInterface.update(this.guessHistory, guess, this.guessCounter);
+        this.userInterface.update(this.guessHistory, guess, this.guessCounter, this.initialGuessCount);
         this.display.update(guess);
 
       }else{
@@ -228,7 +234,7 @@ class Game  {
 
     // Within targetTol of target
     // This only triggers once per game, so you are not constantly winning if you continue
-    else if( (this.logDist(1+targetTol) > this.logDist(guessArea, this.targetArea)) && 
+    else if( (UTILS.logDist(1+targetTol) > UTILS.logDist(guessArea, this.targetArea)) && 
     (this.currentState == GameState.NOT_CLOSE)) {
       this.currentState = GameState.WITHIN_TOL;
       this.winGame();
@@ -265,6 +271,7 @@ class Game  {
   // Resets the state of the game to the initial condition, as if page was reloaded
   resetGame() {
     this.guessCounter = Infinity;
+    this.initialGuessCount = Infinity;
     this.guessHistory = [];
     this.currentState = GameState.INIT;
     this.targetArea = null;
