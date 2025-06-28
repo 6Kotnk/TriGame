@@ -203,11 +203,15 @@ class Game  {
 
         // Set accuracy-based color for the triangle
         const accuracyColor = UTILS.getAccuracyColor(guess.getArea(), this.targetArea);
-        guess.colors = {
-          verts: accuracyColor,
-          edges: accuracyColor,
-          fill: accuracyColor,
-        };
+        guess.setColors (
+          {
+            verts: accuracyColor,
+            edges: accuracyColor,
+            fill: accuracyColor,
+            outline: accuracyColor,
+          }
+        );
+        
 
         // Show how good the new guess was
         this.userInterface.update(this.guessHistory, guess, this.guessCounter, this.initialGuessCount);

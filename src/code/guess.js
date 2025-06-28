@@ -15,6 +15,7 @@ class Guess {
       verts: "white",
       edges: "white",
       fill: "cyan",
+      outline: "pink",
     };
     this.area = null;
   }
@@ -76,6 +77,10 @@ class Guess {
 
   getArea() {
     return this.area;
+  }
+
+  setColors(colors) {
+    this.colors = colors;
   }
 
   // Get area of the spherical triangle

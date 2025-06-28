@@ -37,7 +37,6 @@ class UserInterface {
     this.cityInputs.lockCities(numCitiesLocked, cityList);
     this.guessDisplay.update(guessNum, guessNum);
     this.targetDisplay.update(targetVal);
-    this.history.setTargetArea(targetVal);
   }
 
   getGuess(){

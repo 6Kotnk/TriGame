@@ -5,7 +5,7 @@
   background-color: rgba(255, 255, 255, 0.95);
   padding: 20px;
   border-radius: 5px;
-  border: 1px solid #ddd;
+  border: 3px solid #ddd;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   /* Center the div */
   top: 50%;
@@ -16,7 +16,7 @@
 @media (prefers-color-scheme: dark) {
   .panel {
     background-color: rgba(45, 45, 45, 0.95);
-    border: 1px solid #444;
+    border: 3px solid #444;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   }
 }

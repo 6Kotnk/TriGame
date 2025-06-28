@@ -1,5 +1,3 @@
-import * as UTILS from '../utils.js';
-
 export {GuessHistory};
 
 class GuessHistory {
@@ -8,7 +6,6 @@ class GuessHistory {
     this.HTMLElements = HTMLElements;
     this.outputDiv = this.HTMLElements.history;
     this.historyResults = [];
-    this.targetArea = null;
   }
 
   update(guessList, latestGuess) {
@@ -19,7 +16,7 @@ class GuessHistory {
     // Create the latest result
     const latestDiv = document.createElement("div");
     latestDiv.className = "resultItem";
-    latestDiv.style.borderColor = UTILS.getAccuracyColor(latestGuess.getArea(), this.targetArea);
+    latestDiv.style.borderColor = latestGuess.colors.outline;
     latestDiv.innerHTML = this.guessToHTML(latestGuess);
     // Create a separator    
     const separator = document.createElement("hr");
@@ -48,7 +45,7 @@ class GuessHistory {
     for (let index = 0; index < guessList.length; index++) {
       const resultDiv = document.createElement("div");
       resultDiv.className = "resultItem";
-      resultDiv.style.borderColor = UTILS.getAccuracyColor(guessList[index].getArea(), this.targetArea);
+      resultDiv.style.borderColor = guessList[index].colors.outline;
       resultDiv.innerHTML = this.guessToHTML(guessList[index]);
       this.outputDiv.appendChild(resultDiv);
     }
@@ -65,17 +62,11 @@ class GuessHistory {
     return HTML;
   }
 
-  // Set target area for accuracy calculations
-  setTargetArea(targetArea) {
-    this.targetArea = targetArea;
-  }
-
   // Clear the dashboard
   reset() {
     this.historyResults = [];
     this.outputDiv = this.HTMLElements.history;
     this.outputDiv.innerHTML = '';
-    this.targetArea = null;
   }
 
 }

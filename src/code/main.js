@@ -36,11 +36,13 @@ const HTMLElements = {
       },
 
       GuessDisplay: {
-        element:                            document.getElementById('guessDisplayValue'),
+        element:                            document.getElementById('guessDisplay'),
+        value:                              document.getElementById('guessDisplayValue'),
       },
 
       TargetDisplay: {
-        element:                            document.getElementById('targetDisplayValue'),
+        element:                            document.getElementById('targetDisplay'),
+        value:                              document.getElementById('targetDisplayValue'),
       },
 
       GuessSlider: {
