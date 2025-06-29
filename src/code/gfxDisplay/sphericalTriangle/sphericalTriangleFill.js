@@ -41,59 +41,15 @@ class SphericalTriangleFill {
     return { longitude: longitudeDegrees, latitude: latitudeDegrees };
   }
 
-  // Calculate signed spherical area using spherical excess
-  calculateSignedSphericalArea(vecs) {
-    if (vecs.length !== 3) {
-      throw new Error("This method is designed for triangles (3 vertices)");
-    }
+  // Determine which pole to include for minimal area
+  shouldIncludeNorthPole(vecs) {
 
-    // Calculate the three edge vectors (great circle arcs)
-    let a = vecs[0].angleTo(vecs[1]); // Edge opposite to vertex 2
-    let b = vecs[1].angleTo(vecs[2]); // Edge opposite to vertex 0  
-    let c = vecs[2].angleTo(vecs[0]); // Edge opposite to vertex 1
-
-    // Use L'Huilier's formula for spherical area
-    let s = (a + b + c) / 2; // Semi-perimeter
-    let E = 4 * Math.atan(Math.sqrt(
-      Math.tan(s/2) * 
-      Math.tan((s-a)/2) * 
-      Math.tan((s-b)/2) * 
-      Math.tan((s-c)/2)
-    ));
-
-    // Determine orientation using the normal vector
-    let normal = new THREE.Vector3()
-      .crossVectors(vecs[1].clone().sub(vecs[0]), vecs[2].clone().sub(vecs[0]))
-      .normalize();
-    
-    // Check if the triangle is oriented clockwise or counterclockwise
-    // by looking at the direction of the normal relative to the centroid
-    let centroid = new THREE.Vector3()
+    const centroid = new THREE.Vector3()
       .addVectors(vecs[0], vecs[1])
       .add(vecs[2])
       .normalize();
-    
-    let orientation = normal.dot(centroid);
-    
-    return orientation > 0 ? E : -E;
-  }
 
-  // Determine which pole to include for minimal area
-  shouldIncludeNorthPole(vecs) {
-    let signedArea = this.calculateSignedSphericalArea(vecs);
-    
-    // Total sphere area is 4π
-    let halfSphere = 2 * Math.PI;
-    
-    if (Math.abs(signedArea) > halfSphere) {
-      // Triangle covers more than half the sphere
-      // Choose the complement (smaller area) by flipping the pole choice
-      return signedArea < 0;
-    } else {
-      // Triangle covers less than half the sphere
-      // Positive area (counterclockwise) naturally includes north pole region
-      return signedArea > 0;
-    }
+    return centroid.y > 0;
   }
 
   // Draw the map for the triangle
@@ -175,8 +131,7 @@ class SphericalTriangleFill {
 
   drawLine(ctx, curr_lon, curr_lat, next_lon, next_lat, vecs) {
     // Check if we're crossing the antimeridian (±180° longitude boundary)
-    let lon_diff = Math.abs(curr_lon - next_lon);
-    let crosses_antimeridian = lon_diff > 180;
+    const crosses_antimeridian = Math.sign(curr_lon) != Math.sign(next_lon);
     
     if(crosses_antimeridian)
     {
@@ -187,17 +142,17 @@ class SphericalTriangleFill {
       next_lat -= 90;
       
       // interpolate crossing point
-      let side_lon = Math.sign(curr_lon);
-      let curr_delta = 180 - side_lon * curr_lon;
-      let next_delta = 180 + side_lon * next_lon;
+      const side_lon = Math.sign(curr_lon);
+      const curr_delta = 180 - side_lon * curr_lon;
+      const next_delta = 180 + side_lon * next_lon;
   
-      let lon_delta = curr_delta + next_delta;
-      let lat_delta = next_lat - curr_lat;
-      let mid_point_lat = curr_lat + (lat_delta * (curr_delta/lon_delta));
+      const lon_delta = curr_delta + next_delta;
+      const lat_delta = next_lat - curr_lat;
+      const mid_point_lat = curr_lat + (lat_delta * (curr_delta/lon_delta));
   
       // Use spherical area calculation instead of just the crossing point
-      let includeNorth = this.shouldIncludeNorthPole(vecs);
-      let side_lat = includeNorth ? 1 : -1;
+      const includeNorth = this.shouldIncludeNorthPole(vecs);
+      const side_lat = includeNorth ? -1 : 1;
   
       // Comments show example if we run over the east side, and want to include the north pole
       ctx.lineTo(MAP_SCALE*(side_lon *  180 + 180),MAP_SCALE*( mid_point_lat + 90)); // South to midpoint latitude
