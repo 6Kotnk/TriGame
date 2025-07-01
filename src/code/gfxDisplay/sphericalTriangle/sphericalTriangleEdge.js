@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import * as UTILS from '../../utils.js';
 
 export {SphericalTriangleEdge};
 
@@ -33,24 +34,6 @@ class SphericalTriangleEdge{
     return cylinder;
   }
 
-  // Spherical linear interpolation
-  // p and q are vectors, t is a scalar between 0 and 1
-  // returns the vector on the sphere "t" of the way between p and q
-  SLERP(p, q, t){
-    const theta = p.angleTo(q);
-    const sinTheta = Math.sin(theta);
-  
-    // Calculate the SLERP scale factors
-    const scaleP = Math.sin((1 - t) * theta) / sinTheta;
-    const scaleQ = Math.sin(t * theta) / sinTheta;
-  
-    // Calculate the interpolated vector by scaling and adding the input vectors
-    const result = new THREE.Vector3();
-    result.addScaledVector(p, scaleP); 
-    result.addScaledVector(q, scaleQ);
-  
-    return result
-  }
   
   // Tangent vector to the SLERP vector, in the direction of increasing t
   SLERPTangent(p, q, t) {
@@ -76,7 +59,7 @@ class SphericalTriangleEdge{
     // Move all the cylinders
     for (let idx = 0; idx < this.edge.length; idx++) {
       // Position according to SLERP
-      this.edge[idx].position.copy(this.SLERP(vec1, vec2, idx/this.edge.length));
+      this.edge[idx].position.copy(UTILS.SLERP(vec1, vec2, idx/this.edge.length));
       // Direction according to SLERPTangent
       const normalizedTarget = this.SLERPTangent(vec1, vec2, idx/this.edge.length).normalize();
       // Rotation has to be referenced to the up vector of the cylinder, so we do some quaternion magic

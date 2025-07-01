@@ -6,6 +6,13 @@ import * as UTILS from './utils.js';
 
 export {Game};
 
+// Get max possible error, to normalize errors
+const earthRadius = 6371; // in km
+const minArea = 0.000001; // estimated
+const maxArea = (4 * Math.PI * (earthRadius * earthRadius)) / 2; // Half of the earth
+
+const maxError = UTILS.logDist(minArea, maxArea);
+
 // Tolerance for winning a game
 const targetTol = 0.1; //10%
 
@@ -126,6 +133,10 @@ class Game  {
     this.guessCounter = numGuesses;
     this.initialGuessCount = numGuesses;
 
+    this.
+    const guessErrorNormalized = guessError / (maxError + minError);
+
+
     this.userInterface.startGame(numCitiesLocked, cityList, targetVal, numGuesses);
     this.HTMLElements.difficultyPanel.style.display = 'none';
     this.currentState = GameState.NOT_CLOSE;
@@ -168,13 +179,14 @@ class Game  {
       // Get guess
       const guess = this.userInterface.getGuess();
 
+      // The error (how wrong the guess was) is calculated using logarithmic distance
+      const guessError = UTILS.logDist(guess.getArea(), this.targetArea);
+
       // If you haven't tried it yet...
       if(!guess.isInList(this.guessHistory))
       {
 
         this.guessCounter--;
-        // The error (how wrong the guess was) is calculated using logarithmic distance
-        const currentGuessAreaError = UTILS.logDist(guess.getArea(), this.targetArea);
 
         // if no guesses in guess history
         if(this.guessHistory.length == 0){
@@ -184,7 +196,7 @@ class Game  {
           let inserted = false;
           for (let index = 0; index < this.guessHistory.length; index++) {
             const listGuessAreaError = UTILS.logDist(this.guessHistory[index].getArea(), this.targetArea);
-            if(currentGuessAreaError < listGuessAreaError){
+            if(guessError < listGuessAreaError){
               // Insert at the right spot, so list is always sorted.
               // This makes sure guess history is displayed with closest guesses at the top
               this.guessHistory.splice(index, 0, guess);
@@ -202,7 +214,7 @@ class Game  {
         this.evaluateGuess(guess);
 
         // Set accuracy-based color for the triangle
-        const accuracyColor = UTILS.getAccuracyColor(guess.getArea(), this.targetArea);
+        const accuracyColor = UTILS.getColorFromValue(guessError / maxError);
         guess.setColors (
           {
             verts: accuracyColor,

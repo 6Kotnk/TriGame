@@ -19,24 +19,13 @@ export function getColorFromValue(value) {
     return 'rgb(128, 128, 128)'; // Gray for invalid values
   }
   
-  // Create smooth gradient from green (0) to yellow (0.5) to red (1)
-  let r, g, b;
+  // Rotate through hues while keeping saturation and lightness constant
+  // Green (120°) → Yellow (60°) → Red (0°)
+  const hue = 120 - (value * 120); // 120° to 0°
+  const saturation = 60; 
+  const lightness = 50;  
   
-  if (value <= 0.5) {
-    // Green to yellow
-    const t = value * 2; // 0 to 1
-    r = Math.round(255 * t);  // 0 to 255
-    g = 255;                  // constant 255
-    b = 0;                    // constant 0
-  } else {
-    // Yellow to red
-    const t = (value - 0.5) * 2; // 0 to 1
-    r = 255;                     // constant 255
-    g = Math.round(255 * (1 - t)); // 255 to 0
-    b = 0;                       // constant 0
-  }
-  
-  return `rgb(${r}, ${g}, ${b})`;
+  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 }
 
 export function getAccuracyColor(guessArea, targetArea) {
@@ -47,4 +36,18 @@ export function getAccuracyColor(guessArea, targetArea) {
   const normalizedError = Math.min(error, 1.0);
   
   return getColorFromValue(normalizedError);
+}
+
+export function SLERP(p, q, t) {
+  const theta = p.angleTo(q);
+  const sinTheta = Math.sin(theta);
+
+  // Calculate the SLERP scale factors
+  const scaleP = Math.sin((1 - t) * theta) / sinTheta;
+  const scaleQ = Math.sin(t * theta) / sinTheta;
+
+  // Calculate the interpolated vector by scaling and adding the input vectors
+  const result = p.clone().multiplyScalar(scaleP).add(q.clone().multiplyScalar(scaleQ));
+
+  return result;
 }

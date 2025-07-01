@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { PlanetLayer } from '../planetLayer';
+import * as UTILS from '../../utils.js';
 
 export {SphericalTriangleFill};
 
@@ -90,9 +91,13 @@ class SphericalTriangleFill {
       let current_vec = vecs[idx];
       let next_vec = vecs[(idx + 1) % vecs.length];
   
-      for (let t = 0; t < current_vec.angleTo(next_vec); t += 2*Math.PI/DIVS) {
-        // r interpolates between current and next vec
-        r = this.interpolateBetweenPoints(current_vec,next_vec,t);
+      const totalAngle = current_vec.angleTo(next_vec);
+      const steps = Math.ceil(totalAngle * DIVS / (2 * Math.PI));
+      
+      for (let step = 1; step <= steps; step++) {
+        const t = step / steps; // 0 to 1 parameterization for SLERP
+        // r interpolates between current and next vec using SLERP
+        r = UTILS.SLERP(current_vec, next_vec, t);
         // Transform r to coords
         ({ longitude: next_lon, latitude: next_lat } = this.vecToLatLon(r, newCentralMeridian));
         // Draw using coords
@@ -113,20 +118,6 @@ class SphericalTriangleFill {
     this.fillLayer.changeMap(newMap, xOffset)
   }
 
-  // Interpolate across the sphere
-  // Like SLERP, except t is between 0 and the angle between the points
-  interpolateBetweenPoints(point1, point2, t) {
-  
-    let n = new THREE.Vector3().crossVectors(point1, point2);
-   
-    let u = point1.clone();
-    let v = new THREE.Vector3().crossVectors(n, u).normalize();
-   
-    let r = new THREE.Vector3();
-    r = v.multiplyScalar(Math.sin(t)).add(u.multiplyScalar(Math.cos(t)));
-    
-    return r;
-  }
   
 
   drawLine(ctx, curr_lon, curr_lat, next_lon, next_lat, vecs) {
