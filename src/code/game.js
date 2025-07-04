@@ -6,13 +6,6 @@ import * as UTILS from './utils.js';
 
 export {Game};
 
-// Get max possible error, to normalize errors
-const earthRadius = 6371; // in km
-const minArea = 0.000001; // estimated
-const maxArea = (4 * Math.PI * (earthRadius * earthRadius)) / 2; // Half of the earth
-
-const maxError = UTILS.logDist(minArea, maxArea);
-
 // Tolerance for winning a game
 const targetTol = 0.1; //10%
 
@@ -133,10 +126,6 @@ class Game  {
     this.guessCounter = numGuesses;
     this.initialGuessCount = numGuesses;
 
-    this.
-    const guessErrorNormalized = guessError / (maxError + minError);
-
-
     this.userInterface.startGame(numCitiesLocked, cityList, targetVal, numGuesses);
     this.HTMLElements.difficultyPanel.style.display = 'none';
     this.currentState = GameState.NOT_CLOSE;
@@ -214,7 +203,7 @@ class Game  {
         this.evaluateGuess(guess);
 
         // Set accuracy-based color for the triangle
-        const accuracyColor = UTILS.getColorFromValue(guessError / maxError);
+        const accuracyColor = UTILS.getColorFromValue(guessError - UTILS.logDist(1+targetTol));
         guess.setColors (
           {
             verts: accuracyColor,

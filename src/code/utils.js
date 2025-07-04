@@ -11,17 +11,18 @@ export function logDist(a, b = 1) {
   return Math.abs(Math.log10(a) - Math.log10(b));
 }
 
+function sigmoid(z) {
+  return 1 / (1 + Math.exp(-z));
+}
+
 export function getColorFromValue(value) {
   // Input: value from 0 (good/green) to 1 (bad/red)
   // Output: RGB color string
-  
-  if (value < 0 || value > 1) {
-    return 'rgb(128, 128, 128)'; // Gray for invalid values
-  }
+  const normalizedValue = sigmoid(value)
   
   // Rotate through hues while keeping saturation and lightness constant
   // Green (120°) → Yellow (60°) → Red (0°)
-  const hue = 120 - (value * 120); // 120° to 0°
+  const hue = 120 - (normalizedValue * 120); // 120° to 0°
   const saturation = 60; 
   const lightness = 50;  
   
