@@ -9,6 +9,8 @@ export {Game};
 // Tolerance for winning a game
 const targetTol = 0.1; //10%
 
+const errorScalingFactor = Math.log(3)/UTILS.logDist(2*(1+targetTol));
+
 const GameState = {
   INIT: 'INIT',
   NOT_CLOSE: 'NOT_CLOSE',
@@ -203,7 +205,7 @@ class Game  {
         this.evaluateGuess(guess);
 
         // Set accuracy-based color for the triangle
-        const accuracyColor = UTILS.getColorFromValue(guessError - UTILS.logDist(1+targetTol));
+        const accuracyColor = UTILS.getColorFromValue(errorScalingFactor * guessError);
         guess.setColors (
           {
             verts: accuracyColor,

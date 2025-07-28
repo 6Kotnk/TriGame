@@ -18,7 +18,7 @@ function sigmoid(z) {
 export function getColorFromValue(value) {
   // Input: value from 0 (good/green) to 1 (bad/red)
   // Output: RGB color string
-  const normalizedValue = sigmoid(value)
+  const normalizedValue = 2 * (sigmoid(value) - 1/2);
   
   // Rotate through hues while keeping saturation and lightness constant
   // Green (120°) → Yellow (60°) → Red (0°)
