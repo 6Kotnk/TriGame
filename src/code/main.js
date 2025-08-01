@@ -45,10 +45,6 @@ const HTMLElements = {
         value:                              document.getElementById('targetDisplayValue'),
       },
 
-      GuessSlider: {
-        element:                            document.getElementById('guessSlider'),
-        elementValue:                       document.getElementById('guessSliderValue'),
-      },
 
       Tour: {
         tourButton:                         document.getElementById('tourButton'),
@@ -60,8 +56,8 @@ const HTMLElements = {
 
 const game = new Game(HTMLElements.Game);
 
-function startGame(gameType) {
-  game.startGame(gameType);
+function startGame() {
+  game.startGame();
 }
 
 function resetGame() {
@@ -80,8 +76,13 @@ function startTour() {
   game.startTour();
 }
 
+function hideDifficultyPanel() {
+  game.hideDifficultyPanel();
+}
+
 window.startGame = startGame;
 window.resetGame = resetGame;
 window.continueGame = continueGame;
 window.submitGuess = submitGuess;
 window.startTour = startTour;
+window.hideDifficultyPanel = hideDifficultyPanel;

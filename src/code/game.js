@@ -60,12 +60,8 @@ class Game  {
   }
 
 
-  // Starts the game, with the desired number of locked cities
-  startGame(gameType) {
-
-    let seed = 0;
-    let numGuesses = 0;
-    let numCitiesLocked = 0;
+  // Starts the daily game
+  startGame() {
 
     // Get current date + time
     const now = new Date();
@@ -76,46 +72,9 @@ class Game  {
                   String(now.getDate()).padStart(2, '0');
                 
     // Generate a consistent seed based on today's date
-    const todaySeed = this.hash(today);
-    // Generate random seed
-    const randomSeed = Math.floor(Math.random() * 0xFFFFFFFF);
-
-    // Choose whether we want random or daily seed + other options
-    switch (gameType) {
-      case "Daily":
-        seed = todaySeed;
-        numCitiesLocked = UTILS.randomFromSeed(seed,0,2);
-        numGuesses = UTILS.randomFromSeed(seed,1,10);
-        break;
-
-      case "Random":
-        seed = randomSeed;
-        numCitiesLocked = UTILS.randomFromSeed(seed,0,2);
-        numGuesses = UTILS.randomFromSeed(seed,1,10);
-        break;
-
-      case "Easy":
-        seed = randomSeed;
-        numCitiesLocked = 0;
-        numGuesses = this.userInterface.getNumGuesses();
-        break;
-
-      case "Medium":
-        seed = randomSeed;
-        numCitiesLocked = 1;
-        numGuesses = this.userInterface.getNumGuesses();
-        break;
-
-      case "Hard":
-        seed = randomSeed;
-        numCitiesLocked = 2;
-        numGuesses = this.userInterface.getNumGuesses();
-        break;
-
-      default:
-        this.userInterface.display("Unknown game type");
-        return;
-    }
+    const seed = this.hash(today);
+    const numCitiesLocked = UTILS.randomFromSeed(seed,0,2);
+    const numGuesses = UTILS.randomFromSeed(seed,1,10);
 
     // Get a random guess using our seed. This makes sure it is possible to win
     const targetGuess = this.userInterface.getRandomGuess(seed);
@@ -273,6 +232,11 @@ class Game  {
           defaults, 
           { particleCount, origin: { x: Math.random(), y: Math.random() - 0.2 } }));
     }, 10);
+  }
+
+  // Hides the difficulty panel (used by tutorial button)
+  hideDifficultyPanel() {
+    this.HTMLElements.difficultyPanel.style.display = 'none';
   }
 
   // Resets the state of the game to the initial condition, as if page was reloaded

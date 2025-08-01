@@ -54,20 +54,12 @@ class Tour {
 
     let currentOrder = 1;
 
-    // Add difficulty step only if panel is visible
+    // Add title screen step only if panel is visible
     if (isDifficultyVisible) {
       steps.push({
-        title: "Custom Game Modes",
-        content: "In the 'Custom Game' modes, you can set your own challenge. Choose a difficulty (Easy, Medium, or Hard) to determine how many cities are pre-selected for you, and use the slider to set your number of guesses.",
-        target: "#standardModes",
-        propagateEvents: true,
-        order: currentOrder++,
-      });
-
-      steps.push({
-        title: "Challenge Modes",
-        content: "For a different experience, try the 'Challenge Modes'. The 'Daily Challenge' is a unique puzzle that's the same for everyone each day. Or, hit the 'Random' button for a complete surprise with a randomly selected difficulty.",
-        target: "#challengeModes",
+        title: "Game Modes",
+        content: "Choose 'Play' to start today's daily challenge - a unique puzzle that's the same for everyone today! The game will randomly select a difficulty and number of guesses for you.",
+        target: "#titleScreen",
         propagateEvents: true,
         order: currentOrder++,
       });

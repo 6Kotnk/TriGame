@@ -2,7 +2,6 @@ import { GuessHistory } from "./guessHistory";
 import { CityInputs } from "./cityInputs";
 import { Tour } from "./tour";
 import { StateDisplay } from "./stateDisplay";
-import { Slider } from "./slider";
 
 export {UserInterface};
 
@@ -18,16 +17,12 @@ class UserInterface {
     this.tour = new Tour(this.HTMLElements.Tour);
     this.guessDisplay = new StateDisplay(this.HTMLElements.GuessDisplay);
     this.targetDisplay = new StateDisplay(this.HTMLElements.TargetDisplay);
-    this.guessSlider = new Slider(this.HTMLElements.GuessSlider);
   }
 
   getRandomGuess(seed){
     return this.cityInputs.getRandomGuess(seed);
   }
 
-  getNumGuesses(){
-    return this.guessSlider.getSliderValue();
-  }
 
   startTour(isDifficultyVisible) {
     this.tour.startTour(isDifficultyVisible);
