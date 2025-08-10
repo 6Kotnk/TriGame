@@ -44,13 +44,22 @@ class SphericalTriangleFill {
 
   // Determine which pole to include for minimal area
   shouldIncludeNorthPole(vecs) {
+    const v0 = vecs[0];
+    let v1 = vecs[1];
+    let v2 = vecs[2];
 
-    const centroid = new THREE.Vector3()
-      .addVectors(vecs[0], vecs[1])
-      .add(vecs[2])
-      .normalize();
+    const crossProduct = new THREE.Vector3().crossVectors(v1, v2);
+    const determinant = v0.dot(crossProduct);
 
-    return centroid.y > 0;
+    if (determinant < 0) {
+      [v1, v2] = [v2, v1]; // Swap v1 and v2
+    }
+
+    const edge1 = new THREE.Vector3().subVectors(v1, v0);
+    const edge2 = new THREE.Vector3().subVectors(v2, v0);
+    const normal = new THREE.Vector3().crossVectors(edge1, edge2);
+
+    return normal.y > 0;
   }
 
   // Draw the map for the triangle
@@ -81,7 +90,7 @@ class SphericalTriangleFill {
     // Go to first vertex, begin drawing map
     this.ctx.moveTo(curr_lon, curr_lat);
     this.ctx.beginPath();
-  
+
     // r is the vector we are drawing with
     let r = new THREE.Vector3();
   
@@ -122,7 +131,8 @@ class SphericalTriangleFill {
 
   drawLine(ctx, curr_lon, curr_lat, next_lon, next_lat, vecs) {
     // Check if we're crossing the antimeridian (±180° longitude boundary)
-    const crosses_antimeridian = Math.sign(curr_lon) != Math.sign(next_lon);
+    //const crosses_antimeridian = (curr_lon > 0) != (next_lon > 0);
+    const crosses_antimeridian = Math.abs(curr_lon - next_lon) > 180;
     
     if(crosses_antimeridian)
     {
@@ -146,10 +156,10 @@ class SphericalTriangleFill {
       const side_lat = includeNorth ? -1 : 1;
   
       // Comments show example if we run over the east side, and want to include the north pole
-      ctx.lineTo(MAP_SCALE*(side_lon *  180 + 180),MAP_SCALE*( mid_point_lat + 90)); // South to midpoint latitude
-      ctx.lineTo(MAP_SCALE*(side_lon *  180 + 180),MAP_SCALE*( side_lat * 90 + 90)); // North to 90 deg
-      ctx.lineTo(MAP_SCALE*(-side_lon * 180 + 180),MAP_SCALE*( side_lat * 90 + 90)); // East to -180 deg
-      ctx.lineTo(MAP_SCALE*(-side_lon * 180 + 180),MAP_SCALE*( mid_point_lat + 90)); // South to midpoint latitude
+      this.lineTo(ctx, MAP_SCALE*(side_lon *  180 + 180),MAP_SCALE*( mid_point_lat + 90)); // South to midpoint latitude
+      this.lineTo(ctx, MAP_SCALE*(side_lon *  180 + 180),MAP_SCALE*( side_lat * 90 + 90)); // North to 90 deg
+      this.lineTo(ctx, MAP_SCALE*(-side_lon * 180 + 180),MAP_SCALE*( side_lat * 90 + 90)); // East to -180 deg
+      this.lineTo(ctx, MAP_SCALE*(-side_lon * 180 + 180),MAP_SCALE*( mid_point_lat + 90)); // South to midpoint latitude
   
       // Update position
       curr_lon += 180;
@@ -159,7 +169,12 @@ class SphericalTriangleFill {
     }
     
     // Draw the (rest of the) line segment
-    ctx.lineTo(next_lon*MAP_SCALE, next_lat*MAP_SCALE);
+    this.lineTo(ctx, next_lon*MAP_SCALE, next_lat*MAP_SCALE);
+  }
+
+  lineTo(ctx,x,y){
+    ctx.lineTo(x, y);
+    //ctx.stroke();
   }
 
 }

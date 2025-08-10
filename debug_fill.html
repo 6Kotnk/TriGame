@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Triangle Fill Debug</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background: #f0f0f0;
+      }
+      
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      
+      .debug-panel {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      
+      .canvas-container {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        text-align: center;
+      }
+      
+      #mapCanvas {
+        border: 2px solid #ccc;
+        max-width: 100%;
+        height: auto;
+        image-rendering: pixelated;
+      }
+      
+      .test-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+      }
+      
+      button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        background: #007bff;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      
+      button:hover {
+        background: #0056b3;
+      }
+      
+      .info {
+        background: #e9ecef;
+        padding: 10px;
+        border-radius: 4px;
+        margin-top: 10px;
+        font-family: monospace;
+        font-size: 12px;
+      }
+      
+      .coords {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 10px;
+        margin-top: 10px;
+      }
+      
+      .coord-item {
+        background: #f8f9fa;
+        padding: 8px;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 11px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Triangle Fill Debug Tool</h1>
+      
+      <div class="debug-panel">
+        <h2>Test Cases</h2>
+        <div class="test-buttons">
+          <button onclick="testNorthPoleTriangle()">North Pole Triangle</button> 
+          <button onclick="testSouthPoleTriangle()">South Pole Triangle</button>
+          <button onclick="testAntimeridianCrossing()">Antimeridian Crossing</button>
+          <button onclick="testLargeTriangle()">Large Triangle</button>
+          <button onclick="testSmallTriangle()">Small Triangle</button>
+          <button onclick="testRandomTriangle()">Random Triangle</button>
+          <button onclick="testErrorTriangle()">Error Triangle</button>
+          <br>
+          <button onclick="testFullTest()">Full Test</button>
+        </div>
+        
+        <div id="triangleInfo" class="info">
+          Click a test button to see triangle information
+        </div>
+      </div>
+      
+      <div class="canvas-container">
+        <h2>Triangle Fill Visualization</h2>
+        <canvas id="mapCanvas" width="3600" height="1800"></canvas>
+        <div class="info">
+          Canvas shows the 2D projection used for fill rendering.<br>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import * as THREE from '/node_modules/three/build/three.module.js';
+      import { SphericalTriangleFill } from './src/code/gfxDisplay/sphericalTriangle/sphericalTriangleFill.js';
+      import { SphericalTriangle } from './src/code/gfxDisplay/sphericalTriangle/sphericalTriangle.js';
+      import { Guess } from "./src/code/guess";
+      
+      // Extended debug version that adds grid and visualization
+      class DebugTriangle extends SphericalTriangle {
+        constructor(canvas) {
+          // Create a fake scene object since we don't need the 3D rendering
+          const fakeScene = { add: () => {}, remove: () => {} };
+          super(fakeScene, canvas);
+          this.fill = new DebugTriangleFill(fakeScene, canvas);
+        }
+      }
+
+      // Extended debug version that adds grid and visualization
+      class DebugTriangleFill extends SphericalTriangleFill {
+        
+        drawGrid() {
+          const MAP_SCALE = 10;
+          //this.ctx.strokeStyle = 'rgba(200, 200, 200, 0.5)';
+          this.ctx.lineWidth = 3;
+          
+          // Draw longitude lines every 30 degrees
+          for (let lon = 0; lon <= 360; lon += 30) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(lon * MAP_SCALE, 0);
+            this.ctx.lineTo(lon * MAP_SCALE, 1800);
+            this.ctx.stroke();
+          }
+          
+          // Draw latitude lines every 30 degrees
+          for (let lat = 0; lat <= 180; lat += 30) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(0, lat * MAP_SCALE);
+            this.ctx.lineTo(3600, lat * MAP_SCALE);
+            this.ctx.stroke();
+          }
+          
+          // Draw equator and prime meridian in different color
+          //this.ctx.strokeStyle = 'rgba(100, 100, 100, 0.8)';
+          this.ctx.lineWidth = 10;
+          
+          // Equator (90 degrees latitude)
+          this.ctx.beginPath();
+          this.ctx.moveTo(0, 90 * MAP_SCALE);
+          this.ctx.lineTo(3600, 90 * MAP_SCALE);
+          this.ctx.stroke();
+          
+          // Prime meridian (180 degrees longitude in our wrapped system)
+          this.ctx.beginPath();
+          this.ctx.moveTo(180 * MAP_SCALE, 0);
+          this.ctx.lineTo(180 * MAP_SCALE, 1800);
+          this.ctx.stroke();
+        }
+      }
+
+      function compareTriangle(coords) {
+
+        const canvas = document.getElementById('mapCanvas');
+        const triangle = new DebugTriangle(canvas);
+        const guess = new Guess();
+
+        // Draw the triangle
+        triangle.setCoords(coords)
+        guess.setCoords(coords)
+        triangle.reconfigure()
+        //fill.draw(vecs, 'rgba(0, 150, 255, 0.3)');
+        
+        const earth_surface_area_mil_km2 = 510; // ~510 million sq km
+
+        const imageData = triangle.fill.ctx.getImageData(0, 0, canvas.width, canvas.height); // Get the entire canvas
+        const data = imageData.data;
+
+        const canvas_height = 1800;
+        const canvas_width = 3600;
+
+        // The area of a single pixel at the equator. This is our base unit.
+        // The total area will be in terms of "square pixels at the equator".
+        const equatorial_pixel_area = 1.0;
+
+        let total_projected_area = 0;
+        let total_area = 0;
+
+        for (let i = 0; i < data.length; i += 4) {
+            const pxIdx = i / 4;
+            
+            // --- FIX 1: Correctly calculate the pixel's y-coordinate (row index) ---
+            const y_row = Math.floor(pxIdx / canvas_width);
+
+            // --- FIX 2: Calculate the latitude and the area scaling factor ---
+
+            // Map the y-coordinate (from 0 at the top to canvas_height at the bottom)
+            // to a latitude in radians (from +PI/2 at the top to -PI/2 at the bottom).
+            const latitude_rad = (Math.PI / 2) - (y_row / canvas_height) * Math.PI;
+
+            // The area scaling factor is the cosine of the latitude.
+            // This is because the surface area gets smaller as you move from the equator to the poles.
+            const scaling_factor = Math.cos(latitude_rad);
+
+          // Check if the pixel is part of the filled shape (i.e., not transparent)
+          if (data[i + 3] > 0) {
+            // Add the scaled area of this pixel to the total.
+            total_projected_area += equatorial_pixel_area * scaling_factor;
+          }
+          total_area += equatorial_pixel_area * scaling_factor;
+        }
+
+        triangle.fill.drawGrid();
+
+        const canvasArea = guess.toFixedDynamicRange(earth_surface_area_mil_km2 * total_projected_area / total_area);
+        
+        const guessArea = guess.getArea();
+
+        let equal = false;
+        let altArea = 0;
+
+        if(guessArea < 5)
+        {
+          equal = true;
+          altArea = 0;
+        }
+        else
+        {
+          equal = Math.abs(guessArea - canvasArea) < (5*guessArea/100)
+          altArea = canvasArea;
+        }
+        //const equal = (Math.abs(guessArea - canvasArea) < (5*guessArea/100)) || (guessArea < 5);
+        return [equal, altArea, guessArea];
+      }
+
+      function testTriangle(coords, description) {
+
+        const [equal, altArea, guessArea] = compareTriangle(coords);
+
+        // Update info display
+        const info = document.getElementById('triangleInfo');
+        
+        info.innerHTML = `
+          <strong>${description}</strong><br>
+          coords[0]${coords[0]}<br>
+          coords[1]${coords[1]}<br>
+          coords[2]${coords[2]}<br>
+          <strong>altArea: ${altArea}</strong><br>
+          <strong>guessArea: ${guessArea}</strong><br>
+          <strong>MATCH?: ${equal}</strong><br>
+        `;
+        
+      }
+      
+      function fullTest() {
+
+        const info = document.getElementById('triangleInfo');
+        const testLen = 1000;
+        var randomCoords;
+        var equal, altArea, guessArea;
+        for (let idx = 0; idx < testLen; idx++) {
+          info.innerHTML = `<strong>Progress:${idx/testLen}</strong><br>`;
+          randomCoords = [
+            [180*Math.random() - 90, 360*Math.random() - 180],
+            [180*Math.random() - 90, 360*Math.random() - 180],
+            [180*Math.random() - 90, 360*Math.random() - 180],
+          ];
+          [equal, altArea, guessArea] = compareTriangle(randomCoords);
+          if (!equal)
+          {
+            info.innerHTML = `
+              <strong>FAIL</strong><br>
+              coords[0]${randomCoords[0]}<br>
+              coords[1]${randomCoords[1]}<br>
+              coords[2]${randomCoords[2]}<br>
+              <strong>altArea: ${altArea}</strong><br>
+              <strong>guessArea: ${guessArea}</strong><br>
+              <strong>MATCH?: ${equal}</strong><br>
+            `;
+            return
+          }
+        }
+
+        info.innerHTML = `<strong>SUCCESS</strong><br>`;
+        return
+
+      }
+      
+
+      window.testNorthPoleTriangle = () => testTriangle([
+        [60, 0],
+        [60, 120],
+        [60, -120],
+      ],'North Pole Triangle');
+     
+
+      window.testSouthPoleTriangle = () => testTriangle([
+        [-60, 0],
+        [-60, 120],
+        [-60, -120],
+      ],'South Pole Triangle');
+
+      window.testAntimeridianCrossing = () => testTriangle([
+        [0, 0],
+        [0, 120],
+        [0, -120],
+      ],'Antimeridian Crossing Triangle');
+
+      window.testLargeTriangle = () => testTriangle([
+        [ 60, 0],
+        [-60, 120],
+        [-60, -120],
+      ],'Large Triangle');
+
+      window.testSmallTriangle = () => testTriangle([
+        [ 30/1e6,   0/1e6],
+        [-30/1e6,  60/1e6],
+        [-30/1e6, -60/1e6],
+      ],'Small Triangle');
+
+      window.testRandomTriangle = () => testTriangle([
+        [180*Math.random() - 90, 360*Math.random() - 180],
+        [180*Math.random() - 90, 360*Math.random() - 180],
+        [180*Math.random() - 90, 360*Math.random() - 180],
+      ],'Random Triangle');
+
+      window.testErrorTriangle = () => testTriangle([
+        [-70, -30],
+        [ 88, 115],
+        [-57, -73],
+      ],'Error Triangle');
+
+      window.testFullTest = () => fullTest();
+
+      /*
+      Random Triangle
+      coords[0]-70.12056774116382,-30.591098067314505
+      coords[1]88.32026998159668,115.5227826421663
+      coords[2]-57.20445373824239,-73.38763647879318
+      canvasArea: 447.5
+      guessArea: 62.62
+      MATCH?: false
+      */
+
+      // Load initial test
+      testNorthPoleTriangle();
+    </script>
+  </body>
+</html>

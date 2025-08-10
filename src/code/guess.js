@@ -83,29 +83,29 @@ class Guess {
     this.colors = colors;
   }
 
-  // Get area of the spherical triangle
+    // Get area of the spherical triangle
   sphericalTriangleArea(coords) {
-    const a = this.haversine(coords[0], coords[1]);
-    const b = this.haversine(coords[1], coords[2]);
-    const c = this.haversine(coords[2], coords[0]);
-    const A = Math.acos((Math.cos(a / R) - Math.cos(b / R) * Math.cos(c / R)) / (Math.sin(b / R) * Math.sin(c / R)));
-    const B = Math.acos((Math.cos(b / R) - Math.cos(a / R) * Math.cos(c / R)) / (Math.sin(a / R) * Math.sin(c / R)));
-    const C = Math.acos((Math.cos(c / R) - Math.cos(a / R) * Math.cos(b / R)) / (Math.sin(a / R) * Math.sin(b / R)));
-    const E = A + B + C - Math.PI;
-    const area = E * R ** 2;
-    return area;
-  }
+    const toRad = d => d * Math.PI / 180;
 
-  // Helper math function
-  haversine(coord1, coord2) {
-    const [lat1, lon1] = coord1;
-    const [lat2, lon2] = coord2;
-    const dLat = UTILS.degToRad(lat2 - lat1);
-    const dLon = UTILS.degToRad(lon2 - lon1);
-    const a = Math.sin(dLat / 2) ** 2 + Math.cos(UTILS.degToRad(lat1)) * Math.cos(UTILS.degToRad(lat2)) * Math.sin(dLon / 2) ** 2;
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c;
-    return distance;
+    // great-circle distance in radians
+    const arc = (p1, p2) => {
+      const [lat1, lon1] = p1.map(toRad);
+      const [lat2, lon2] = p2.map(toRad);
+      const dLat = lat2 - lat1;
+      const dLon = lon2 - lon1;
+      const a = Math.sin(dLat/2)**2 + Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLon/2)**2;
+      return 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    };
+
+    const a = arc(coords[0], coords[1]);
+    const b = arc(coords[1], coords[2]);
+    const c = arc(coords[2], coords[0]);
+
+    const s = (a+b+c)/2;
+    const t = Math.tan(s/2) * Math.tan((s-a)/2) * Math.tan((s-b)/2) * Math.tan((s-c)/2);
+    const E = 4 * Math.atan(Math.sqrt(Math.max(0, t))); // max() to avoid tiny negative due to FP error
+
+    return E * R * R; // in km²
   }
 
   // Check if two guesses are the same, assuming city names are sorted
