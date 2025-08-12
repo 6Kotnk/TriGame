@@ -17,6 +17,9 @@ class UserInterface {
     this.tour = new Tour(this.HTMLElements.Tour);
     this.guessDisplay = new StateDisplay(this.HTMLElements.GuessDisplay);
     this.targetDisplay = new StateDisplay(this.HTMLElements.TargetDisplay);
+
+    // Set up the callback for when a guess is clicked in history
+    this.history.onGuessClick = (guess) => this.onHistoryGuessClick(guess);
   }
 
   getRandomGuess(seed){
@@ -36,6 +39,15 @@ class UserInterface {
 
   getGuess(){
     return this.cityInputs.getGuess();
+  }
+
+  // Handle when a history guess is clicked
+  onHistoryGuessClick(guess) {
+    this.cityInputs.populateFromGuess(guess);
+    // Set the display callback to update the triangle display
+    if (this.onGuessSelected) {
+      this.onGuessSelected(guess);
+    }
   }
 
   update(guessHistory, latestGuess, newCount, totalCount = null){

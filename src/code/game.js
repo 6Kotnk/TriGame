@@ -27,6 +27,11 @@ class Game  {
     this.display = new GFXDisplay(this.HTMLElements.GFXDisplay);
     this.userInterface = new UserInterface(this.HTMLElements.UserInterface);
 
+    // Set up callback for when a guess is selected from history
+    this.userInterface.onGuessSelected = (guess) => {
+      this.display.update(guess);
+    };
+
     // Declare gamestate
     this.guessCounter = Infinity;
     this.initialGuessCount = Infinity;

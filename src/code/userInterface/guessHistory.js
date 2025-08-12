@@ -6,6 +6,7 @@ class GuessHistory {
     this.HTMLElements = HTMLElements;
     this.outputDiv = this.HTMLElements.history;
     this.historyResults = [];
+    this.onGuessClick = null; // Callback function for when a guess is clicked
   }
 
   update(guessList, latestGuess) {
@@ -14,10 +15,7 @@ class GuessHistory {
     this.outputDiv.innerHTML = '';
 
     // Create the latest result
-    const latestDiv = document.createElement("div");
-    latestDiv.className = "resultItem";
-    latestDiv.style.borderColor = latestGuess.colors.outline;
-    latestDiv.innerHTML = this.guessToHTML(latestGuess);
+    const latestDiv = this.createGuessDiv(latestGuess);
     // Create a separator    
     const separator = document.createElement("hr");
 
@@ -43,12 +41,27 @@ class GuessHistory {
 
     // Loop over the list, add a entry for each guess
     for (let index = 0; index < guessList.length; index++) {
-      const resultDiv = document.createElement("div");
-      resultDiv.className = "resultItem";
-      resultDiv.style.borderColor = guessList[index].colors.outline;
-      resultDiv.innerHTML = this.guessToHTML(guessList[index]);
+      const resultDiv = this.createGuessDiv(guessList[index]);
       this.outputDiv.appendChild(resultDiv);
     }
+  }
+
+  // Create a clickable div element for a guess
+  createGuessDiv(guess) {
+    const resultDiv = document.createElement("div");
+    resultDiv.className = "resultItem";
+    resultDiv.style.borderColor = guess.colors.outline;
+    resultDiv.innerHTML = this.guessToHTML(guess);
+    
+    // Add click handler to make the div clickable
+    resultDiv.style.cursor = 'pointer';
+    resultDiv.addEventListener('click', () => {
+      if (this.onGuessClick) {
+        this.onGuessClick(guess);
+      }
+    });
+    
+    return resultDiv;
   }
 
   // Make the HTML for a guess

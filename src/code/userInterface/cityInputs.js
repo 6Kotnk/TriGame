@@ -184,6 +184,29 @@ class CityInputs {
     this.datalist.innerHTML = ""; 
   }
 
+  // Populate the input fields with cities from a guess
+  populateFromGuess(guess) {
+    for (let index = 0; index < 3; index++) {
+      const input = this.inputs[index];
+      const cityName = guess.cities[index].name;
+      const coords = guess.cities[index].coords;
+      
+      // Set the input value
+      input.value = cityName;
+      
+      // Update internal state
+      this.cityNames[index] = cityName;
+      this.cityCoords[index] = coords;
+      
+      // Set visual state to valid
+      this.setInputState(input, "valid");
+      
+      // Trigger events to ensure everything is properly updated
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  }
+
   reset(){
     this.cityCoords.fill(null);
     this.cityNames.fill(null);
