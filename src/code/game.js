@@ -93,7 +93,7 @@ class Game  {
     this.initialGuessCount = numGuesses;
 
     this.userInterface.startGame(numCitiesLocked, cityList, targetVal, numGuesses);
-    this.HTMLElements.difficultyPanel.style.display = 'none';
+    this.HTMLElements.titleScreen.style.display = 'none';
     this.currentState = GameState.NOT_CLOSE;
   }
 
@@ -239,9 +239,9 @@ class Game  {
     }, 10);
   }
 
-  // Hides the difficulty panel (used by tutorial button)
-  hideDifficultyPanel() {
-    this.HTMLElements.difficultyPanel.style.display = 'none';
+  // Hides the title screen (used by tutorial button)
+  hideTitleScreen() {
+    this.HTMLElements.titleScreen.style.display = 'none';
   }
 
   // Resets the state of the game to the initial condition, as if page was reloaded
@@ -262,8 +262,8 @@ class Game  {
     this.HTMLElements.winPanel.style.display = 'none';
     this.HTMLElements.epicWinPanel.style.display = 'none';
     this.HTMLElements.losePanel.style.display = 'none';
-    //Show the difficulty selection
-    this.HTMLElements.difficultyPanel.style.display = 'block';
+    //Show the title screen
+    this.HTMLElements.titleScreen.style.display = 'block';
   
   }
 

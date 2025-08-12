@@ -4,7 +4,7 @@ import { Game } from "./game.js";
 // Would be useful, if everything wasn't a singleton... maybe.
 const HTMLElements = {
   Game: {
-    difficultyPanel:                        document.getElementById('difficultyPanel'),
+    titleScreen:                            document.getElementById('titleScreen'),
     winPanel:                               document.getElementById('winPanel'),
     epicWinPanel:                           document.getElementById('epicWinPanel'),
     losePanel:                              document.getElementById('losePanel'),
@@ -76,8 +76,8 @@ function startTour() {
   game.startTour();
 }
 
-function hideDifficultyPanel() {
-  game.hideDifficultyPanel();
+function hideTitleScreen() {
+  game.hideTitleScreen();
 }
 
 window.startGame = startGame;
@@ -85,4 +85,4 @@ window.resetGame = resetGame;
 window.continueGame = continueGame;
 window.submitGuess = submitGuess;
 window.startTour = startTour;
-window.hideDifficultyPanel = hideDifficultyPanel;
+window.hideTitleScreen = hideTitleScreen;
