@@ -93,6 +93,10 @@ class Game  {
     this.initialGuessCount = numGuesses;
 
     this.userInterface.startGame(numCitiesLocked, cityList, targetVal, numGuesses);
+    
+    // Animate tutorial button from center to corner
+    this.animateTutorialButton();
+    
     this.HTMLElements.titleScreen.style.display = 'none';
     this.currentState = GameState.NOT_CLOSE;
   }
@@ -239,6 +243,20 @@ class Game  {
     }, 10);
   }
 
+  // Animates the tutorial button from center to corner position
+  animateTutorialButton() {
+    const tourButton = this.HTMLElements.tourButton;
+    
+    // Show the button in center position (matching tutorial button style)
+    tourButton.style.display = 'block';
+    tourButton.classList.add('tutorial-transition');
+    
+    // After a brief delay, remove the transition class to animate to corner
+    setTimeout(() => {
+      tourButton.classList.remove('tutorial-transition');
+    }, 100);
+  }
+
   // Hides the title screen (used by tutorial button)
   hideTitleScreen() {
     this.HTMLElements.titleScreen.style.display = 'none';
@@ -262,6 +280,9 @@ class Game  {
     this.HTMLElements.winPanel.style.display = 'none';
     this.HTMLElements.epicWinPanel.style.display = 'none';
     this.HTMLElements.losePanel.style.display = 'none';
+    // Hide tutorial button
+    this.HTMLElements.tourButton.style.display = 'none';
+    this.HTMLElements.tourButton.classList.remove('tutorial-transition');
     //Show the title screen
     this.HTMLElements.titleScreen.style.display = 'block';
   

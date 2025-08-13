@@ -5,6 +5,7 @@ import { Game } from "./game.js";
 const HTMLElements = {
   Game: {
     titleScreen:                            document.getElementById('titleScreen'),
+    tourButton:                             document.getElementById('tourButton'),
     winPanel:                               document.getElementById('winPanel'),
     epicWinPanel:                           document.getElementById('epicWinPanel'),
     losePanel:                              document.getElementById('losePanel'),
