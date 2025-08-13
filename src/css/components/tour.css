@@ -12,26 +12,6 @@
   transition: all 6s ease-in-out;
 }
 
-/* Starting position for tutorial button animation */
-#tourButton.tutorial-transition {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 180px;
-  padding: 15px 30px;
-  font-size: 1.1rem;
-  border: 2px solid #2196F3;
-  color: #2196F3;
-  background-color: #f5f5f5;
-  border-radius: 4px;
-}
-
-@media (prefers-color-scheme: dark) {
-  #tourButton.tutorial-transition {
-    background-color: #333;
-  }
-}
 @media (prefers-color-scheme: dark) {
   #tourButton {
     background-color: rgba(45, 45, 45, 0.95);
