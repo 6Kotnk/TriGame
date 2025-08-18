@@ -1,83 +1,78 @@
 /* Title Screen Styles */
 
 #titleScreen {
-  text-align: center;
-  padding: 40px 20px;
+text-align: center;
+padding: 40px 20px;
 }
 
 #titleScreen h1 {
-  font-size: 3rem;
-  margin: 0 0 15px 0;
-  color: #2563eb;
-  font-weight: bold;
+font-size: 3rem;
+margin: 0 0 15px 0;
+color: #2563eb;
+font-weight: bold;
 }
 
 @media (prefers-color-scheme: dark) {
-  #titleScreen h1 {
-    color: #66aaff;
-  }
+#titleScreen h1 {
+color: #66aaff;
+}
 }
 
 #titleScreen p {
-  font-size: 1.2rem;
-  margin: 0 0 40px 0;
-  color: #666;
+font-size: 1.2rem;
+margin: 0 0 40px 0;
+color: #666;
 }
 
 @media (prefers-color-scheme: dark) {
-  #titleScreen p {
-    color: #bbb;
-  }
+#titleScreen p {
+color: #bbb;
+}
 }
 
 .title-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  align-items: center;
-  max-width: 200px;
-  margin: 0 auto;
+display: flex;
+flex-direction: column;
+gap: 20px;
+align-items: center;
+max-width: 200px;
+margin: 0 auto;
 }
 
 .title-button {
-  width: 180px;
-  padding: 15px 30px;
-  font-size: 1.3rem;
-  font-weight: bold;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+width: 180px;
+padding: 15px 30px;
+  font-size: 1.1rem;
+  font-weight: normal;
+  border: 2px solid;
+  border-radius: 4px;
+cursor: pointer;
+  transition: background-color 0.2s ease;
+  background-color: #f5f5f5;
+}
+
+@media (prefers-color-scheme: dark) {
+  .title-button {
+    background-color: #333;
+  }
 }
 
 .play-button {
+  border-color: #4CAF50;
+  color: #4CAF50;
+}
+
+.play-button:hover {
   background-color: #4CAF50;
   color: white;
 }
 
-.play-button:hover {
-  background-color: #45a049;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
-}
-
 .tutorial-button {
-  background-color: #2196F3;
-  color: white;
+  border-color: #2196F3;
+  color: #2196F3;
 }
 
 .tutorial-button:hover {
-  background-color: #1976D2;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
-}
-
-@media (prefers-color-scheme: dark) {
-  .play-button:hover {
-    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.5);
-  }
-  
-  .tutorial-button:hover {
-    box-shadow: 0 4px 8px rgba(33, 150, 243, 0.5);
-  }
+  background-color: #2196F3;
+  color: white;
 }
