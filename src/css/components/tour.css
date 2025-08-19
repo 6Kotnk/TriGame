@@ -9,8 +9,17 @@
   border: 1px solid #ddd;
   z-index: 1000;
   cursor: pointer;
-  transition: all 6s ease-in-out;
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.8s ease-in-out;
 }
+
+#tourButton.hidden {
+  opacity: 0;
+  transform: translateY(-20px);
+  pointer-events: none;
+}
+
 
 @media (prefers-color-scheme: dark) {
   #tourButton {
@@ -33,21 +42,4 @@
     color: #e0e0e0;
     
   }
-}
-
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
-  }
-}
-
-.tutorial-pulse {
-  animation: pulse 2s infinite;
-  border-radius: 5px; /* Ensure the glow matches the button shape */
 }

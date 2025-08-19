@@ -95,6 +95,7 @@ class Game  {
     this.userInterface.startGame(numCitiesLocked, cityList, targetVal, numGuesses);
     
     this.HTMLElements.titleScreen.style.display = 'none';
+    document.getElementById('tourButton').classList.remove('hidden');
     this.currentState = GameState.NOT_CLOSE;
   }
 
@@ -243,6 +244,7 @@ class Game  {
   // Hides the title screen (used by tutorial button)
   hideTitleScreen() {
     this.HTMLElements.titleScreen.style.display = 'none';
+    document.getElementById('tourButton').classList.remove('hidden');
   }
 
   // Resets the state of the game to the initial condition, as if page was reloaded
@@ -265,6 +267,7 @@ class Game  {
     this.HTMLElements.losePanel.style.display = 'none';
     //Show the title screen
     this.HTMLElements.titleScreen.style.display = 'block';
+    document.getElementById('tourButton').classList.add('hidden');
   
   }
 
