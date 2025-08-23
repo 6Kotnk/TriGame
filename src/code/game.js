@@ -13,10 +13,8 @@ const errorScalingFactor = Math.log(3)/UTILS.logDist(2*(1+targetTol));
 
 const GameState = {
   INIT: 'INIT',
-  NOT_CLOSE: 'NOT_CLOSE',
-  WITHIN_TOL: 'WITHIN_TOL',
-  EXACT_MATCH: 'EXACT_MATCH',
-  LOSS: 'LOSS',
+  PLAY: 'PLAY',
+  END: 'END',
 };
 
 class Game  {
@@ -94,35 +92,17 @@ class Game  {
 
     this.userInterface.startGame(numCitiesLocked, cityList, targetVal, numGuesses);
     
-    this.HTMLElements.titleScreen.style.display = 'none';
+    this.HTMLElements.titlePanel.style.display = 'none';
     document.getElementById('tourButton').classList.remove('hidden');
-    this.currentState = GameState.NOT_CLOSE;
-  }
-
-  // Called when within targetTol. Displays the winGame panel.
-  winGame() {
-    this.HTMLElements.winPanelGuessesLeft.textContent = this.guessCounter;
-    this.HTMLElements.winPanel.style.display = 'block';
-    this.celebrate(10);
+    this.currentState = GameState.PLAY;
   }
   
-  // Called when the guess is an EXACT match. Displays the epicWinGame panel.
-  // Guesses are rounded depending on their magnitude, so smaller areas need more precision for an exact match.
-  epicWinGame() {
-    this.HTMLElements.epicWinPanelGuessesLeft.textContent = this.guessCounter;
-    this.HTMLElements.epicWinPanel.style.display = 'block';
-    this.celebrate(100);
-  }
-
-  // When you win within tolerance you can keep going, if you so choose
-  continueGame() {
-    this.HTMLElements.winPanel.style.display = 'none';
-  }
-
   // No guesses left
-  loss() {
-    this.HTMLElements.losePanel.style.display = 'block';
+  endGame() {
+    this.currentState = GameState.END;
+    this.HTMLElements.endPanel.style.display = 'block';
   }
+
 
   // Click submit button
   submitGuess() {
@@ -198,25 +178,14 @@ class Game  {
 
   evaluateGuess(guess) {
     const guessArea = guess.getArea();
-
-    // Exact match
-    if(guessArea == this.targetArea) {
-      this.currentState = GameState.EXACT_MATCH;
-      this.epicWinGame();
-    }
-
     // Within targetTol of target
-    // This only triggers once per game, so you are not constantly winning if you continue
-    else if( (UTILS.logDist(1+targetTol) > UTILS.logDist(guessArea, this.targetArea)) && 
-    (this.currentState == GameState.NOT_CLOSE)) {
-      this.currentState = GameState.WITHIN_TOL;
-      this.winGame();
+    if( UTILS.logDist(1+targetTol) > UTILS.logDist(guessArea, this.targetArea)){
+      this.celebrate(10);
+      this.endGame();
     }
-
     // Out of guesses AND you didn't win
     else if(this.guessCounter == 0){
-      this.currentState = GameState.LOSS;
-      this.loss();
+      this.endGame();
     }
   }
 
@@ -241,12 +210,6 @@ class Game  {
     }, 10);
   }
 
-  // Hides the title screen (used by tutorial button)
-  hideTitleScreen() {
-    this.HTMLElements.titleScreen.style.display = 'none';
-    document.getElementById('tourButton').classList.remove('hidden');
-  }
-
   // Resets the state of the game to the initial condition, as if page was reloaded
   resetGame() {
     this.guessCounter = Infinity;
@@ -261,12 +224,10 @@ class Game  {
     // Reset the cities, guess counter, history display
     this.userInterface.reset();
 
-    // Hide all panels
-    this.HTMLElements.winPanel.style.display = 'none';
-    this.HTMLElements.epicWinPanel.style.display = 'none';
-    this.HTMLElements.losePanel.style.display = 'none';
+    // Hide end panel
+    this.HTMLElements.endPanel.style.display = 'none';
     //Show the title screen
-    this.HTMLElements.titleScreen.style.display = 'block';
+    this.HTMLElements.titlePanel.style.display = 'block';
     document.getElementById('tourButton').classList.add('hidden');
   
   }

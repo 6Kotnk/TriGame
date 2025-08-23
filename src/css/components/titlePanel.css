@@ -1,11 +1,11 @@
 /* Title Screen Styles */
 
-#titleScreen {
+#titlePanel {
 text-align: center;
 padding: 40px 20px;
 }
 
-#titleScreen h1 {
+#titlePanel h1 {
 font-size: 3rem;
 margin: 0 0 15px 0;
 color: #2563eb;
@@ -13,19 +13,19 @@ font-weight: bold;
 }
 
 @media (prefers-color-scheme: dark) {
-#titleScreen h1 {
+#titlePanel h1 {
 color: #66aaff;
 }
 }
 
-#titleScreen p {
+#titlePanel p {
 font-size: 1.2rem;
 margin: 0 0 40px 0;
 color: #666;
 }
 
 @media (prefers-color-scheme: dark) {
-#titleScreen p {
+#titlePanel p {
 color: #bbb;
 }
 }

@@ -59,7 +59,7 @@ class Tour {
       steps.push({
         title: "Game Modes",
         content: "Choose 'Play' to start today's daily challenge - a unique puzzle that's the same for everyone today! The game will randomly select a difficulty and number of guesses for you.",
-        target: "#titleScreen",
+        target: "#titlePanel",
         propagateEvents: true,
         order: currentOrder++,
       });

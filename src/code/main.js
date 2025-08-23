@@ -4,12 +4,8 @@ import { Game } from "./game.js";
 // Would be useful, if everything wasn't a singleton... maybe.
 const HTMLElements = {
   Game: {
-    titleScreen:                            document.getElementById('titleScreen'),
-    winPanel:                               document.getElementById('winPanel'),
-    epicWinPanel:                           document.getElementById('epicWinPanel'),
-    losePanel:                              document.getElementById('losePanel'),
-    winPanelGuessesLeft:                    document.getElementById('winPanelGuessesLeft'),
-    epicWinPanelGuessesLeft:                document.getElementById('epicWinPanelGuessesLeft'),
+    titlePanel:                             document.getElementById('titlePanel'),
+    endPanel:                               document.getElementById('endPanel'),
     target:                                 document.getElementById('target'),
 
     GFXDisplay: {
@@ -60,14 +56,6 @@ function startGame() {
   game.startGame();
 }
 
-function resetGame() {
-  game.resetGame();
-}
-
-function continueGame() {
-  game.continueGame();
-}
-
 function submitGuess() {
   game.submitGuess();
 }
@@ -76,13 +64,6 @@ function startTour() {
   game.startTour();
 }
 
-function hideTitleScreen() {
-  game.hideTitleScreen();
-}
-
 window.startGame = startGame;
-window.resetGame = resetGame;
-window.continueGame = continueGame;
 window.submitGuess = submitGuess;
 window.startTour = startTour;
-window.hideTitleScreen = hideTitleScreen;
