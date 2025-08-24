@@ -41,7 +41,6 @@ const HTMLElements = {
         value:                              document.getElementById('targetDisplayValue'),
       },
 
-
       Tour: {
         tourButton:                         document.getElementById('tourButton'),
       },

@@ -62,6 +62,17 @@ class Game  {
     return hash;
   }
 
+  getNumGuesses(numCitiesLocked, targetArea){
+    // At least 3 guesses
+    const minGuesses = 3;
+    // 1 Guess per locked city
+    const lockedFactor = numCitiesLocked;
+    // 
+    const optimalArea = 1;
+    const areaFactor = Math.min(Math.floor(UTILS.logDist(targetArea, optimalArea)), 5);
+
+    return minGuesses + lockedFactor + areaFactor;
+  }
 
   // Starts the daily game
   startGame() {
@@ -76,9 +87,8 @@ class Game  {
                 
     // Generate a consistent seed based on today's date
     const seed = this.hash(today);
-    const numCitiesLocked = UTILS.randomFromSeed(seed,0,2);
-    const numGuesses = UTILS.randomFromSeed(seed,1,10);
 
+    const numCitiesLocked = UTILS.randomFromSeed(seed,0,2);
     // Get a random guess using our seed. This makes sure it is possible to win
     const targetGuess = this.userInterface.getRandomGuess(seed);
 
@@ -86,7 +96,9 @@ class Game  {
     this.targetArea = targetGuess.getArea();
     const cityList = targetGuess.getNames();
     const targetVal = this.targetArea;
+
     // Set initial number of guesses
+    const numGuesses = this.getNumGuesses(numCitiesLocked, targetVal);
     this.guessCounter = numGuesses;
     this.initialGuessCount = numGuesses;
 
@@ -97,10 +109,42 @@ class Game  {
     this.currentState = GameState.PLAY;
   }
   
+  bestGuessScore(bestGuessError){
+    // A guess should give 50% the score of perfect guess @ target tol
+    const scoreAtTargetTol = 0.5
+    const fudgeFactor = Math.log10(scoreAtTargetTol)/Math.log10(1 - targetTol)
+    return 10**(-bestGuessError*fudgeFactor);
+  }
+
+  guessesLeftScore(){
+    return this.guessCounter / this.initialGuessCount;
+  }
+
   // No guesses left
   endGame() {
     this.currentState = GameState.END;
     this.HTMLElements.endPanel.style.display = 'block';
+
+
+    const bestGuess = this.guessHistory[0];
+    const bestGuessError = UTILS.logDist(bestGuess.getArea(), this.targetArea)
+
+    const bestGuessScore = this.bestGuessScore(bestGuessError);
+    const guessesLeftScore = this.guessesLeftScore();
+
+    const bestGuessFactor = 1 / (this.initialGuessCount + 1);
+    const guessesLeftFactor = this.initialGuessCount / (this.initialGuessCount + 1);
+
+    const totalScore = guessesLeftScore * guessesLeftFactor + bestGuessScore * bestGuessFactor;
+
+    const HTML = `
+      <p>bestGuessScore: ${bestGuessScore}</p>
+      <p>guessesLeftScore: ${guessesLeftScore}</p>
+      <p>totalScore: ${totalScore}</p>
+    `;
+
+    this.HTMLElements.endPanel.innerHTML = HTML;
+
   }
 
 
@@ -122,9 +166,6 @@ class Game  {
       // If you haven't tried it yet...
       if(!guess.isInList(this.guessHistory))
       {
-
-        this.guessCounter--;
-
         // if no guesses in guess history
         if(this.guessHistory.length == 0){
           this.guessHistory.push(guess);
@@ -175,16 +216,22 @@ class Game  {
     }
   }
 
-
   evaluateGuess(guess) {
     const guessArea = guess.getArea();
     // Within targetTol of target
-    if( UTILS.logDist(1+targetTol) > UTILS.logDist(guessArea, this.targetArea)){
+    const guessError = UTILS.logDist(guessArea, this.targetArea)
+    const maxError = UTILS.logDist(1+targetTol)
+
+    // Check if guess is close enough
+    if( guessError < maxError ){
       this.celebrate(10);
       this.endGame();
     }
-    // Out of guesses AND you didn't win
-    else if(this.guessCounter == 0){
+
+    // Guess is not close enough, deduct guess
+    this.guessCounter--;
+
+    if(this.guessCounter == 0){
       this.endGame();
     }
   }
