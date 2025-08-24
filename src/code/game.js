@@ -137,13 +137,7 @@ class Game  {
 
     const totalScore = guessesLeftScore * guessesLeftFactor + bestGuessScore * bestGuessFactor;
 
-    const HTML = `
-      <p>bestGuessScore: ${bestGuessScore}</p>
-      <p>guessesLeftScore: ${guessesLeftScore}</p>
-      <p>totalScore: ${totalScore}</p>
-    `;
-
-    this.HTMLElements.endPanel.innerHTML = HTML;
+    this.HTMLElements.endPanelScore.innerHTML = `Your score: ${totalScore}`;
 
   }
 

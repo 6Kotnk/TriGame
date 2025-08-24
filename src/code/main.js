@@ -6,6 +6,7 @@ const HTMLElements = {
   Game: {
     titlePanel:                             document.getElementById('titlePanel'),
     endPanel:                               document.getElementById('endPanel'),
+    endPanelScore:                          document.getElementById('endPanelScore'),
     target:                                 document.getElementById('target'),
 
     GFXDisplay: {
