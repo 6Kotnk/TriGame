@@ -1,0 +1,152 @@
+.score-display {
+  text-align: center;
+  padding: 20px;
+}
+
+.score-display h3 {
+  margin-bottom: 15px;
+  color: var(--text-color);
+}
+
+.username-section {
+  margin: 20px 0;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.username-section label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.username-section input {
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-color);
+  margin-right: 10px;
+  width: 200px;
+}
+
+.username-section button {
+  padding: 8px 16px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s ease;
+}
+
+.username-section button:hover {
+  background: #45a049;
+}
+
+.username-section button:disabled {
+  background: #666;
+  cursor: not-allowed;
+}
+
+.histogram {
+  display: flex;
+  justify-content: space-around;
+  align-items: end;
+  height: 150px;
+  margin: 20px 0;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.histogram h4 {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 14px;
+}
+
+.histogram-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  margin: 0 2px;
+}
+
+.histogram-bar .bar {
+  width: 100%;
+  background: #4CAF50;
+  border-radius: 4px 4px 0 0;
+  min-height: 2px;
+  transition: all 0.3s ease;
+}
+
+.histogram-bar.user-bin .bar {
+  background: #FF9800;
+  box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+}
+
+.histogram-bar .label {
+  font-size: 10px;
+  margin-top: 5px;
+  text-align: center;
+  word-break: break-all;
+}
+
+.histogram-bar .count {
+  font-size: 11px;
+  font-weight: bold;
+  margin-top: 2px;
+}
+
+.top-scores {
+  margin-top: 20px;
+  text-align: left;
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.top-scores h4 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.top-scores ol {
+  padding-left: 20px;
+}
+
+.top-scores li {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 10px;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.top-scores .player {
+  font-weight: normal;
+  text-align: left;
+}
+
+.top-scores li.user-score {
+  background: rgba(255, 152, 0, 0.2);
+  padding: 5px 10px;
+  border-radius: 4px;
+  border-bottom: 1px solid rgba(255, 152, 0, 0.3);
+}
+
+.top-scores .score {
+  font-weight: bold;
+}
+
+.top-scores .date {
+  font-size: 12px;
+  color: var(--text-secondary, #888);
+}

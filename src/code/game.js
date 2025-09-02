@@ -1,5 +1,7 @@
 import { GFXDisplay } from './gfxDisplay/gfxDisplay.js';
 import { UserInterface } from './userInterface/userInterface.js';
+import { Database } from './database/database.js';
+import { Leaderboard } from './leaderboard/leaderboard.js';
 
 import * as CONFETTI from '@tsparticles/confetti';
 import * as UTILS from './utils.js';
@@ -24,6 +26,9 @@ class Game  {
     
     this.display = new GFXDisplay(this.HTMLElements.GFXDisplay);
     this.userInterface = new UserInterface(this.HTMLElements.UserInterface);
+    
+    this.database = new Database();
+    this.leaderboard = new Leaderboard(this.database);
 
     // Set up callback for when a guess is selected from history
     this.userInterface.onGuessSelected = (guess) => {
@@ -86,7 +91,8 @@ class Game  {
                   String(now.getDate()).padStart(2, '0');
                 
     // Generate a consistent seed based on today's date
-    const seed = this.hash(today);
+    //const seed = this.hash(today); //Prod
+    const seed = Math.floor(Math.random() * 0xFFFFFFFF); //Test
 
     const numCitiesLocked = UTILS.randomFromSeed(seed,0,2);
     // Get a random guess using our seed. This makes sure it is possible to win
@@ -121,10 +127,9 @@ class Game  {
   }
 
   // No guesses left
-  endGame() {
+  async endGame() {
     this.currentState = GameState.END;
     this.HTMLElements.endPanel.style.display = 'block';
-
 
     const bestGuess = this.guessHistory[0];
     const bestGuessError = UTILS.logDist(bestGuess.getArea(), this.targetArea)
@@ -137,8 +142,62 @@ class Game  {
 
     const totalScore = guessesLeftScore * guessesLeftFactor + bestGuessScore * bestGuessFactor;
 
-    this.HTMLElements.endPanelScore.innerHTML = `Your score: ${totalScore}`;
+    // Display initial score and username input
+    let scoreHTML = `<div class="score-display">`;
+    scoreHTML += `<h3>Your Score: ${totalScore.toFixed(3)}</h3>`;
+    scoreHTML += `
+      <div class="username-section">
+        <label for="username-input">Enter username for leaderboard (optional):</label>
+        <input type="text" id="username-input" maxlength="20" placeholder="Anonymous">
+        <button id="submit-score-btn">Submit Score</button>
+      </div>
+      <div id="leaderboard-stats" style="display: none;"></div>
+    `;
+    scoreHTML += `</div>`;
+    
+    this.HTMLElements.endPanelScore.innerHTML = scoreHTML;
 
+    // Add event listener for score submission
+    document.getElementById('submit-score-btn').addEventListener('click', async () => {
+      const usernameInput = document.getElementById('username-input');
+      const username = usernameInput.value.trim() || null;
+      
+      // Disable button and show loading
+      const submitBtn = document.getElementById('submit-score-btn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting...';
+      
+      // Save score to database
+      const saveSuccess = await this.database.saveScore(totalScore, username);
+      
+      // Get leaderboard stats
+      const stats = await this.leaderboard.getStats(totalScore);
+      
+      // Generate leaderboard HTML
+      let leaderboardHTML = '';
+      if (saveSuccess && stats.totalPlayers > 0) {
+        leaderboardHTML += `<p>You scored better than ${stats.percentile}% of players!</p>`;
+        leaderboardHTML += `<p>Average score: ${stats.average} (${stats.totalPlayers} total players)</p>`;
+        
+        // Add histogram
+        leaderboardHTML += this.leaderboard.generateHistogramHTML(stats.histogram, totalScore);
+        
+        // Add top scores
+        leaderboardHTML += this.leaderboard.generateTopScoresHTML(stats.topScores, totalScore, username);
+      } else if (!saveSuccess) {
+        leaderboardHTML += `<p><em>Unable to connect to leaderboard</em></p>`;
+      } else {
+        leaderboardHTML += `<p><em>You're the first player! More stats will appear as others play.</em></p>`;
+      }
+      
+      // Show leaderboard stats
+      const statsDiv = document.getElementById('leaderboard-stats');
+      statsDiv.innerHTML = leaderboardHTML;
+      statsDiv.style.display = 'block';
+      
+      // Hide username section
+      document.querySelector('.username-section').style.display = 'none';
+    });
   }
 
 

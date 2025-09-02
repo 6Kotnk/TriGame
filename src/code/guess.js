@@ -1,4 +1,3 @@
-import * as UTILS from './utils.js';
 export {Guess};
 
 // Earth's radius in kilometers. Used to calculate triangle area.
