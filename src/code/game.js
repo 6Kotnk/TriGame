@@ -1,6 +1,6 @@
 import { GFXDisplay } from './gfxDisplay/gfxDisplay.js';
 import { UserInterface } from './userInterface/userInterface.js';
-import { Database } from './database/database.js';
+import { Database } from './database/databaseLocal.js';
 import { Leaderboard } from './leaderboard/leaderboard.js';
 
 import * as CONFETTI from '@tsparticles/confetti';
