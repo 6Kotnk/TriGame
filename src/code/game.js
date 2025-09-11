@@ -1,6 +1,11 @@
 import { GFXDisplay } from './gfxDisplay/gfxDisplay.js';
 import { UserInterface } from './userInterface/userInterface.js';
-import { Database } from './database/databaseLocal.js';
+
+import { Database as LocalDatabase } from './database/databaseLocal.js';
+import { Database as ProdDatabase } from './database/database.js';
+
+const Database = globalThis.USE_LOCAL_DATABASE ? LocalDatabase : ProdDatabase;
+
 import { Leaderboard } from './leaderboard/leaderboard.js';
 
 import * as CONFETTI from '@tsparticles/confetti';
