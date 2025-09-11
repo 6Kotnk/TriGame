@@ -64,12 +64,26 @@
           </div>
         </div>
 
-        <!-- Shows on loss -->
-        <div id="endPanel" class="panel">
-          <h2>End panel</h2>
-          <span id="endPanelScore"></span>
+        <div id="winPanel" class="panel">
+          <h2>You Won</h2>
+          <span id="winPanelScore"></span>
+          <div>
+            <label>Enter username for leaderboard (optional):</label>
+            <input type="text" id="usernameInput" maxlength="20" placeholder="Anonymous">
+            <button onclick="submitScore()" id="submitScoreButton">Submit Score</button>
+          </div>
         </div>
- 
+
+        <div id="losePanel" class="panel">
+          <h2>You Lost</h2>
+          <span id="losePanelScore"></span>
+          <button onclick="showLeaderboard()" id="loseLeaderboardButton">Show Leaderboard</button>
+        </div>
+
+        <div id="leaderboardPanel" class="panel">
+          <h2>Leaderboard</h2>
+        </div>
+
       </div>
     </div>
  

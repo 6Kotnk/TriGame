@@ -34,16 +34,13 @@ class Tour {
     this.tg.start();
   }
 
-  // Function to remove the tour button animation
-  stopTutorialAnimation = () => {
-    if (this.tourButton && this.tourButton.classList.contains("tutorial-pulse")) {
-      this.tourButton.classList.remove("tutorial-pulse");
-      // Remove the event listeners so this doesn't keep firing
-      document.body.removeEventListener('click', this.stopTutorialAnimation);
-      document.body.removeEventListener('keydown', this.stopTutorialAnimation);
-    }
+  startGame(){
+    this.HTMLElements.tourButton.classList.remove('hidden');
   }
 
+  reset(){
+    this.HTMLElements.tourButton.classList.add('hidden');
+  }
 
   createTourSteps(isDifficultyVisible) {
     const steps = [{

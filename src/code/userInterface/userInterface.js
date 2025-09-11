@@ -35,6 +35,7 @@ class UserInterface {
     this.cityInputs.lockCities(numCitiesLocked, cityList);
     this.guessDisplay.update(guessNum, guessNum);
     this.targetDisplay.update(targetVal);
+    this.tour.startGame();
   }
 
   getGuess(){
@@ -61,6 +62,7 @@ class UserInterface {
     this.history.reset();
     this.guessDisplay.reset();
     this.targetDisplay.reset();
+    this.tour.reset();
     this.clearDisplay();
   }
 

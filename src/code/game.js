@@ -16,7 +16,9 @@ const errorScalingFactor = Math.log(3)/UTILS.logDist(2*(1+targetTol));
 const GameState = {
   INIT: 'INIT',
   PLAY: 'PLAY',
-  END: 'END',
+  WIN: 'WIN',
+  LOSE: 'LOSE',
+  LEADERBOARD: 'LEADERBOARD',
 };
 
 class Game  {
@@ -91,8 +93,9 @@ class Game  {
                   String(now.getDate()).padStart(2, '0');
                 
     // Generate a consistent seed based on today's date
+    const seed = 1; //Prod
     //const seed = this.hash(today); //Prod
-    const seed = Math.floor(Math.random() * 0xFFFFFFFF); //Test
+    //const seed = Math.floor(Math.random() * 0xFFFFFFFF); //Test
 
     const numCitiesLocked = UTILS.randomFromSeed(seed,0,2);
     // Get a random guess using our seed. This makes sure it is possible to win
@@ -111,7 +114,6 @@ class Game  {
     this.userInterface.startGame(numCitiesLocked, cityList, targetVal, numGuesses);
     
     this.HTMLElements.titlePanel.style.display = 'none';
-    document.getElementById('tourButton').classList.remove('hidden');
     this.currentState = GameState.PLAY;
   }
   
@@ -126,8 +128,73 @@ class Game  {
     return this.guessCounter / this.initialGuessCount;
   }
 
+  getScore(guess){
+    const guessError = UTILS.logDist(guess.getArea(), this.targetArea)
+
+    const guessScore = this.bestGuessScore(guessError);
+    const guessesLeftScore = this.guessesLeftScore();
+
+    const bestGuessFactor = 1 / (this.initialGuessCount + 1);
+    const guessesLeftFactor = this.initialGuessCount / (this.initialGuessCount + 1);
+
+    const totalScore = guessesLeftScore * guessesLeftFactor + guessScore * bestGuessFactor;
+
+    return totalScore;
+  }
+
+  winGame() {
+    this.celebrate(10);
+    this.currentState = GameState.WIN;
+    this.HTMLElements.winPanel.style.display = 'block';
+
+  }
+
+  loseGame() {
+    this.currentState = GameState.LOSE;
+    this.HTMLElements.losePanel.style.display = 'block';
+  }
+
+  async submitScore(){
+    const bestGuess = this.guessHistory[0];
+    const totalScore = this.getScore(bestGuess);
+
+    const username = this.HTMLElements.usernameInput.value.trim() || null;
+
+    this.HTMLElements.submitScoreButton.disabled = true;
+    this.HTMLElements.submitScoreButton.textContent = 'Submitting...';
+
+    const saveSuccess = await this.database.saveScore(totalScore, username);
+
+    this.showLeaderboard(username, totalScore);
+  }
+
+  async showLeaderboard(username = null, totalScore = null){
+    this.currentState = GameState.LEADERBOARD;
+    this.HTMLElements.winPanel.style.display = 'none';
+    this.HTMLElements.losePanel.style.display = 'none';
+    this.HTMLElements.leaderboard.style.display = 'block';
+    //
+
+    const stats = await this.leaderboard.getStats(totalScore);
+
+    let leaderboardHTML = '';
+    leaderboardHTML += `<p>You scored better than ${stats.percentile}% of players!</p>`;
+    leaderboardHTML += `<p>Average score: ${stats.average} (${stats.totalPlayers} total players)</p>`;
+    
+    // Add histogram
+    leaderboardHTML += this.leaderboard.generateHistogramHTML(stats.histogram, totalScore);
+    
+    // Add top scores
+    leaderboardHTML += this.leaderboard.generateTopScoresHTML(stats.topScores, totalScore, username);
+    
+    // Show leaderboard stats
+    this.HTMLElements.leaderboard.innerHTML = leaderboardHTML;
+  }
+
+
+  /*
   // No guesses left
-  async endGame() {
+  endGame() {
     this.currentState = GameState.END;
     this.HTMLElements.endPanel.style.display = 'block';
 
@@ -199,7 +266,7 @@ class Game  {
       document.querySelector('.username-section').style.display = 'none';
     });
   }
-
+  */
 
   // Click submit button
   submitGuess() {
@@ -276,16 +343,17 @@ class Game  {
     const maxError = UTILS.logDist(1+targetTol)
 
     // Check if guess is close enough
-    if( guessError < maxError ){
-      this.celebrate(10);
-      this.endGame();
+    if( guessError < maxError  || 1){ // Debug
+      this.winGame();
+      return;
     }
 
     // Guess is not close enough, deduct guess
     this.guessCounter--;
 
     if(this.guessCounter == 0){
-      this.endGame();
+      this.loseGame();
+      return;
     }
   }
 
@@ -325,11 +393,10 @@ class Game  {
     this.userInterface.reset();
 
     // Hide end panel
-    this.HTMLElements.endPanel.style.display = 'none';
+    this.HTMLElements.winPanel.style.display = 'none';
+    this.HTMLElements.losePanel.style.display = 'none';
     //Show the title screen
     this.HTMLElements.titlePanel.style.display = 'block';
-    document.getElementById('tourButton').classList.add('hidden');
-  
   }
 
 }

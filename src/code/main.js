@@ -5,9 +5,17 @@ import { Game } from "./game.js";
 const HTMLElements = {
   Game: {
     titlePanel:                             document.getElementById('titlePanel'),
-    endPanel:                               document.getElementById('endPanel'),
-    endPanelScore:                          document.getElementById('endPanelScore'),
     target:                                 document.getElementById('target'),
+
+    winPanel:                               document.getElementById('winPanel'),
+    winPanelScore:                          document.getElementById('winPanelScore'),
+    usernameInput:                          document.getElementById('usernameInput'),
+    submitScoreButton:                      document.getElementById('submitScoreButton'),
+
+    losePanel:                              document.getElementById('losePanel'),
+    losePanelScore:                         document.getElementById('losePanelScore'),
+
+    leaderboard:                            document.getElementById('leaderboardPanel'),
 
     GFXDisplay: {
       mapCanvas:                            document.getElementById('mapCanvas'),
@@ -64,6 +72,17 @@ function startTour() {
   game.startTour();
 }
 
+function submitScore() {
+  game.submitScore();
+}
+
+function showLeaderboard() {
+  game.showLeaderboard();
+}
+
+
 window.startGame = startGame;
 window.submitGuess = submitGuess;
 window.startTour = startTour;
+window.submitScore = submitScore;
+window.showLeaderboard = showLeaderboard;

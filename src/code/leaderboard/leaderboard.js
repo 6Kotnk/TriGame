@@ -114,7 +114,7 @@ export class Leaderboard {
   }
 
   // Generate HTML for top scores display
-  generateTopScoresHTML(topScores, userScore, userusername = null) {
+  generateTopScoresHTML(topScores, userScore, username = null) {
     if (topScores.length === 0) {
       return '<p>No scores recorded yet.</p>';
     }
@@ -125,7 +125,7 @@ export class Leaderboard {
     
     topScores.forEach((scoreData) => {
       const isUser = Math.abs(scoreData.score - userScore) < 0.001 && 
-                     scoreData.username === userusername;
+                     scoreData.username === username;
       const displayName = scoreData.username || 'Anonymous';
       const date = new Date(scoreData.created_at).toLocaleDateString();
       
