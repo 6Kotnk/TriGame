@@ -109,8 +109,12 @@ if(window.DEBUG)
     }
   }
 
+  const score = 0.67;
+  const username = "test"
+
   startGame();
-  showLeaderboard();
+  game.database.saveScore(score, username)
+  game.showLeaderboard(username, score);
 
 
 

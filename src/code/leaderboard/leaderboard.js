@@ -9,7 +9,7 @@ export class Leaderboard {
     if (allScores.length === 0) return 100;
     
     const betterScores = allScores.filter(score => score > userScore).length;
-    return Math.round(((betterScores) / allScores.length) * 100);
+    return Math.round((1 - ((betterScores) / allScores.length)) * 100);
   }
 
   // Calculate average score
@@ -19,26 +19,20 @@ export class Leaderboard {
   }
 
   // Create histogram data for visualization
-  createHistogram(scores, bins = 10) {
+  createHistogram(scores, numBins = 10) {
     if (scores.length === 0) return [];
 
-    const min = Math.min(...scores);
-    const max = Math.max(...scores);
-    const binSize = (max - min) / bins;
-    
+    const binSize = 1 / numBins;
     const histogram = [];
-    for (let i = 0; i < bins; i++) {
-      const binStart = min + (i * binSize);
+
+    for (let bin = 0; bin < numBins; bin++) {
+      const binStart = bin * binSize;
       const binEnd = binStart + binSize;
       const count = scores.filter(score => 
-        score >= binStart && (i === bins - 1 ? score <= binEnd : score < binEnd)
+        score >= binStart && (bin === numBins - 1 ? score <= binEnd : score < binEnd)
       ).length;
-      
-      histogram.push({
-        range: `${binStart.toFixed(2)}-${binEnd.toFixed(2)}`,
-        count,
-        percentage: ((count / scores.length) * 100).toFixed(1)
-      });
+
+      histogram.push(count / scores.length);
     }
     
     return histogram;
@@ -89,26 +83,30 @@ export class Leaderboard {
     if (histogram.length === 0) {
       return '<p>No data available yet.</p>';
     }
-
-    let html = '<div class="histogram">';
+    let html = '<div>';
     html += '<h4>Score Distribution</h4>';
-    
-    const maxCount = Math.max(...histogram.map(bin => bin.count));
-    
-    histogram.forEach(bin => {
-      const barHeight = (bin.count / maxCount) * 100;
-      const isUserBin = userScore >= parseFloat(bin.range.split('-')[0]) && 
-                       userScore <= parseFloat(bin.range.split('-')[1]);
-      
-      html += `
-        <div class="histogram-bar ${isUserBin ? 'user-bin' : ''}">
-          <div class="bar" style="height: ${barHeight}%"></div>
-          <div class="label">${bin.range}</div>
-          <div class="count">${bin.count}</div>
-        </div>
-      `;
-    });
-    
+    const numBins = 10;
+    html += '<table>';
+
+    for (let bin = 0; bin < numBins; bin++) {
+      const barHeight = histogram[bin];
+      const isUserBin = (userScore >= (bin/numBins))  && (userScore < ((bin + 1)/numBins))
+      html += '<tr>';
+      html += '<td>';
+      html += `<div style="background-color:${isUserBin ? "red" : "white"}; height:16px; width: ${barHeight * 500}px">`
+      /*
+      if(isUserBin){
+        html += '<td>';
+        html += '←You are here'
+        html += '</td>';
+      }
+      */
+      html += '</div>';
+      html += '</tr>';
+      html += '</td>';
+    }
+
+    html += '</table>';
     html += '</div>';
     return html;
   }

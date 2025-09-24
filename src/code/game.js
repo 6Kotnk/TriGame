@@ -183,6 +183,7 @@ class Game  {
     const stats = await this.leaderboard.getStats(totalScore);
 
     let leaderboardHTML = '';
+    leaderboardHTML += `<h3>Your Score: ${totalScore.toFixed(3)}</h3>`;
     leaderboardHTML += `<p>You scored better than ${stats.percentile}% of players!</p>`;
     leaderboardHTML += `<p>Average score: ${stats.average} (${stats.totalPlayers} total players)</p>`;
     
