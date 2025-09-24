@@ -8,6 +8,7 @@
 @import 'components/submitButton.css';
 @import 'components/targetDisplay.css';
 @import 'components/tour.css';
+@import 'components/debug.css';
 
 body, html {
   margin: 0;

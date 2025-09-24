@@ -4,7 +4,7 @@ import { UserInterface } from './userInterface/userInterface.js';
 import { Database as LocalDatabase } from './database/databaseLocal.js';
 import { Database as ProdDatabase } from './database/database.js';
 
-const Database = globalThis.USE_LOCAL_DATABASE ? LocalDatabase : ProdDatabase;
+const Database = window.USE_LOCAL_DATABASE ? LocalDatabase : ProdDatabase;
 
 import { Leaderboard } from './leaderboard/leaderboard.js';
 

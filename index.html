@@ -21,8 +21,23 @@
           <!-- Cities datalist filled by cityInputs.js -->
           <datalist id="cities"></datalist>
 
-          <!-- Submit guess button -->
-          <button onclick="submitGuess()" id="submitButton">Submit</button>
+          <!-- Submit guess button -->         
+          <div>
+             <button onclick="submitGuess()" id="submitButton">Submit</button>
+          </div>
+
+          
+          <!-- Debug functionality -->
+          <div class="debugItem">
+            <div>
+              Win score:<input type="number" value="1" id="dbgWinScore">
+            </div>
+            <div>
+              <button onclick="dbgWin()" id="dbgWinButton">WIN</button>
+              <button onclick="dbgLose()" id="dbgLoseButton">LOSE</button>
+            </div>
+          </div>
+          
         </div>
 
         <!-- Dashboard for guess counter and history of guesses -->
@@ -90,6 +105,12 @@
     <!-- Canvas for sphericalTriangleFill -->
     <canvas id="mapCanvas" width="3600" height="1800"></canvas>
  
+    <!-- Canvas for sphericalTriangleFill -->
+    <script>
+      window.USE_LOCAL_DATABASE = true;
+      window.DEBUG = true;
+    </script>
+
     <!-- JS import -->
     <script type="module" src="/src/code/main.js"></script>
 

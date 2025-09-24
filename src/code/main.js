@@ -1,7 +1,3 @@
-// Global variables
-globalThis.USE_LOCAL_DATABASE = true;
-
-
 import { Game } from "./game.js";
 
 // Get all the HTML elements and then pass them down the class hierarchy
@@ -90,3 +86,32 @@ window.submitGuess = submitGuess;
 window.startTour = startTour;
 window.submitScore = submitScore;
 window.showLeaderboard = showLeaderboard;
+
+
+
+let sheet = null;
+
+for (let sheetIndex = 0; sheetIndex < document.styleSheets.length; sheetIndex++) {
+  sheet = document.styleSheets[sheetIndex];
+  if(sheet.href && (sheet.href.includes('main.css')))
+  {
+    break;
+  }
+}
+
+if(window.DEBUG)
+{
+  for (let rule of sheet.cssRules) 
+  {
+    if (rule.selectorText === '.debugItem') 
+    {
+      rule.style.display = 'block';
+    }
+  }
+
+  startGame();
+  showLeaderboard();
+
+
+
+}
