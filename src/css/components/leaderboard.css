@@ -75,6 +75,25 @@ body, html {
   color: red;
 }
 
+.top-scores ol {
+  counter-reset: score-list;
+  padding: 0;
+  margin: 0;
+}
+
+.top-scores li {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+  list-style: none;
+}
+
+.top-scores li::before {
+  counter-increment: score-list;
+  content: counter(score-list) ". ";
+  margin-right: 8px;
+}
+
 /* Dark mode overrides */
 @media (prefers-color-scheme: dark) {
   body, html {

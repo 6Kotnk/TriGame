@@ -142,9 +142,7 @@ export class Leaderboard {
                  scoreData.username === username;
       }
 
-
       const displayName = scoreData.username || 'Anonymous';
-      const date = new Date(scoreData.created_at).toLocaleDateString();
       
       html += `
         <li class="${isUser ? 'user-score' : ''}">

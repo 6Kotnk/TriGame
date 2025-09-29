@@ -142,7 +142,7 @@ class Game  {
     const bestGuessFactor = 1 / (this.initialGuessCount + 1);
     const guessesLeftFactor = this.initialGuessCount / (this.initialGuessCount + 1);
 
-    const totalScore = guessesLeftScore * guessesLeftFactor + guessScore * bestGuessFactor;
+    const totalScore = (guessesLeftScore * guessesLeftFactor + guessScore * bestGuessFactor);
 
     return totalScore;
   }
@@ -211,7 +211,6 @@ class Game  {
       leaderboardHTML += `<h3>Your Score: ${totalScore.toFixed(3)}</h3>`;
       leaderboardHTML += `<p>You scored better than ${percentile}% of players!</p>`;
     }
-
 
     leaderboardHTML += `<p>Average score: ${stats.average} (${stats.totalPlayers} total players)</p>`;
     
