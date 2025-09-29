@@ -1,152 +1,104 @@
-.score-display {
-  text-align: center;
-  padding: 20px;
-}
-
-.score-display h3 {
-  margin-bottom: 15px;
-  color: var(--text-color);
-}
-
-.username-section {
-  margin: 20px 0;
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-}
-
-.username-section label {
-  display: block;
-  margin-bottom: 10px;
-  font-size: 14px;
-}
-
-.username-section input {
-  padding: 8px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--text-color);
-  margin-right: 10px;
-  width: 200px;
-}
-
-.username-section button {
-  padding: 8px 16px;
-  background: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background 0.3s ease;
-}
-
-.username-section button:hover {
-  background: #45a049;
-}
-
-.username-section button:disabled {
-  background: #666;
-  cursor: not-allowed;
-}
-
-.histogram {
-  display: flex;
-  justify-content: space-around;
-  align-items: end;
-  height: 150px;
-  margin: 20px 0;
-  padding: 10px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+/* Light mode (default) */
+body, html {
+  background-color: #ffffff;
+  color: #333333;
 }
 
 .histogram h4 {
-  position: absolute;
-  top: -30px;
-  left: 50%;
-  transform: translateX(-50%);
-  margin: 0;
-  font-size: 14px;
+  margin: 0 0 8px 0;
 }
 
-.histogram-bar {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1;
-  margin: 0 2px;
-}
-
-.histogram-bar .bar {
+/* Container */
+.histogram-wrapper {
+  position: relative;
   width: 100%;
-  background: #4CAF50;
-  border-radius: 4px 4px 0 0;
-  min-height: 2px;
-  transition: all 0.3s ease;
+  padding-bottom: 40px; /* space for axis + labels */
+  box-sizing: border-box;
 }
 
-.histogram-bar.user-bin .bar {
-  background: #FF9800;
-  box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+/* Bars row */
+.histogram-bars {
+  display: flex;
+  align-items: flex-end;
+  height: 200px; /* tallest normalized bar */
 }
 
-.histogram-bar .label {
-  font-size: 10px;
-  margin-top: 5px;
-  text-align: center;
-  word-break: break-all;
+/* Each bin */
+.histogram-bin {
+  flex: 1;
+  display: flex;
+  justify-content: center;
 }
 
-.histogram-bar .count {
-  font-size: 11px;
-  font-weight: bold;
-  margin-top: 2px;
+/* Bar */
+.bar {
+  width: 60%;
+  border-radius: 2px;
+  background-color: black; /* light mode default */
 }
 
-.top-scores {
-  margin-top: 20px;
-  text-align: left;
-  max-width: 300px;
-  margin-left: auto;
-  margin-right: auto;
+.bar.user {
+  background-color: red;
 }
 
-.top-scores h4 {
-  text-align: center;
-  margin-bottom: 10px;
+/* Axis line */
+.histogram-axis {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: black; /* light mode default */
+  bottom: 40px;
 }
 
-.top-scores ol {
-  padding-left: 20px;
+/* Ticks */
+.tick {
+  position: absolute;
+  width: 1px;
+  height: 6px;
+  background: black; /* light mode default */
+  bottom: 40px;
+  transform: translateX(-50%);
 }
 
-.top-scores li {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  gap: 10px;
-  padding: 5px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.top-scores .player {
-  font-weight: normal;
-  text-align: left;
-}
-
-.top-scores li.user-score {
-  background: rgba(255, 152, 0, 0.2);
-  padding: 5px 10px;
-  border-radius: 4px;
-  border-bottom: 1px solid rgba(255, 152, 0, 0.3);
-}
-
-.top-scores .score {
-  font-weight: bold;
-}
-
-.top-scores .date {
+/* Labels */
+.tick-label {
+  position: absolute;
   font-size: 12px;
-  color: var(--text-secondary, #888);
+  color: black; /* light mode default */
+  white-space: nowrap;
+  bottom: 20px;
+  transform: translateX(-50%);
+}
+
+.user-score {
+  color: red;
+}
+
+/* Dark mode overrides */
+@media (prefers-color-scheme: dark) {
+  body, html {
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+  }
+
+  .bar {
+    background-color: white;
+  }
+
+  .bar.user {
+    background-color: red; /* stays red */
+  }
+
+  .histogram-axis {
+    background: white;
+  }
+
+  .tick {
+    background: white;
+  }
+
+  .tick-label {
+    color: white;
+  }
 }

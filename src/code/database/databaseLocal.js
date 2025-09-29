@@ -20,7 +20,7 @@ export class Database {
   }
 
   // Generate sample data with fun usernames
-  generateSampleData() {
+  generateSampleData( numSamples = 50) {
     const funUsernames = [
       'TriangleMaster', 'GeoGuesser', 'EarthExplorer', 'MapManiac', 'SphericalSage',
       'LatitudeLegend', 'LongitudeKing', 'GeographyGuru', 'WorldWanderer', 'GlobeGladiator',
@@ -34,7 +34,7 @@ export class Database {
       'CornerConnoisseur', 'AlleyAce', 'SquareScholar', 'CircleSage', 'TriangleTracker'
     ];
 
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < numSamples; i++) {
       // Generate Gaussian score centered at 0.5 with std dev of 0.15
       let score = this.gaussianRandom(0.5, 0.15);
       

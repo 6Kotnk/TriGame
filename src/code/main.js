@@ -88,6 +88,21 @@ window.submitScore = submitScore;
 window.showLeaderboard = showLeaderboard;
 
 
+//=== DEBUG ===
+
+
+function dbgWin() {
+  game.winGame();
+}
+
+function dbgLose() {
+  game.loseGame();
+}
+
+
+window.dbgWin = dbgWin;
+window.dbgLose = dbgLose;
+
 
 let sheet = null;
 
@@ -109,13 +124,16 @@ if(window.DEBUG)
     }
   }
 
+  startGame();
+
+  /*
   const score = 0.67;
   const username = "test"
 
   startGame();
   game.database.saveScore(score, username)
   game.showLeaderboard(username, score);
-
+*/
 
 
 }

@@ -4,14 +4,6 @@ export class Leaderboard {
     this.database = database;
   }
 
-  // Calculate user's percentile ranking
-  calculatePercentile(userScore, allScores) {
-    if (allScores.length === 0) return 100;
-    
-    const betterScores = allScores.filter(score => score > userScore).length;
-    return Math.round((1 - ((betterScores) / allScores.length)) * 100);
-  }
-
   // Calculate average score
   calculateAverage(allScores) {
     if (allScores.length === 0) return 0;
@@ -39,14 +31,15 @@ export class Leaderboard {
   }
 
   // Get comprehensive stats for a user's score
-  async getStats(userScore) {
+  async getStats() {
     try {
       const allScoresData = await this.database.getAllScores();
       const scores = allScoresData.map(s => s.score);
 
       if (scores.length === 0) {
         return {
-          percentile: 100,
+          //percentile: 100,
+          scores: [],
           totalPlayers: 0,
           average: 0,
           histogram: [],
@@ -54,13 +47,13 @@ export class Leaderboard {
         };
       }
 
-      const percentile = this.calculatePercentile(userScore, scores);
       const average = this.calculateAverage(scores);
       const histogram = this.createHistogram(scores);
       const topScores = await this.database.getTopScores();
 
       return {
-        percentile,
+        //percentile,
+        scores: scores,
         totalPlayers: scores.length,
         average: average.toFixed(3),
         histogram,
@@ -78,36 +71,55 @@ export class Leaderboard {
     }
   }
 
-  // Generate HTML for histogram display
   generateHistogramHTML(histogram, userScore) {
-    if (histogram.length === 0) {
+    if (!histogram || histogram.length === 0) {
       return '<p>No data available yet.</p>';
     }
-    let html = '<div>';
+
+    const numBins = histogram.length;
+    const maxVal = Math.max(...histogram);
+    const maxHeight = 200; // tallest bar in px
+
+    let html = '<div class="histogram">';
     html += '<h4>Score Distribution</h4>';
-    const numBins = 10;
-    html += '<table>';
+
+    html += '<div class="histogram-wrapper">';
+    html += '<div class="histogram-bars">';
 
     for (let bin = 0; bin < numBins; bin++) {
-      const barHeight = histogram[bin];
-      const isUserBin = (userScore >= (bin/numBins))  && (userScore < ((bin + 1)/numBins))
-      html += '<tr>';
-      html += '<td>';
-      html += `<div style="background-color:${isUserBin ? "red" : "white"}; height:16px; width: ${barHeight * 500}px">`
-      /*
-      if(isUserBin){
-        html += '<td>';
-        html += '←You are here'
-        html += '</td>';
+      let barHeight = maxVal > 0 ? (histogram[bin] / maxVal) * maxHeight : 0;
+
+      let isUserBin = false;
+
+      if(userScore != null)
+      {
+        isUserBin = (userScore === 1)
+        ? (bin === numBins - 1)
+        : (userScore >= (bin / numBins) && userScore < ((bin + 1) / numBins));
       }
-      */
+
+      html += '<div class="histogram-bin">';
+      html += `<div class="bar ${isUserBin ? 'user' : ''}" style="height:${barHeight}px;"></div>`;
       html += '</div>';
-      html += '</tr>';
-      html += '</td>';
     }
 
-    html += '</table>';
-    html += '</div>';
+    html += '</div>'; // close bars row
+
+    // Axis line
+    html += '<div class="histogram-axis"></div>';
+
+    // Axis ticks + labels
+    for (let i = 0; i <= numBins; i++) {
+      const leftPercent = (i / numBins) * 100;
+      const label = Math.round((i / numBins) * 100);
+
+      html += `<div class="tick" style="left:${leftPercent}%;"></div>`;
+      html += `<div class="tick-label" style="left:${leftPercent}%; ">${label}</div>`;
+    }
+
+    html += '</div>'; // wrapper
+    html += '</div>'; // histogram outer
+
     return html;
   }
 
@@ -122,8 +134,15 @@ export class Leaderboard {
     html += '<ol>';
     
     topScores.forEach((scoreData) => {
-      const isUser = Math.abs(scoreData.score - userScore) < 0.001 && 
-                     scoreData.username === username;
+
+      let isUser = false;
+      if(userScore != null)
+      {
+        isUser = Math.abs(scoreData.score - userScore) < 0.001 && 
+                 scoreData.username === username;
+      }
+
+
       const displayName = scoreData.username || 'Anonymous';
       const date = new Date(scoreData.created_at).toLocaleDateString();
       
@@ -131,7 +150,6 @@ export class Leaderboard {
         <li class="${isUser ? 'user-score' : ''}">
           <span class="player">${displayName}</span>
           <span class="score">${scoreData.score.toFixed(3)}</span>
-          <span class="date">${date}</span>
         </li>
       `;
     });

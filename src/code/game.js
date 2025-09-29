@@ -160,17 +160,38 @@ class Game  {
   }
 
   async submitScore(){
-    const bestGuess = this.guessHistory[0];
-    const totalScore = this.getScore(bestGuess);
+
+    let bestGuess;
+    let totalScore;
+
+    try {
+      bestGuess = this.guessHistory[0];
+      totalScore = this.getScore(bestGuess);
+    } catch (error) {
+      if (window.DEBUG) {
+        totalScore = parseFloat(document.getElementById('dbgWinScore').value);
+      } else {
+        this.userInterface.display(error.message);
+      }
+    }
 
     const username = this.HTMLElements.usernameInput.value.trim() || null;
 
     this.HTMLElements.submitScoreButton.disabled = true;
     this.HTMLElements.submitScoreButton.textContent = 'Submitting...';
 
-    const saveSuccess = await this.database.saveScore(totalScore, username);
+    await this.database.saveScore(totalScore, username);
 
     this.showLeaderboard(username, totalScore);
+
+  }
+
+  // Calculate user's percentile ranking
+  calculatePercentile(userScore, allScores) {
+    if (allScores.length === 0) return 100;
+    
+    const betterScores = allScores.filter(score => score > userScore).length;
+    return Math.round((1 - ((betterScores) / allScores.length)) * 100);
   }
 
   async showLeaderboard(username = null, totalScore = null){
@@ -180,11 +201,18 @@ class Game  {
     this.HTMLElements.leaderboard.style.display = 'block';
     //
 
-    const stats = await this.leaderboard.getStats(totalScore);
+    let leaderboardHTML = '<h2>Leaderboard</h2>';
 
-    let leaderboardHTML = '';
-    leaderboardHTML += `<h3>Your Score: ${totalScore.toFixed(3)}</h3>`;
-    leaderboardHTML += `<p>You scored better than ${stats.percentile}% of players!</p>`;
+    const stats = await this.leaderboard.getStats();
+
+    if( totalScore != null) // game won
+    {
+      const percentile = this.calculatePercentile(totalScore, stats.scores);
+      leaderboardHTML += `<h3>Your Score: ${totalScore.toFixed(3)}</h3>`;
+      leaderboardHTML += `<p>You scored better than ${percentile}% of players!</p>`;
+    }
+
+
     leaderboardHTML += `<p>Average score: ${stats.average} (${stats.totalPlayers} total players)</p>`;
     
     // Add histogram
