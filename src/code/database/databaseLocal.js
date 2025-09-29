@@ -39,7 +39,7 @@ export class Database {
       let score = this.gaussianRandom(0.5, 0.15);
       
       // Clamp to [0, 1] range
-      score = Math.max(0, Math.min(1, score));
+      score = Math.max(0, Math.min(1, score)) * 100;
       
       const username = funUsernames[i % funUsernames.length];
       const timestamp = new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000); // Random time in last week

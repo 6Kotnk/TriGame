@@ -10,25 +10,27 @@ export class Leaderboard {
     return allScores.reduce((sum, score) => sum + score, 0) / allScores.length;
   }
 
-  // Create histogram data for visualization
-  createHistogram(scores, numBins = 10) {
-    if (scores.length === 0) return [];
+createHistogram(scores, numBins = 10) {
+  if (scores.length === 0) return [];
 
-    const binSize = 1 / numBins;
-    const histogram = [];
+  const normalizedScores = scores.map(s => s / 100);
 
-    for (let bin = 0; bin < numBins; bin++) {
-      const binStart = bin * binSize;
-      const binEnd = binStart + binSize;
-      const count = scores.filter(score => 
-        score >= binStart && (bin === numBins - 1 ? score <= binEnd : score < binEnd)
-      ).length;
+  const binSize = 1 / numBins;
+  const histogram = [];
 
-      histogram.push(count / scores.length);
-    }
-    
-    return histogram;
+  for (let bin = 0; bin < numBins; bin++) {
+    const binStart = bin * binSize;
+    const binEnd = binStart + binSize;
+
+    const count = normalizedScores.filter(score =>
+      score >= binStart && (bin === numBins - 1 ? score <= binEnd : score < binEnd)
+    ).length;
+
+    histogram.push(count / normalizedScores.length);
   }
+
+  return histogram;
+}
 
   // Get comprehensive stats for a user's score
   async getStats() {
@@ -55,7 +57,7 @@ export class Leaderboard {
         //percentile,
         scores: scores,
         totalPlayers: scores.length,
-        average: average.toFixed(3),
+        average: average.toFixed(0),
         histogram,
         topScores
       };
@@ -147,7 +149,7 @@ export class Leaderboard {
       html += `
         <li class="${isUser ? 'user-score' : ''}">
           <span class="player">${displayName}</span>
-          <span class="score">${scoreData.score.toFixed(3)}</span>
+          <span class="score">${scoreData.score.toFixed(0)}</span>
         </li>
       `;
     });

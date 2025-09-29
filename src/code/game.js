@@ -142,7 +142,7 @@ class Game  {
     const bestGuessFactor = 1 / (this.initialGuessCount + 1);
     const guessesLeftFactor = this.initialGuessCount / (this.initialGuessCount + 1);
 
-    const totalScore = (guessesLeftScore * guessesLeftFactor + guessScore * bestGuessFactor);
+    const totalScore = (guessesLeftScore * guessesLeftFactor + guessScore * bestGuessFactor) * 100;
 
     return totalScore;
   }
@@ -208,7 +208,7 @@ class Game  {
     if( totalScore != null) // game won
     {
       const percentile = this.calculatePercentile(totalScore, stats.scores);
-      leaderboardHTML += `<h3>Your Score: ${totalScore.toFixed(3)}</h3>`;
+      leaderboardHTML += `<h3>Your Score: ${totalScore.toFixed(0)}</h3>`;
       leaderboardHTML += `<p>You scored better than ${percentile}% of players!</p>`;
     }
 
