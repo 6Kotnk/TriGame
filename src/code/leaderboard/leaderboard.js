@@ -78,6 +78,8 @@ createHistogram(scores, numBins = 10) {
       return '<p>No data available yet.</p>';
     }
 
+    const normalizedUserScore = userScore / 100;
+
     const numBins = histogram.length;
     const maxVal = Math.max(...histogram);
     const maxHeight = 200; // tallest bar in px
@@ -93,11 +95,11 @@ createHistogram(scores, numBins = 10) {
 
       let isUserBin = false;
 
-      if(userScore != null)
+      if(normalizedUserScore != null)
       {
-        isUserBin = (userScore === 1)
+        isUserBin = (normalizedUserScore === 1)
         ? (bin === numBins - 1)
-        : (userScore >= (bin / numBins) && userScore < ((bin + 1) / numBins));
+        : (normalizedUserScore >= (bin / numBins) && normalizedUserScore < ((bin + 1) / numBins));
       }
 
       html += '<div class="histogram-bin">';
@@ -138,9 +140,10 @@ createHistogram(scores, numBins = 10) {
     topScores.forEach((scoreData) => {
 
       let isUser = false;
+
       if(userScore != null)
       {
-        isUser = Math.abs(scoreData.score - userScore) < 0.001 && 
+        isUser = scoreData.score == userScore && 
                  scoreData.username === username;
       }
 
