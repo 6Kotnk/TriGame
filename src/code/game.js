@@ -159,6 +159,7 @@ class Game  {
     this.HTMLElements.losePanel.style.display = 'block';
   }
 
+  // After winning the game
   async submitScore(){
 
     let bestGuess;
@@ -194,12 +195,12 @@ class Game  {
     return Math.round((1 - ((betterScores) / allScores.length)) * 100);
   }
 
+  // Lost game score is null
   async showLeaderboard(username = null, totalScore = null){
     this.currentState = GameState.LEADERBOARD;
     this.HTMLElements.winPanel.style.display = 'none';
     this.HTMLElements.losePanel.style.display = 'none';
     this.HTMLElements.leaderboard.style.display = 'block';
-    //
 
     let leaderboardHTML = '<h2>Leaderboard</h2>';
 
@@ -223,83 +224,6 @@ class Game  {
     // Show leaderboard stats
     this.HTMLElements.leaderboard.innerHTML = leaderboardHTML;
   }
-
-
-  /*
-  // No guesses left
-  endGame() {
-    this.currentState = GameState.END;
-    this.HTMLElements.endPanel.style.display = 'block';
-
-    const bestGuess = this.guessHistory[0];
-    const bestGuessError = UTILS.logDist(bestGuess.getArea(), this.targetArea)
-
-    const bestGuessScore = this.bestGuessScore(bestGuessError);
-    const guessesLeftScore = this.guessesLeftScore();
-
-    const bestGuessFactor = 1 / (this.initialGuessCount + 1);
-    const guessesLeftFactor = this.initialGuessCount / (this.initialGuessCount + 1);
-
-    const totalScore = guessesLeftScore * guessesLeftFactor + bestGuessScore * bestGuessFactor;
-
-    // Display initial score and username input
-    let scoreHTML = `<div class="score-display">`;
-    scoreHTML += `<h3>Your Score: ${totalScore.toFixed(3)}</h3>`;
-    scoreHTML += `
-      <div class="username-section">
-        <label for="username-input">Enter username for leaderboard (optional):</label>
-        <input type="text" id="username-input" maxlength="20" placeholder="Anonymous">
-        <button id="submit-score-btn">Submit Score</button>
-      </div>
-      <div id="leaderboard-stats" style="display: none;"></div>
-    `;
-    scoreHTML += `</div>`;
-    
-    this.HTMLElements.endPanelScore.innerHTML = scoreHTML;
-
-    // Add event listener for score submission
-    document.getElementById('submit-score-btn').addEventListener('click', async () => {
-      const usernameInput = document.getElementById('username-input');
-      const username = usernameInput.value.trim() || null;
-      
-      // Disable button and show loading
-      const submitBtn = document.getElementById('submit-score-btn');
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Submitting...';
-      
-      // Save score to database
-      const saveSuccess = await this.database.saveScore(totalScore, username);
-      
-      // Get leaderboard stats
-      const stats = await this.leaderboard.getStats(totalScore);
-      
-      // Generate leaderboard HTML
-      let leaderboardHTML = '';
-      if (saveSuccess && stats.totalPlayers > 0) {
-        leaderboardHTML += `<p>You scored better than ${stats.percentile}% of players!</p>`;
-        leaderboardHTML += `<p>Average score: ${stats.average} (${stats.totalPlayers} total players)</p>`;
-        
-        // Add histogram
-        leaderboardHTML += this.leaderboard.generateHistogramHTML(stats.histogram, totalScore);
-        
-        // Add top scores
-        leaderboardHTML += this.leaderboard.generateTopScoresHTML(stats.topScores, totalScore, username);
-      } else if (!saveSuccess) {
-        leaderboardHTML += `<p><em>Unable to connect to leaderboard</em></p>`;
-      } else {
-        leaderboardHTML += `<p><em>You're the first player! More stats will appear as others play.</em></p>`;
-      }
-      
-      // Show leaderboard stats
-      const statsDiv = document.getElementById('leaderboard-stats');
-      statsDiv.innerHTML = leaderboardHTML;
-      statsDiv.style.display = 'block';
-      
-      // Hide username section
-      document.querySelector('.username-section').style.display = 'none';
-    });
-  }
-  */
 
   // Click submit button
   submitGuess() {
@@ -376,7 +300,7 @@ class Game  {
     const maxError = UTILS.logDist(1+targetTol)
 
     // Check if guess is close enough
-    if( guessError < maxError  || 1){ // Debug
+    if( guessError < maxError || window.DEBUG){ // Debug
       this.winGame();
       return;
     }

@@ -40,7 +40,6 @@ createHistogram(scores, numBins = 10) {
 
       if (scores.length === 0) {
         return {
-          //percentile: 100,
           scores: [],
           totalPlayers: 0,
           average: 0,
