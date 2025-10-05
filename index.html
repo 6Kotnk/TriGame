@@ -81,17 +81,33 @@
 
         <div id="winPanel" class="panel">
           <h2>You Won</h2>
-          <span id="winPanelScore"></span>
+          <h2>Your score: <span id="winPanelScore">0</span></h2>
           <div>
-            <div>Enter Leaderboard username</div>
-            <input type="text" id="usernameInput" maxlength="20" placeholder="Anonymous">
-            <button onclick="submitScore()" id="submitScoreButton">Submit</button>
+
+            <div>
+              <div>Enter leaderboard username:</div>
+              <input type="text" id="usernameInput" maxlength="20" placeholder="Anonymous" >
+            </div>
+            <br/>
+            <div>
+              <div>Enter your leaderboards:</div>
+              <input type="text" id="winLeaderboardInput">
+            </div>
+            <br/>
+            <div>
+              <button onclick="submitScore()" id="submitScoreButton">Submit</button>
+            </div>
+
           </div>
         </div>
 
         <div id="losePanel" class="panel">
           <h2>You Lost</h2>
-          <span id="losePanelScore"></span>
+            <div>
+              <div>Enter your leaderboards:</div>
+              <input type="text" id="loseLeaderboardInput">
+            </div>
+            <br/>
           <button onclick="showLeaderboard()" id="loseLeaderboardButton">Show Leaderboard</button>
         </div>
 

@@ -5,15 +5,17 @@ import { Game } from "./game.js";
 const HTMLElements = {
   Game: {
     titlePanel:                             document.getElementById('titlePanel'),
+    
     target:                                 document.getElementById('target'),
 
     winPanel:                               document.getElementById('winPanel'),
     winPanelScore:                          document.getElementById('winPanelScore'),
     usernameInput:                          document.getElementById('usernameInput'),
+    winUsernameInput:                       document.getElementById('winLeaderboardInput'),
     submitScoreButton:                      document.getElementById('submitScoreButton'),
 
     losePanel:                              document.getElementById('losePanel'),
-    losePanelScore:                         document.getElementById('losePanelScore'),
+    loseUsernameInput:                      document.getElementById('loseLeaderboardInput'),
 
     leaderboard:                            document.getElementById('leaderboardPanel'),
 

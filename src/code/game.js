@@ -50,6 +50,9 @@ class Game  {
     this.targetArea = null;
     this.citiesLocked = 0;
 
+    this.score = 0;
+    this.username = "";
+
     // Game does not preserve state, since it has no cookies.
     // Every new game should be the same as a page reload
     this.resetGame();
@@ -98,9 +101,7 @@ class Game  {
                   String(now.getDate()).padStart(2, '0');
                 
     // Generate a consistent seed based on today's date
-    const seed = 1; //Prod
-    //const seed = this.hash(today); //Prod
-    //const seed = Math.floor(Math.random() * 0xFFFFFFFF); //Test
+    const seed = this.hash(today); //Prod
 
     const numCitiesLocked = UTILS.randomFromSeed(seed,0,2);
     // Get a random guess using our seed. This makes sure it is possible to win
@@ -152,16 +153,6 @@ class Game  {
     this.currentState = GameState.WIN;
     this.HTMLElements.winPanel.style.display = 'block';
 
-  }
-
-  loseGame() {
-    this.currentState = GameState.LOSE;
-    this.HTMLElements.losePanel.style.display = 'block';
-  }
-
-  // After winning the game
-  async submitScore(){
-
     let bestGuess;
     let totalScore;
 
@@ -176,15 +167,26 @@ class Game  {
       }
     }
 
-    const username = this.HTMLElements.usernameInput.value.trim() || null;
+    this.score = totalScore;
+    this.HTMLElements.winPanelScore.textContent = this.score;
+  }
+
+  loseGame() {
+    this.currentState = GameState.LOSE;
+    this.HTMLElements.losePanel.style.display = 'block';
+  }
+
+  // After winning the game
+  async submitScore(){
+
+    this.username = this.HTMLElements.usernameInput.value.trim() || null;
 
     this.HTMLElements.submitScoreButton.disabled = true;
     this.HTMLElements.submitScoreButton.textContent = 'Submitting...';
 
-    await this.database.saveScore(totalScore, username);
+    await this.database.saveScore(this.score, this.username);
 
-    this.showLeaderboard(username, totalScore);
-
+    this.showLeaderboard();
   }
 
   // Calculate user's percentile ranking
@@ -196,7 +198,7 @@ class Game  {
   }
 
   // Lost game score is null
-  async showLeaderboard(username = null, totalScore = null){
+  async showLeaderboard(){
     this.currentState = GameState.LEADERBOARD;
     this.HTMLElements.winPanel.style.display = 'none';
     this.HTMLElements.losePanel.style.display = 'none';
@@ -206,20 +208,20 @@ class Game  {
 
     const stats = await this.leaderboard.getStats();
 
-    if( totalScore != null) // game won
+    if( this.score != 0) // game won
     {
-      const percentile = this.calculatePercentile(totalScore, stats.scores);
-      leaderboardHTML += `<h3>Your Score: ${totalScore.toFixed(0)}</h3>`;
+      const percentile = this.calculatePercentile(this.score, stats.scores);
+      leaderboardHTML += `<h3>Your Score: ${this.score.toFixed(0)}</h3>`;
       leaderboardHTML += `<p>You scored better than ${percentile}% of players!</p>`;
     }
 
     leaderboardHTML += `<p>Average score: ${stats.average} (${stats.totalPlayers} total players)</p>`;
     
     // Add histogram
-    leaderboardHTML += this.leaderboard.generateHistogramHTML(stats.histogram, totalScore);
+    leaderboardHTML += this.leaderboard.generateHistogramHTML(stats.histogram, this.score);
     
     // Add top scores
-    leaderboardHTML += this.leaderboard.generateTopScoresHTML(stats.topScores, totalScore, username);
+    leaderboardHTML += this.leaderboard.generateTopScoresHTML(stats.topScores, this.score, this.username);
     
     // Show leaderboard stats
     this.HTMLElements.leaderboard.innerHTML = leaderboardHTML;
@@ -343,6 +345,9 @@ class Game  {
     this.currentState = GameState.INIT;
     this.targetArea = null;
     this.citiesLocked = 0;
+
+    this.score = 0;
+    this.username = "";
 
     // Reset the triangle
     this.display.reset();

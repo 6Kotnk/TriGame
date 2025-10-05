@@ -23,9 +23,16 @@
 
 /* Panel specific button styling */
 .panel button {
-  margin: 5px;
-  min-width: 80px;
+  width: 100%;
 }
+
+
+
+.panel input[type="text"] {
+  width: 200px;
+}
+
+
 
 #cityInputs div {
   margin-bottom: 10px;

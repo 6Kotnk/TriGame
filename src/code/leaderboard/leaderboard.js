@@ -94,7 +94,7 @@ createHistogram(scores, numBins = 10) {
 
       let isUserBin = false;
 
-      if(normalizedUserScore != null)
+      if(normalizedUserScore != 0)
       {
         isUserBin = (normalizedUserScore === 1)
         ? (bin === numBins - 1)
@@ -140,7 +140,7 @@ createHistogram(scores, numBins = 10) {
 
       let isUser = false;
 
-      if(userScore != null)
+      if(userScore != 0)
       {
         isUser = scoreData.score == userScore && 
                  scoreData.username === username;
