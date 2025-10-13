@@ -5,17 +5,17 @@ import { Game } from "./game.js";
 const HTMLElements = {
   Game: {
     titlePanel:                             document.getElementById('titlePanel'),
-    
+
     target:                                 document.getElementById('target'),
 
     winPanel:                               document.getElementById('winPanel'),
     winPanelScore:                          document.getElementById('winPanelScore'),
     usernameInput:                          document.getElementById('usernameInput'),
-    winUsernameInput:                       document.getElementById('winLeaderboardInput'),
+    winLeaderboardInput:                    document.getElementById('winLeaderboardInput'),
     submitScoreButton:                      document.getElementById('submitScoreButton'),
 
     losePanel:                              document.getElementById('losePanel'),
-    loseUsernameInput:                      document.getElementById('loseLeaderboardInput'),
+    loseLeaderboardInput:                   document.getElementById('loseLeaderboardInput'),
 
     leaderboard:                            document.getElementById('leaderboardPanel'),
 
@@ -128,14 +128,15 @@ if(window.DEBUG)
 
   startGame();
 
-  /*
+  
   const score = 0.67;
   const username = "test"
 
   startGame();
+  dbgWin();
   game.database.saveScore(score, username)
   game.showLeaderboard(username, score);
-*/
+
 
 
 }

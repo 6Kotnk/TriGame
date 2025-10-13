@@ -8,7 +8,7 @@ export class Database {
   }
 
   // Save a score to the database
-  async saveScore(score, username = null) {
+  async saveScore(score, username = null, leaderboards) {
     try {
       const response = await fetch(`${this.apiUrl}/scores`, {
         method: 'POST',
@@ -20,7 +20,8 @@ export class Database {
         },
         body: JSON.stringify({
           score: score,
-          username: username
+          username: username,
+          leaderboards: leaderboards,
         })
       });
 

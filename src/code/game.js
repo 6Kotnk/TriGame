@@ -52,6 +52,7 @@ class Game  {
 
     this.score = 0;
     this.username = "";
+    this.leaderboards = "";
 
     // Game does not preserve state, since it has no cookies.
     // Every new game should be the same as a page reload
@@ -180,11 +181,14 @@ class Game  {
   async submitScore(){
 
     this.username = this.HTMLElements.usernameInput.value.trim() || null;
+    this.leaderboards = this.HTMLElements.winLeaderboardInput.value.split(',');
+    // Deduplicate
+    this.leaderboards = [...new Set(this.leaderboards)];
 
     this.HTMLElements.submitScoreButton.disabled = true;
     this.HTMLElements.submitScoreButton.textContent = 'Submitting...';
 
-    await this.database.saveScore(this.score, this.username);
+    await this.database.saveScore(this.score, this.username, this.leaderboards);
 
     this.showLeaderboard();
   }
@@ -204,7 +208,7 @@ class Game  {
     this.HTMLElements.losePanel.style.display = 'none';
     this.HTMLElements.leaderboard.style.display = 'block';
 
-    let leaderboardHTML = '<h2>Leaderboard</h2>';
+    let leaderboardHTML = this.HTMLElements.leaderboard.innerHTML;
 
     const stats = await this.leaderboard.getStats();
 

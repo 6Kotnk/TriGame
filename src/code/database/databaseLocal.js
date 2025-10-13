@@ -41,25 +41,43 @@ export class Database {
       // Clamp to [0, 1] range
       score = Math.max(0, Math.min(1, score)) * 100;
       
+      const availableLeaderboards = ["a","b","c","d","e","f"]
+
       const username = funUsernames[i % funUsernames.length];
       const timestamp = new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000); // Random time in last week
+
+      function sample(array, size = 1) {
+        let sampleSet = new Set();
+        for (let i = 0; i < size; i++) {
+          let index;
+          do { index = Math.floor(Math.random() * array.length); }
+          while (sampleSet.has(index));
+          sampleSet.add(index);
+        }
+        return [...sampleSet].map(i => array[i]);
+      }
+
+
+      const leaderboards = sample(availableLeaderboards, 3);
       
       this.scores.push({
         id: this.nextId++,
         score: score,
         username: username,
+        leaderboards: leaderboards,
         created_at: timestamp.toISOString()
       });
     }
   }
 
   // Save a score to the local array
-  async saveScore(score, username = null) {
+  async saveScore(score, username = null, leaderboards) {
     try {
       const newScore = {
         id: this.nextId++,
         score: score,
         username: username,
+        leaderboards: leaderboards,
         created_at: new Date().toISOString()
       };
       
