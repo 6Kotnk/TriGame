@@ -29,7 +29,7 @@ export class Leaderboard {
     if (allScores.length === 0) return 100;
     
     const betterScores = allScores.filter(score => score > userScore).length;
-    return Math.round((1 - ((betterScores) / allScores.length)) * 100);
+    return (1 - ((betterScores) / (allScores.length - 1))) * 100;
   }
 
   createHistogram(scores, numBins = 10) {
@@ -222,7 +222,7 @@ export class Leaderboard {
     {
       const percentile = this.calculatePercentile(this.score, stats.scores);
       leaderboardHTML += `<h3>Your Score: ${this.score.toFixed(0)}</h3>`;
-      leaderboardHTML += `<p>You scored better than ${percentile}% of players!</p>`;
+      leaderboardHTML += `<p>You scored better than ${percentile.toFixed(0)}% of players!</p>`;
     }
 
     leaderboardHTML += `<p>Average score: ${stats.average} (${stats.totalPlayers} total players)</p>`;
