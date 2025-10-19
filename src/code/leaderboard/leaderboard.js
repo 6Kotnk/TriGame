@@ -3,6 +3,12 @@ export class Leaderboard {
   constructor(HTMLElements, database) {
     this.HTMLElements = HTMLElements;
     this.database = database;
+    this.HTMLElements.leaderboardSelect.addEventListener("change", this.selectLeaderboards)
+  }
+
+  selectLeaderboards = (event) => {
+    const selectedValues = Array.from(this.HTMLElements.leaderboardSelect.selectedOptions).map(opt => opt.value); 
+    console.log(selectedValues); 
   }
 
   // Calculate average score
