@@ -17,7 +17,7 @@ class StateDisplay {
     
     // Apply color based on remaining count if total is provided
     if (totalCount !== null && typeof newCount === 'number' && totalCount > 0) {
-      const value = 1 - (newCount / totalCount); // 0 = good/green, 1 = bad/red
+      const value = 1 - ((newCount - 1) / (totalCount - 1)); // 0 = good/green, 1 = bad/red
       const color = UTILS.getColorFromValue(value);
       this.element.style.borderColor = color;
     } else {

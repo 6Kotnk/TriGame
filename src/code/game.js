@@ -250,7 +250,7 @@ class Game  {
         this.evaluateGuess(guess);
 
         // Set accuracy-based color for the triangle
-        const accuracyColor = UTILS.getColorFromValue(errorScalingFactor * guessError);
+        const accuracyColor = UTILS.getColorFromValue(UTILS.normalizeValue(errorScalingFactor * guessError));
         guess.setColors (
           {
             verts: accuracyColor,
