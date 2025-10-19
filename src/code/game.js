@@ -35,7 +35,7 @@ class Game  {
     this.userInterface = new UserInterface(this.HTMLElements.UserInterface);
     
     this.database = new Database();
-    this.leaderboard = new Leaderboard(this.database);
+    this.leaderboard = new Leaderboard(this.HTMLElements.Leaderboard, this.database);
 
     // Set up callback for when a guess is selected from history
     this.userInterface.onGuessSelected = (guess) => {
@@ -193,42 +193,12 @@ class Game  {
     this.showLeaderboard();
   }
 
-  // Calculate user's percentile ranking
-  calculatePercentile(userScore, allScores) {
-    if (allScores.length === 0) return 100;
-    
-    const betterScores = allScores.filter(score => score > userScore).length;
-    return Math.round((1 - ((betterScores) / allScores.length)) * 100);
-  }
-
   // Lost game score is null
   async showLeaderboard(){
     this.currentState = GameState.LEADERBOARD;
     this.HTMLElements.winPanel.style.display = 'none';
     this.HTMLElements.losePanel.style.display = 'none';
-    this.HTMLElements.leaderboard.style.display = 'block';
-
-    let leaderboardHTML = this.HTMLElements.leaderboard.innerHTML;
-
-    const stats = await this.leaderboard.getStats();
-
-    if( this.score != 0) // game won
-    {
-      const percentile = this.calculatePercentile(this.score, stats.scores);
-      leaderboardHTML += `<h3>Your Score: ${this.score.toFixed(0)}</h3>`;
-      leaderboardHTML += `<p>You scored better than ${percentile}% of players!</p>`;
-    }
-
-    leaderboardHTML += `<p>Average score: ${stats.average} (${stats.totalPlayers} total players)</p>`;
-    
-    // Add histogram
-    leaderboardHTML += this.leaderboard.generateHistogramHTML(stats.histogram, this.score);
-    
-    // Add top scores
-    leaderboardHTML += this.leaderboard.generateTopScoresHTML(stats.topScores, this.score, this.username);
-    
-    // Show leaderboard stats
-    this.HTMLElements.leaderboard.innerHTML = leaderboardHTML;
+    this.leaderboard.showLeaderboard(this.score, this.username, this.leaderboards);
   }
 
   // Click submit button

@@ -1,6 +1,7 @@
 // Leaderboard service for statistics and histogram generation
 export class Leaderboard {
-  constructor(database) {
+  constructor(HTMLElements, database) {
+    this.HTMLElements = HTMLElements;
     this.database = database;
   }
 
@@ -10,27 +11,35 @@ export class Leaderboard {
     return allScores.reduce((sum, score) => sum + score, 0) / allScores.length;
   }
 
-createHistogram(scores, numBins = 10) {
-  if (scores.length === 0) return [];
-
-  const normalizedScores = scores.map(s => s / 100);
-
-  const binSize = 1 / numBins;
-  const histogram = [];
-
-  for (let bin = 0; bin < numBins; bin++) {
-    const binStart = bin * binSize;
-    const binEnd = binStart + binSize;
-
-    const count = normalizedScores.filter(score =>
-      score >= binStart && (bin === numBins - 1 ? score <= binEnd : score < binEnd)
-    ).length;
-
-    histogram.push(count / normalizedScores.length);
+  // Calculate user's percentile ranking
+  calculatePercentile(userScore, allScores) {
+    if (allScores.length === 0) return 100;
+    
+    const betterScores = allScores.filter(score => score > userScore).length;
+    return Math.round((1 - ((betterScores) / allScores.length)) * 100);
   }
 
-  return histogram;
-}
+  createHistogram(scores, numBins = 10) {
+    if (scores.length === 0) return [];
+
+    const normalizedScores = scores.map(s => s / 100);
+
+    const binSize = 1 / numBins;
+    const histogram = [];
+
+    for (let bin = 0; bin < numBins; bin++) {
+      const binStart = bin * binSize;
+      const binEnd = binStart + binSize;
+
+      const count = normalizedScores.filter(score =>
+        score >= binStart && (bin === numBins - 1 ? score <= binEnd : score < binEnd)
+      ).length;
+
+      histogram.push(count / normalizedScores.length);
+    }
+
+    return histogram;
+  }
 
   // Get comprehensive stats for a user's score
   async getStats() {
@@ -160,4 +169,31 @@ createHistogram(scores, numBins = 10) {
     html += '</div>';
     return html;
   }
+
+  async showLeaderboard(score, username = null, leaderboards){
+    this.HTMLElements.leaderboard.style.display = 'block';
+
+    let leaderboardHTML = this.HTMLElements.leaderboard.innerHTML;
+
+    const stats = await this.getStats();
+
+    if( score != 0) // game won
+    {
+      const percentile = this.calculatePercentile(score, stats.scores);
+      leaderboardHTML += `<h3>Your Score: ${score.toFixed(0)}</h3>`;
+      leaderboardHTML += `<p>You scored better than ${percentile}% of players!</p>`;
+    }
+
+    leaderboardHTML += `<p>Average score: ${stats.average} (${stats.totalPlayers} total players)</p>`;
+    
+    // Add histogram
+    leaderboardHTML += this.generateHistogramHTML(stats.histogram, score);
+    
+    // Add top scores
+    leaderboardHTML += this.generateTopScoresHTML(stats.topScores, score, username);
+    
+    // Show leaderboard stats
+    this.HTMLElements.leaderboard.innerHTML = leaderboardHTML;
+  }
+
 }

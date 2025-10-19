@@ -1,4 +1,5 @@
 import { Game } from "./game.js";
+import { Leaderboard } from "./leaderboard/leaderboard.js";
 
 // Get all the HTML elements and then pass them down the class hierarchy
 // Would be useful, if everything wasn't a singleton... maybe.
@@ -17,7 +18,11 @@ const HTMLElements = {
     losePanel:                              document.getElementById('losePanel'),
     loseLeaderboardInput:                   document.getElementById('loseLeaderboardInput'),
 
-    leaderboard:                            document.getElementById('leaderboardPanel'),
+    Leaderboard: {
+      leaderboard:                          document.getElementById('leaderboardPanel'),
+      leaderboardSelect:                    document.getElementById('leaderboardSelect'),
+      leaderboardAppend:                    document.getElementById('leaderboardAppend'),
+    },
 
     GFXDisplay: {
       mapCanvas:                            document.getElementById('mapCanvas'),
@@ -128,7 +133,7 @@ if(window.DEBUG)
 
   startGame();
 
-  
+  /*
   const score = 0.67;
   const username = "test"
 
@@ -136,7 +141,7 @@ if(window.DEBUG)
   dbgWin();
   game.database.saveScore(score, username)
   game.showLeaderboard(username, score);
-
+  */
 
 
 }
