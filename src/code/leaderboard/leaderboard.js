@@ -14,7 +14,6 @@ export class Leaderboard {
   selectLeaderboards = (event) => {
     const selectedLeaderboards = Array.from(this.HTMLElements.leaderboardSelect.selectedOptions).map(opt => opt.value); 
     this.selectedLeaderboards = selectedLeaderboards;
-    console.log(selectedLeaderboards); 
     this.showLeaderboardStats()
   }
 
@@ -108,7 +107,7 @@ export class Leaderboard {
 
   generateHistogramHTML(histogram, userScore) {
     if (!histogram || histogram.length === 0) {
-      return '<p>No data available yet.</p>';
+      return '<p>No data available for histogram.</p>';
     }
 
     const normalizedUserScore = userScore / 100;

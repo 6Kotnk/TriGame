@@ -169,7 +169,7 @@ class Game  {
     }
 
     this.score = totalScore;
-    this.HTMLElements.winPanelScore.textContent = this.score;
+    this.HTMLElements.winPanelScore.textContent = this.score.toFixed(0);
   }
 
   loseGame() {
@@ -177,21 +177,25 @@ class Game  {
     this.HTMLElements.losePanel.style.display = 'block';
   }
 
+  parseLeaderboards(leaderboardString) {
+    if(leaderboardString != "")
+    {
+      this.leaderboards = leaderboardString.split(',');
+    }
+
+    // Deduplicate
+    this.leaderboards = [...new Set(this.leaderboards)];
+  }
+
   // After winning the game
   async submitScore(){
 
     this.username = this.HTMLElements.usernameInput.value.trim() || null;
 
-    if(this.HTMLElements.winLeaderboardInput.value != "")
-    {
-      this.leaderboards = this.HTMLElements.winLeaderboardInput.value.split(',');
-    }
-
-    // Deduplicate
-    this.leaderboards = [...new Set(this.leaderboards)];
-
     this.HTMLElements.submitScoreButton.disabled = true;
     this.HTMLElements.submitScoreButton.textContent = 'Submitting...';
+
+    this.parseLeaderboards(this.HTMLElements.winLeaderboardInput.value)
 
     await this.database.saveScore(this.score, this.username, this.leaderboards);
 
@@ -200,6 +204,10 @@ class Game  {
 
   // Lost game score is null
   async showLeaderboard(){
+    if (GameState.LOSE) {
+      this.parseLeaderboards(this.HTMLElements.loseLeaderboardInput.value)
+    }
+
     this.currentState = GameState.LEADERBOARD;
     this.HTMLElements.winPanel.style.display = 'none';
     this.HTMLElements.losePanel.style.display = 'none';
