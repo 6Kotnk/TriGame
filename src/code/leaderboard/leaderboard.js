@@ -173,7 +173,14 @@ export class Leaderboard {
   async showLeaderboard(score, username = null, leaderboards){
     this.HTMLElements.leaderboard.style.display = 'block';
 
-    let leaderboardHTML = this.HTMLElements.leaderboard.innerHTML;
+    leaderboards.forEach(text => {
+      const option = document.createElement('option');
+      option.text = text;
+      option.value = text.toLowerCase(); // optional
+      this.HTMLElements.leaderboardSelect.add(option);
+    });
+
+    let leaderboardHTML = "";
 
     const stats = await this.getStats();
 
@@ -193,7 +200,7 @@ export class Leaderboard {
     leaderboardHTML += this.generateTopScoresHTML(stats.topScores, score, username);
     
     // Show leaderboard stats
-    this.HTMLElements.leaderboard.innerHTML = leaderboardHTML;
+    this.HTMLElements.leaderboardAppend.innerHTML = leaderboardHTML;
   }
 
 }

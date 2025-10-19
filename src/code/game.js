@@ -52,7 +52,7 @@ class Game  {
 
     this.score = 0;
     this.username = "";
-    this.leaderboards = "";
+    this.leaderboards = []
 
     // Game does not preserve state, since it has no cookies.
     // Every new game should be the same as a page reload
@@ -181,7 +181,12 @@ class Game  {
   async submitScore(){
 
     this.username = this.HTMLElements.usernameInput.value.trim() || null;
-    this.leaderboards = this.HTMLElements.winLeaderboardInput.value.split(',');
+
+    if(this.HTMLElements.winLeaderboardInput.value != "")
+    {
+      this.leaderboards = this.HTMLElements.winLeaderboardInput.value.split(',');
+    }
+
     // Deduplicate
     this.leaderboards = [...new Set(this.leaderboards)];
 
