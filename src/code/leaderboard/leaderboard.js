@@ -3,12 +3,19 @@ export class Leaderboard {
   constructor(HTMLElements, database) {
     this.HTMLElements = HTMLElements;
     this.database = database;
+
+    this.score = 0;
+    this.username = "";
+    this.selectedLeaderboards = []
+
     this.HTMLElements.leaderboardSelect.addEventListener("change", this.selectLeaderboards)
   }
 
   selectLeaderboards = (event) => {
-    const selectedValues = Array.from(this.HTMLElements.leaderboardSelect.selectedOptions).map(opt => opt.value); 
-    console.log(selectedValues); 
+    const selectedLeaderboards = Array.from(this.HTMLElements.leaderboardSelect.selectedOptions).map(opt => opt.value); 
+    this.selectedLeaderboards = selectedLeaderboards;
+    console.log(selectedLeaderboards); 
+    this.showLeaderboardStats()
   }
 
   // Calculate average score
@@ -51,7 +58,16 @@ export class Leaderboard {
   async getStats() {
     try {
       const allScoresData = await this.database.getAllScores();
-      const scores = allScoresData.map(s => s.score);
+      let selectedScoreData = allScoresData;
+
+      if(this.selectedLeaderboards.length != 0)
+      {
+        selectedScoreData = allScoresData.filter(scoreData =>
+          scoreData.leaderboards.some(leaderboard => this.selectedLeaderboards.includes(leaderboard))
+        );
+      }
+
+      const scores = selectedScoreData.map(s => s.score);
 
       if (scores.length === 0) {
         return {
@@ -65,7 +81,10 @@ export class Leaderboard {
 
       const average = this.calculateAverage(scores);
       const histogram = this.createHistogram(scores);
-      const topScores = await this.database.getTopScores();
+      const topScores = selectedScoreData
+        .slice() // make a shallow copy so you don’t mutate the original array
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 10);
 
       return {
         //percentile,
@@ -177,6 +196,11 @@ export class Leaderboard {
   }
 
   async showLeaderboard(score, username = null, leaderboards){
+
+    this.score = score;
+    this.username = username;
+    this.selectedLeaderboards = []
+
     this.HTMLElements.leaderboard.style.display = 'block';
 
     leaderboards.forEach(text => {
@@ -186,27 +210,32 @@ export class Leaderboard {
       this.HTMLElements.leaderboardSelect.add(option);
     });
 
+    this.showLeaderboardStats()
+  }
+
+  async showLeaderboardStats(){
     let leaderboardHTML = "";
 
     const stats = await this.getStats();
 
-    if( score != 0) // game won
+    if( this.score != 0) // game won
     {
-      const percentile = this.calculatePercentile(score, stats.scores);
-      leaderboardHTML += `<h3>Your Score: ${score.toFixed(0)}</h3>`;
+      const percentile = this.calculatePercentile(this.score, stats.scores);
+      leaderboardHTML += `<h3>Your Score: ${this.score.toFixed(0)}</h3>`;
       leaderboardHTML += `<p>You scored better than ${percentile}% of players!</p>`;
     }
 
     leaderboardHTML += `<p>Average score: ${stats.average} (${stats.totalPlayers} total players)</p>`;
     
     // Add histogram
-    leaderboardHTML += this.generateHistogramHTML(stats.histogram, score);
+    leaderboardHTML += this.generateHistogramHTML(stats.histogram, this.score);
     
     // Add top scores
-    leaderboardHTML += this.generateTopScoresHTML(stats.topScores, score, username);
+    leaderboardHTML += this.generateTopScoresHTML(stats.topScores, this.score, this.username);
     
     // Show leaderboard stats
     this.HTMLElements.leaderboardAppend.innerHTML = leaderboardHTML;
+
   }
 
 }
