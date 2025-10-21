@@ -25,7 +25,7 @@ export class Leaderboard {
 
   // Calculate user's percentile ranking
   calculatePercentile(userScore, allScores) {
-    if (allScores.length === 0) return 100;
+    if (allScores.length === 1) return 100;
     
     const betterScores = allScores.filter(score => score > userScore).length;
     return (1 - ((betterScores) / (allScores.length - 1))) * 100;
