@@ -2,11 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>TriGame</title>
+    <title>TriGame</title>
     <link rel="shortcut icon" type="image/x-icon" href="./assets/favicon-DZFhJape.ico">
-    <script type="module" crossorigin src="./assets/index-BmmUtArq.js"></script>
+    <script type="module" crossorigin src="./assets/index-CVIPUW_O.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/vendor-Ih04FQOu.js">
-    <link rel="stylesheet" crossorigin href="./assets/index-DmwNE5Uu.css">
+    <link rel="stylesheet" crossorigin href="./assets/index-CyW7HQYG.css">
   </head>
   <body>
     <!-- Container for entire screen -->
@@ -23,8 +23,23 @@
           <!-- Cities datalist filled by cityInputs.js -->
           <datalist id="cities"></datalist>
 
-          <!-- Submit guess button -->
-          <button onclick="submitGuess()" id="submitButton">Submit</button>
+          <!-- Submit guess button -->         
+          <div>
+             <button onclick="submitGuess()" id="submitButton">Submit</button>
+          </div>
+
+          
+          <!-- Debug functionality -->
+          <div class="debugItem">
+            <div>
+              Win score:<input type="number" value="80" id="dbgWinScore">
+            </div>
+            <div>
+              <button onclick="dbgWin()" id="dbgWinButton">WIN</button>
+              <button onclick="dbgLose()" id="dbgLoseButton">LOSE</button>
+            </div>
+          </div>
+          
         </div>
 
         <!-- Dashboard for guess counter and history of guesses -->
@@ -53,147 +68,75 @@
         </div>
 
         <!-- Tour button -->
-        <button onclick="startTour()" id="tourButton" class="tutorial-pulse">Tutorial</button>
+        <button onclick="startTour()" id="tourButton" class="hidden">Tutorial</button>
 
-        <!-- Difficulty selector at start of game -->
-        <div id="difficultyPanel" class="panel">
-          <span id="difficultyLabel">
-            <h2>Select your difficulty</h2>
-          </span>
-        
-          <div class="difficulty-options">
-
-            <!-- Challenge Modes Group -->
-            <div class="challenge-modes-group" id="challengeModes">
-              <h3>Challenge Modes</h3>
-              <div class="grouped-difficulty-options">
-
-                <!-- Daily challenge -->
-                <div class="difficulty-item daily-challenge" onclick="startGame('Daily')">
-                  <div class="difficulty-info">
-                    <div class="difficulty-name">Daily Challenge</div>
-                    <div class="difficulty-description">Same puzzle for everyone today</div>
-                  </div>
-                  <div class="mode-visual">
-                    <div class="challenge-icon">📅</div>
-                  </div>
-                </div>
-
-                <!-- Random game -->
-                <div class="difficulty-item random" onclick="startGame('Random')">
-                  <div class="difficulty-info">
-                    <div class="difficulty-name">Random</div>
-                    <div class="difficulty-description">Surprise me with any difficulty</div>
-                  </div>
-                  <div class="mode-visual">
-                    <div class="challenge-icon">🎲</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Standard Modes Group -->
-            <div class="standard-modes-group" id="standardModes">
-              <h3>Custom Game</h3>
-              
-              <!-- Guess slider -->
-              <div class="guess-selector">
-                <h3>Number of guesses</h3>
-                <div class="slider-container">
-                  <span class="slider-label">1</span>
-                  <input type="range" id="guessSlider" class="guess-slider" min="1" max="11" value="6">
-                  <span class="slider-label">∞</span>
-                </div>
-                <div class="guess-value" id="guessSliderValue">6</div>
-              </div>
-
-              <div class="grouped-difficulty-options">
-
-                <!-- Easy -->
-                <div class="difficulty-item easy" onclick="startGame('Easy')">
-                  <div class="difficulty-info">
-                    <div class="difficulty-name">Easy</div>
-                    <div class="difficulty-description">Choose any of the 3 cities</div>
-                  </div>
-                  <div class="mode-visual">
-                    <div class="city-icon city-unlocked">🏙️</div>
-                    <div class="city-icon city-unlocked">🏙️</div>
-                    <div class="city-icon city-unlocked">🏙️</div>
-                  </div>
-                </div>
-
-                <!-- Medium -->
-                <div class="difficulty-item medium" onclick="startGame('Medium')">
-                  <div class="difficulty-info">
-                    <div class="difficulty-name">Medium</div>
-                    <div class="difficulty-description">1 city locked, 2 available</div>
-                  </div>
-                  <div class="mode-visual">
-                    <div class="city-icon city-locked">
-                      <span class="lock-icon">🔒</span>
-                    </div>
-                    <div class="city-icon city-unlocked">🏙️</div>
-                    <div class="city-icon city-unlocked">🏙️</div>
-                  </div>
-                </div>
-
-                <!-- Hard -->
-                <div class="difficulty-item hard" onclick="startGame('Hard')">
-                  <div class="difficulty-info">
-                    <div class="difficulty-name">Hard</div>
-                    <div class="difficulty-description">2 cities locked, 1 available</div>
-                  </div>
-                  <div class="mode-visual">
-                    <div class="city-icon city-locked">
-                      <span class="lock-icon">🔒</span>
-                    </div>
-                    <div class="city-icon city-locked">
-                      <span class="lock-icon">🔒</span>
-                    </div>
-                    <div class="city-icon city-unlocked">🏙️</div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
+        <!-- Title screen at start of game -->
+        <div id="titlePanel" class="panel">
+          <h1>TriGame</h1>
+          <p>Create triangles on Earth to match the target area</p>
+          
+          <div class="title-buttons">
+            <button class="title-button play-button" onclick="startGame()">Play</button>
+            <button class="title-button tutorial-button" onclick="startTour(); startGame();">Tutorial</button>
           </div>
         </div>
 
-        <!-- Shows on loss -->
-        <div id="losePanel" class="panel">
-          <span id="loseLabel">
-            <h2>Too bad, You lost!</h2>
-          </span>
-          <br>
-          <br>
-          <button onclick="resetGame()">New game</button>
+        <div id="winPanel" class="panel">
+          <h2>You Won</h2>
+          <h2>Your score: <span id="winPanelScore">0</span></h2>
+          <div>
+
+            <div>
+              <div>Enter leaderboard username:</div>
+              <input type="text" id="usernameInput" maxlength="20" placeholder="Anonymous" >
+            </div>
+            <br/>
+            <div>
+            <span title="
+              Create a custom leaderboard by entering a code for the desired group.
+              For example, for a friends leaderboard, agree on a code like 'FriendsOnly'.
+              Anyone who enters that code will be added to the leaderboard.
+              To join multiple leaderboards, separate codes with commas: 'code1,code2,code3'.
+              You are automatically added to the global leaderboard.
+              ">🛈</span>
+              <input type="text" id="winLeaderboardInput" placeholder="Comma seperated list">
+            </div>
+            <br/>
+            <div>
+              <button onclick="submitScore()" id="submitScoreButton">Submit</button>
+            </div>
+
+          </div>
         </div>
 
-        <!-- Shows on victory within tolerance -->
-        <div id="winPanel" class="panel">
-          <span id="winLabel">
-            <h2>Congratulations, You Won!</h2>
-            Guesses left: <span id="winPanelGuessesLeft">0</span>
-          </span>
-          <br>
-          <br>
-          <button onclick="resetGame()">New game</button>
-          <button onclick="continueGame()">Continue</button>
+        <div id="losePanel" class="panel">
+          <h2>You Lost</h2>
+            <div>
+              <div>Enter your leaderboards:</div>
+                <span title="
+                Create a custom leaderboard by entering a code for the desired group.
+                For example, for a friends leaderboard, agree on a code like 'FriendsOnly'.
+                Anyone who enters that code will be added to the leaderboard.
+                To join multiple leaderboards, separate codes with commas: 'code1,code2,code3'.
+                You are automatically added to the global leaderboard.
+                ">🛈</span>
+              <input type="text" id="loseLeaderboardInput">
+            </div>
+            <br/>
+          <button onclick="showLeaderboard()" id="loseLeaderboardButton">Show Leaderboard</button>
         </div>
- 
-        <!-- Shows on exact area match -->
-        <div id="epicWinPanel" class="panel">
-          <span id="epicWinLabel"></span>
-            <h2>
-              <!-- Rainbow text form https://charlesstover.github.io/rainbow-text/ -->
-              <span style="color:#FF0000">F</span><span style="color:#FF6000">l</span><span style="color:#FFBF00">a</span><span style="color:#DFFF00">w</span><span style="color:#80FF00">l</span><span style="color:#20FF00">e</span><span style="color:#00FF40">s</span><span style="color:#00FF9F">s</span> <span style="color:#00FFFF">v</span><span style="color:#009FFF">i</span><span style="color:#0040FF">c</span><span style="color:#2000FF">t</span><span style="color:#7F00FF">o</span><span style="color:#DF00FF">r</span><span style="color:#FF00BF">y</span><span style="color:#FF0060">!</span>
-              <span style="color:#FF0000">H</span><span style="color:#FF6D00">e</span><span style="color:#FFDB00">r</span><span style="color:#B6FF00">e</span> <span style="color:#49FF00">i</span><span style="color:#00FF24">s</span> <span style="color:#00FF92">a</span> <span style="color:#00FFFF">t</span><span style="color:#0092FF">r</span><span style="color:#0024FF">e</span><span style="color:#4900FF">a</span><span style="color:#B600FF">t</span> <a href="/victory.jpeg">⚡</a></span>
-            </h2>
-            Guesses left: <span id="epicWinPanelGuessesLeft">0</span>
-          </span>
-          <br>
-          <br>
-          <button onclick="resetGame()">Restart</button>
+
+        <div id="leaderboardPanel" class="panel">
+          <h2>Leaderboard</h2>
+
+          <label for="leaderboardSelect">Choose leaderboards:</label><br>
+
+          <select id="leaderboardSelect" name="leaderboardSelect[]" multiple>
+          </select>
+
+          <div id="leaderboardAppend">
+          </div>
+
         </div>
 
       </div>
@@ -202,7 +145,13 @@
     <!-- Canvas for sphericalTriangleFill -->
     <canvas id="mapCanvas" width="3600" height="1800"></canvas>
  
-    <!-- JS import -->
+    <!-- Canvas for sphericalTriangleFill -->
+    <script>
+      window.USE_LOCAL_DATABASE = false;
+      window.DEBUG = true;
+    </script>
+
+    <!-- JS import -->
 
   </body>
 </html>
