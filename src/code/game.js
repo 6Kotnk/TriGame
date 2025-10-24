@@ -97,12 +97,12 @@ class Game  {
     const now = new Date();
 
     // Strip off time, only want date
-    const today = now.getFullYear() + '-' + 
-                  String(now.getMonth() + 1).padStart(2, '0') + '-' + 
-                  String(now.getDate()).padStart(2, '0');
-                
-    // Generate a consistent seed based on today's date
-    const seed = this.hash(today); //Prod
+    const todayUTC = now.getUTCFullYear() + '-' + 
+                    String(now.getUTCMonth() + 1).padStart(2, '0') + '-' + 
+                    String(now.getUTCDate()).padStart(2, '0');
+
+    // Generate a consistent seed based on the UTC date
+    const seed = this.hash(todayUTC);
 
     const numCitiesLocked = UTILS.randomFromSeed(seed,0,2);
     // Get a random guess using our seed. This makes sure it is possible to win
