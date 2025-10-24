@@ -97,43 +97,43 @@ class GFXDisplay {
   // Since textures are loaded using thread pool, it needs to be async
   async loadTextures() {
     try {
-      // Low-resolution textures
+      // Only load 8k textures if GPU has at least 8GB of RAM
+      const highPerf = navigator.deviceMemory && navigator.deviceMemory >= 8;
+
       const texturesLoPromises = {
-        albedoMap:  this.loadTexture(albedoMapLoPath),
-        bumpMap:    this.loadTexture(bumpMapLoPath),
-        cloudsMap:  this.loadTexture(cloudsMapLoPath),
-        outlineMap: this.loadTexture(outlineMapLoPath),
-        oceanMap:   this.loadTexture(oceanMapLoPath),
-        skyMap:     this.loadTexture(skyMapLoPath),
+        albedoMap: this.loadTexture(albedoMapLoPath),
+        bumpMap:   this.loadTexture(bumpMapLoPath),
+        cloudsMap: this.loadTexture(cloudsMapLoPath),
+        outlineMap:this.loadTexture(outlineMapLoPath),
+        oceanMap:  this.loadTexture(oceanMapLoPath),
+        skyMap:    this.loadTexture(skyMapLoPath),
       };
 
-      // High-resolution textures
-      const texturesHiPromises = {
-        albedoMap:  this.loadTexture(albedoMapHiPath),
-        bumpMap:    this.loadTexture(bumpMapHiPath),
-        cloudsMap:  this.loadTexture(cloudsMapHiPath),
-        outlineMap: this.loadTexture(outlineMapHiPath),
-        oceanMap:   this.loadTexture(oceanMapHiPath),
-        skyMap:     this.loadTexture(skyMapHiPath),
-      };
-
-      // Wait for low-resolution textures to load first
+      // Load low-res first
       const texturesLo = {};
       for (const [key, promise] of Object.entries(texturesLoPromises)) {
         texturesLo[key] = await promise;
       }
-
-      // Apply low-resolution textures immediately
       await this.applyTextures(texturesLo);
 
-      // Wait for high-resolution textures to load
-      const texturesHi = {};
-      for (const [key, promise] of Object.entries(texturesHiPromises)) {
-        texturesHi[key] = await promise;
-      }
+      // Conditionally load hi-res
+      if (highPerf) {
+        const texturesHiPromises = {
+          albedoMap: this.loadTexture(albedoMapHiPath),
+          bumpMap:   this.loadTexture(bumpMapHiPath),
+          cloudsMap: this.loadTexture(cloudsMapHiPath),
+          outlineMap:this.loadTexture(outlineMapHiPath),
+          oceanMap:  this.loadTexture(oceanMapHiPath),
+          skyMap:    this.loadTexture(skyMapHiPath),
+        };
 
-      // Apply high-resolution textures (will replace low-res ones)
-      await this.applyTextures(texturesHi);
+        const texturesHi = {};
+        for (const [key, promise] of Object.entries(texturesHiPromises)) {
+          texturesHi[key] = await promise;
+        }
+
+        await this.applyTextures(texturesHi);
+      }
 
     } catch (error) {
       console.error('Error loading textures:', error);
