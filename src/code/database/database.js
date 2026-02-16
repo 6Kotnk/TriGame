@@ -2,7 +2,7 @@
 export class Database {
   constructor() {
     // These will need to be replaced with your actual Supabase project values
-    this.supabaseUrl = 'https://clmquoqxsfesbjpseuhj.supabase.co'; // e.g., https://your-project.supabase.co
+    this.supabaseUrl = 'https://clmquoqxsfesbjpseuhj.supabase.co/functions/v1/submit-score';
     this.supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsbXF1b3F4c2Zlc2JqcHNldWhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYwNjQ3NjMsImV4cCI6MjA3MTY0MDc2M30.PnByNeob1w9h2lLWcuOoKR0k7wRtxJj-w8R0fjuKe_s'; // Your anon/public key
     this.apiUrl = `${this.supabaseUrl}/rest/v1`;
   }
