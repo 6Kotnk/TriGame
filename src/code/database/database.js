@@ -11,7 +11,7 @@ export class Database {
   // Save a score to the database
   async saveScore(score, username = null, leaderboards) {
     try {
-      const response = await fetch(this.supabaseReadUrl, {
+      const response = await fetch(this.supabaseWriteUrl, {
         method: 'POST',
         headers: {
           'apikey': this.supabaseKey,
