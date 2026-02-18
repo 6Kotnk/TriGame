@@ -2,16 +2,15 @@
 export class Database {
   constructor() {
     // These will need to be replaced with your actual Supabase project values
-
-    this.supabaseReadUrl = 'https://clmquoqxsfesbjpseuhj.supabase.co/rest/v1'; 
-    this.supabaseWriteUrl = 'https://clmquoqxsfesbjpseuhj.supabase.co/functions/v1/submit-score';
+    this.supabaseUrl = 'https://clmquoqxsfesbjpseuhj.supabase.co'; // e.g., https://your-project.supabase.co
     this.supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsbXF1b3F4c2Zlc2JqcHNldWhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYwNjQ3NjMsImV4cCI6MjA3MTY0MDc2M30.PnByNeob1w9h2lLWcuOoKR0k7wRtxJj-w8R0fjuKe_s'; // Your anon/public key
+    this.apiUrl = `${this.supabaseUrl}/rest/v1`;
   }
 
   // Save a score to the database
   async saveScore(score, username = null, leaderboards) {
     try {
-      const response = await fetch(this.supabaseWriteUrl, {
+      const response = await fetch(`${this.apiUrl}/scores`, {
         method: 'POST',
         headers: {
           'apikey': this.supabaseKey,
@@ -40,7 +39,7 @@ export class Database {
   // Get all scores from database
   async getAllScores() {
     try {
-      const response = await fetch(`${this.supabaseReadUrl}/scores?select=*`, {
+      const response = await fetch(`${this.apiUrl}/scores?select=*`, {
         headers: {
           'apikey': this.supabaseKey,
           'Authorization': `Bearer ${this.supabaseKey}`,
@@ -61,7 +60,7 @@ export class Database {
   // Get top scores for leaderboard
   async getTopScores(limit = 10) {
     try {
-      const response = await fetch(`${this.supabaseReadUrl}/scores?select=*&order=score.desc&limit=${limit}`, {
+      const response = await fetch(`${this.apiUrl}/scores?select=*&order=score.desc&limit=${limit}`, {
         headers: {
           'apikey': this.supabaseKey,
           'Authorization': `Bearer ${this.supabaseKey}`,
