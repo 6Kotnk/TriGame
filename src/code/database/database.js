@@ -40,7 +40,7 @@ export class Database {
   // Get all scores from database
   async getAllScores() {
     try {
-      const response = await fetch(`${this.supabaseReadUrl}/leaderboard_public?select=*`, {
+      const response = await fetch(`${this.supabaseReadUrl}/scores?select=*`, {
         headers: {
           'apikey': this.supabaseKey,
           'Authorization': `Bearer ${this.supabaseKey}`,
@@ -61,7 +61,7 @@ export class Database {
   // Get top scores for leaderboard
   async getTopScores(limit = 10) {
     try {
-      const response = await fetch(`${this.supabaseReadUrl}/leaderboard_public?select=*&order=score.desc&limit=${limit}`, {
+      const response = await fetch(`${this.supabaseReadUrl}/scores?select=*&order=score.desc&limit=${limit}`, {
         headers: {
           'apikey': this.supabaseKey,
           'Authorization': `Bearer ${this.supabaseKey}`,
