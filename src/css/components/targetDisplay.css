@@ -16,3 +16,11 @@
     border: 1px solid #444;
   }
 }
+
+/* --- Mobile View --- */
+@media (max-width: 768px) {
+  #targetDisplay, #tourButton {
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+}

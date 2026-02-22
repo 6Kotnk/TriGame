@@ -76,3 +76,23 @@ cursor: pointer;
   background-color: #2196F3;
   color: white;
 }
+
+/* --- Mobile View --- */
+@media (max-width: 768px) {
+  #titlePanel {
+    padding: 30px 15px;
+  }
+
+  #titlePanel h1 {
+    font-size: 2.2rem;
+  }
+
+  #titlePanel p {
+    font-size: 1rem;
+    margin-bottom: 25px;
+  }
+
+  .title-button {
+    width: 100%;
+  }
+}

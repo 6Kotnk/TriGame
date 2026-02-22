@@ -37,3 +37,21 @@
 #cityInputs div {
   margin-bottom: 10px;
 }
+
+/* --- Mobile View --- */
+@media (max-width: 768px) {
+  .panel {
+    width: 90%; /* Prevent panel from touching screen edges */
+    max-height: 90vh; /* Prevent it from out-scaling the screen height */
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: 20px 15px;
+  }
+  
+  .panel input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 16px;
+  }
+}

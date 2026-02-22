@@ -28,3 +28,26 @@
 #dashboard {
   margin-top: 20px;
 }
+
+/* --- Mobile View --- */
+@media (max-width: 768px) {
+  #container {
+    flex-direction: column-reverse; /* Map on top, inputs on bottom */
+  }
+  
+  #leftPanel, #rightPanel {
+    width: 100%;
+    min-width: 0; /* Override desktop min-width */
+    flex: 1; /* Split screen 50/50 */
+    box-sizing: border-box;
+  }
+  
+  #leftPanel {
+    padding: 15px;
+    height: 50%;
+  }
+
+  #rightPanel {
+    height: 50%;
+  }
+}

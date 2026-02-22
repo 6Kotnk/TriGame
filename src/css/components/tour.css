@@ -43,3 +43,12 @@
     
   }
 }
+
+/* --- Mobile View --- */
+@media (max-width: 768px) {
+  #tourButton {
+    width: auto; /* Overrides the 100% width from general buttons */
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+}
