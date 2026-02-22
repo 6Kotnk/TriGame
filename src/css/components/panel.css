@@ -26,24 +26,24 @@
   width: 100%;
 }
 
-
-
 .panel input[type="text"] {
   width: 200px;
 }
-
-
 
 #cityInputs div {
   margin-bottom: 10px;
 }
 
+
+
 /* --- Mobile View --- */
 @media (max-width: 768px) {
   .panel {
-    width: 90%; /* Prevent panel from touching screen edges */
-    max-height: 90vh; /* Prevent it from out-scaling the screen height */
-    overflow-y: auto;
+    position: fixed; /* Breaks out of rightPanel so it's not cut off by overflow:hidden */
+    z-index: 9999;   /* Ensures it floats above the map and inputs */
+    width: 90%; 
+    max-height: 90vh; 
+    overflow-y: auto; /* Allows scrolling inside the popup if content is very long */
     box-sizing: border-box;
     padding: 20px 15px;
   }
