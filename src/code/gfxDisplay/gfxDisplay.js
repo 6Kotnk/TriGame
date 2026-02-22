@@ -95,41 +95,43 @@ class GFXDisplay {
   }
 
   // AI generated
-  canHandle8kTextures() {
-      // 1. Check if the GPU physically supports 8k (8192x8192) textures      
-      const maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
-      if (maxTextureSize < 8192) {
-          return false; // The GPU literally cannot render an 8k texture
-      }
+  canHandle8kTextures = () => {
+    // 1. Check if the GPU physically supports 8k (8192x8192) textures
+    const gl = this.renderer.getContext('webgl2') || this.renderer.getContext('webgl');
+    
+    const maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+    if (maxTextureSize < 8192) {
+        return false; // The GPU literally cannot render an 8k texture
+    }
 
-      // 2. Exclude mobile/tablet devices (touchscreens and small displays)
-      // "(any-pointer: coarse)" reliably detects touch-first devices (phones/tablets)
-      const isTouchDevice = window.matchMedia("(any-pointer: coarse)").matches;
-      const isSmallScreen = window.innerWidth < 1024;
-      
-      if (isTouchDevice || isSmallScreen) {
-          return false; // Skip 8k on mobile to save bandwidth and shared memory
-      }
+    // 2. Exclude mobile/tablet devices (touchscreens and small displays)
+    // "(any-pointer: coarse)" reliably detects touch-first devices (phones/tablets)
+    const isTouchDevice = window.matchMedia("(any-pointer: coarse)").matches;
+    const isSmallScreen = window.innerWidth < 1024;
+    
+    if (isTouchDevice || isSmallScreen) {
+        return false; // Skip 8k on mobile to save bandwidth and shared memory
+    }
 
-      // 3. Fallback heuristics for desktop performance
-      // Use deviceMemory where available (Chrome), fallback to CPU cores (Firefox/Safari)
-      const ram = navigator.deviceMemory || 8; // default to 8 if unsupported
-      const cores = navigator.hardwareConcurrency || 4; // default to 4 if unsupported
+    // 3. Fallback heuristics for desktop performance
+    // Use deviceMemory where available (Chrome), fallback to CPU cores (Firefox/Safari)
+    const ram = navigator.deviceMemory || 8; // default to 8 if unsupported
+    const cores = navigator.hardwareConcurrency || 4; // default to 4 if unsupported
 
-      // Require at least 8GB RAM (on Chrome) OR at least 8 logical CPU cores
-      if (ram < 8 || cores < 8) {
-          return false;
-      }
+    // Require at least 8GB RAM (on Chrome) OR at least 8 logical CPU cores
+    if (ram < 8 || cores < 8) {
+        return false;
+    }
 
-      // If it passed all the above, it's likely a capable desktop/laptop
-      return true; 
+    // If it passed all the above, it's likely a capable desktop/laptop
+    return true; 
   }
 
 
   // Since textures are loaded using thread pool, it needs to be async
   async loadTextures() {
     try {
-      const highPerf = canHandle8kTextures();
+      const highPerf = this.canHandle8kTextures();
 
       const texturesLoPromises = {
         albedoMap: this.loadTexture(albedoMapLoPath),
