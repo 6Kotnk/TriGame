@@ -1,7 +1,12 @@
 /* Make left and right panels fit side by side */
 #container {
   display: flex;
-  height: 100vh;
+  height: 100%; 
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
 }
 
 /* Make sure left panel has minimum width and guess history has scroll */
